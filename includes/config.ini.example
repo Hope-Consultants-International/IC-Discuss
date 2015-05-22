@@ -1,0 +1,14 @@
+; debugging
+debug = 0
+
+; name of program
+app_title = "IC Discuss"
+
+; Importfunktion aktiv oder nicht
+import_active = 0
+
+[DB]
+hostname = "localhost"
+username = "ic-discuss"
+password = "<secret password>"
+database = "ic-discuss"
