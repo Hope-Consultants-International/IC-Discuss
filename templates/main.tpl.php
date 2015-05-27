@@ -16,6 +16,9 @@
 	<link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
 	<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 
+	<!-- Bootbox -->
+	<script type="text/javascript" src="bootbox/js/bootbox.min.js"></script>
+	
 	<!-- our own CSS, so it can override everything else -->
 	<link rel="stylesheet" href="css/custom-theme.css">
   </head>
@@ -43,13 +46,13 @@
 			  <ul class="dropdown-menu" role="menu">
 			    <li>
 				  <a href="groups.php">
-				    <span class="glyphicon glyphicon-triangle-right" style="font-size:10px; <?php print((strpos($current_page,'|groups') !== false)?'':'visibility:hidden'); ?>">&nbsp</span>
+				    <span class="glyphicon glyphicon-triangle-right" style="font-size:10px; <?php print((strpos($current_page,'|Groups') !== false)?'':'visibility:hidden'); ?>">&nbsp</span>
 					Groups
 				  </a>
 				</li>
 				<li>
 				  <a href="issues.php">
-				    <span class="glyphicon glyphicon-triangle-right" style="font-size:10px; <?php print((strpos($current_page,'|issues') !== false)?'':'visibility:hidden'); ?>">&nbsp</span>
+				    <span class="glyphicon glyphicon-triangle-right" style="font-size:10px; <?php print((strpos($current_page,'|Issues') !== false)?'':'visibility:hidden'); ?>">&nbsp</span>
 					Issues
 				  </a>
 				</li>
@@ -62,25 +65,25 @@
 	<!-- Inhalt -->	
     <div style="height:4em"></div>
 	<div class="container messages">
-	<div class="row">
-	<?php
-		$message_types = array(
-			MSG_TYPE_ERR => 'alert-danger',
-			MSG_TYPE_WARN => 'alert-warning',
-			MSG_TYPE_INFO => 'alert-info',
-		);
-		$fmt = '<div class="alert %s" role="alert">%s</div>';
-		foreach ($message_types as $message_type => $alert_class) {
-			$messages = get_messages($message_type);
-			foreach ($messages as $message) {
-				printf($fmt, $alert_class, $message);
+		<div class="row">
+		<?php
+			$message_types = array(
+				MSG_TYPE_ERR => 'alert-danger',
+				MSG_TYPE_WARN => 'alert-warning',
+				MSG_TYPE_INFO => 'alert-info',
+			);
+			$fmt = '<div class="alert %s" role="alert">%s</div>';
+			foreach ($message_types as $message_type => $alert_class) {
+				$messages = get_messages($message_type);
+				foreach ($messages as $message) {
+					printf($fmt, $alert_class, $message);
+				}
 			}
-		}
-	?>
+		?>
+		</div>
+		<div class="row theme-showcase" role="main">
+		<?php print($inhalt); ?>
 	  </div>
-	</div>
-    <div class="container theme-showcase" role="main">
-	  <?php print($inhalt); ?>
 	</div>
   </body>
  </html>

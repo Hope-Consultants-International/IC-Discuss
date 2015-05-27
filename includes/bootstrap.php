@@ -34,6 +34,8 @@ define('DEBUG', $ini['debug']);
 // app title
 define('APP_TITLE', $ini['app_title']);
 
+define('NEW_ENTRY_ID', 'add');
+
 // database constants
 define('DB_HOSTNAME', $ini['DB']['hostname']);
 define('DB_DATABASE', $ini['DB']['database']);
