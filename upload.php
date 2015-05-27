@@ -3,42 +3,19 @@
 require_once 'includes/bootstrap.php';
 require_once 'php-excel/Classes/PHPExcel.php';
 
-define('FIRST_COLUMN', 'B');
-define('FIRST_ROW', '2');
-
-if (!IMPORT_ACTIVE) {
-	die('Import deaktiviert.');
-}
-
-function _dateOrWarning($data, $row = 0, $column = '') {
-	if (empty($data)) {
-		return null;
-	} elseif (is_numeric($data)) {
-		$exceldatestamp = PHPExcel_Shared_Date::ExcelToPHP($data);
-        return date('Y-m-d', $exceldatestamp);
-	} else {
-		set_message("Kein Datumswert in Zeile {$row}, Spalte '${column}': {$data}", MSG_TYPE_WARN);
-		return null;
-	}
-}
+define('ISSUE_TAG', 'Topic/Issue: ');
+define('ISSUE_CELL', 'A2');
+define('GROUP_TAG', 'Group: ');
+define('GROUP_CELL', 'A3');
+define('DATA_COLUMN', 'A');
+define('DATA_ROW_MIN', '5');
+define('DATA_ROW_MAX', '200');
 
 function _dataOrDefault($data, $default = '') {
 	return empty($data) ? $default : $data;
 }
 
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'nothing';
-
-if ($action == 'empty') {
-	$s = db()->preparedStatement('DELETE FROM mitarbeiter');
-	if (!$s->success) {
-		set_message('Could not empty tables.', MSG_TYPE_ERR);
-	} else {
-		$s = db()->preparedStatement('ALTER TABLE mitarbeiter AUTO_INCREMENT = 0');
-		if (!$s->success) {
-			set_message('Could not reset auto_increment.', MSG_TYPE_ERR);
-		}
-	}
-}
 
 if ($action == 'import') {
 	if(isset($_FILES['spreadsheet']) &&
@@ -60,162 +37,91 @@ if ($action == 'import') {
 
 				//Get worksheet dimensions
 				$sheet = $objPHPExcel->getSheet(0);
-				$highestRow = $sheet->getHighestDataRow();
-				$highestColumn = $sheet->getHighestDataColumn();
-
-				$mitarbeiter_query = "INSERT INTO `mitarbeiter` SET
-					Nachname = :nachname,
-					Vorname = :vorname,
-					Geburtsdatum = :geburtsdatum,
-					Dienstbeginn = :dienstbeginn,
-					Anstellung = :anstellung,
-					G35notwendig = :g35,
-					Lebensversicherung = :lebensversicherung,
-					Notizen = :notizen,
-					Archiviert = :archiv,
-					Kandidatenzeit = :kandidatenzeit,
-					TeamStatus = :status,
-					Geschlecht = :geschlecht,
-					Rueckholversicherung = :rueckhol,
-					RueckholversNummer = :rueckholnum,
-					RueckholversMerkblatt = :rueckholmb,
-					Drittlandversicherung = :drittland,
-					Haftpflichtversicherung = :haftpflicht,
-					KindergeldBeantragt = :kindergeld,
-					E101Beantragt = :e101
-				";
 				
-                //  Read Data into Array
-                $data = $sheet->rangeToArray(FIRST_COLUMN . FIRST_ROW . ':' . $highestColumn . $highestRow, NULL, TRUE, FALSE);
-				$row_num = 1;
-				foreach ($data as $row) {
-					$row_num++;
-					//set_message(print_r($row, true), MSG_TYPE_INFO);
-					
-					$in_deutschland_bis = _dateOrWarning($row[3], $row_num, 'in Deutschland');
-					$e101_gueltig_bis = _dateOrWarning($row[27], $row_num, 'E101 gültig bis');
-					$kindergeld_gueltig_bis = _dateOrWarning($row[29], $row_num, 'Kindergeld genehmigt bis');
-					$letzte_g35 = _dateOrWarning($row[13], $row_num, 'letzte G35');
-					
-					$debr_versandt = _dateOrWarning($row[15], $row_num, 'DEBR Bogen');
-					$debr_wer = $row[18];
-					$debr_wann = _dateOrWarning($row[17], $row_num, 'DEBR Gespräch');
-					$debr_kommentar = $row[16];
-					
-					$mitarbeiter = array(
-						':nachname' => $row[0],
-						':vorname' => $row[1],
-						':geburtsdatum' => _dateOrWarning($row[4], $row_num, 'Geburtsdatum'),
-						':dienstbeginn' => _dateOrWarning($row[7], $row_num, 'Dienstbeginn'),
-						':anstellung' => $row[2],
-						':g35' => (strtolower($row[12]) == 'j') ? 1 : 0,
-						':lebensversicherung' => _dataOrDefault($row[40]),
-						':notizen' => _dataOrDefault($row[8]),
-						':archiv' => 0,
-						':kandidatenzeit' => _dateOrWarning($row[6], $row_num, 'Kandidatenzeit'),
-						':status' => $row[10],
-						':geschlecht' => (strtolower($row[11]) == 'm') ? 'M' : 'W',
-						':rueckhol' => (!empty($row[30])) ? 1 : 0,
-						':rueckholnum' => _dataOrDefault($row[31]),
-						':rueckholmb' => 0,
-						':drittland' => _dataOrDefault($row[34]),
-						':haftpflicht' => _dataOrDefault($row[35]),
-						':kindergeld' => (!empty($row[28])) ? 1 : 0,
-						':e101' => (!empty($row[26])) ? 1 : 0,
+				$issue_id = null;
+				$issue = $sheet->getCell(ISSUE_CELL)->getvalue();
+				$issue = str_replace(ISSUE_TAG, '', $issue);
+				$stmt = db()->preparedStatement(
+					"SELECT IssueId FROM `%table` WHERE Title = :issue",
+					array('%table' => TABLE_ISSUES, ':issue' => $issue)
+				);
+				if ($stmt->foundRows > 1) {
+					set_message('Ambiguous Issue: ' . $issue, MSG_TYPE_ERR);
+				} elseif ($stmt->foundRows != 1) {
+					set_message('Issue not found: ' . $issue, MSG_TYPE_ERR);
+				} else {
+					set_message('Issue: ' . $issue, MSG_TYPE_INFO);
+					$issue_id = $stmt->fetchColumn(0);
+				}
+				
+				$group_id = null;
+				$group = $sheet->getCell(GROUP_CELL)->getvalue();
+				$group = str_replace(GROUP_TAG, '', $group);
+				$stmt = db()->preparedStatement(
+					"SELECT GroupId FROM `%table` WHERE Name = :group",
+					array('%table' => TABLE_GROUPS, ':group' => $group)
+				);
+				if ($stmt->foundRows > 1) {
+					set_message('Ambiguous Group: ' . $group, MSG_TYPE_ERR);
+				} elseif ($stmt->foundRows != 1) {
+					set_message('Group not found: ' . $group, MSG_TYPE_ERR);
+				} else {
+					set_message('Group: ' . $group, MSG_TYPE_INFO);
+					$group_id = $stmt->fetchColumn(0);
+				}
+				
+				
+				
+				if (!is_null($group_id) && !is_null($issue_id)) {
+					// Delete current statements
+					$s = db()->preparedStatement(
+						"DELETE FROM `%table` WHERE GroupId = :group_id AND IssueId = :issue_id",
+						array('%table' => TABLE_STATEMENTS, ':group_id' => $group_id, ':issue_id' => $issue_id)
 					);
-					if ($mitarbeiter[':anstellung'] == 'F') {
-						$mitarbeiter[':anstellung'] = 'Frontiers';
-					}
-					if ($mitarbeiter[':status'] == 'OFFICE') {
-						$mitarbeiter[':status'] = 'Office';
-					}
-					// set_message(print_r($mitarbeiter, true), MSG_TYPE_INFO);
 					
-					$s = db()->preparedStatement($mitarbeiter_query, $mitarbeiter);
-					if (!$s->success) {
-						set_message("Konnte Mitarbeiter in Zeile {$row_num} nicht speichern: " . $s->error, MSG_TYPE_ERR);
-					} else {
-						$mitarbeiter_id = $s->lastInsertId;
+					$statement_query = "INSERT INTO `%table` SET
+						GroupId = :group_id,
+						IssueId = :issue_id,
+						SummaryId = NULL,
+						Statement = :statement
+					";
+					
+					//  Read Data into Array
+					$highestRow = min($sheet->getHighestDataRow(), DATA_ROW_MAX);
+					$data = $sheet->rangeToArray(DATA_COLUMN . DATA_ROW_MIN . ':' . DATA_COLUMN . $highestRow, NULL, TRUE, FALSE);
+					$row_num = DATA_ROW_MIN - 1;
+					$statement_num = 0;
+					foreach ($data as $row) {
+						$row_num++;
+						$statement = _dataOrDefault($row[0]);
 						
-						if (!empty($in_deutschland_bis)) {
-							$stmt = db()->preparedStatement(
-								"INSERT INTO mitarbeiter_deutschland
-								SET MitarbeiterID = :id, BisDatum = :bis
-								ON DUPLICATE KEY UPDATE MitarbeiterID = :id",
-								array(
-									':id' => $mitarbeiter_id,
-									':bis' => $in_deutschland_bis,
-								)
-							);
-							if (!$stmt->success) {
-								die('Database update fail (In Deutschland): ' . $stmt->error);
-							}
-						}
-						if (!empty($e101_gueltig_bis)) {
-							$stmt = db()->preparedStatement(
-								"INSERT INTO mitarbeiter_e101
-								SET MitarbeiterID = :id, GenehmigtBis = :date
-								ON DUPLICATE KEY UPDATE MitarbeiterID = :id",
-								array(':id' => $mitarbeiter_id, ':date' => $e101_gueltig_bis)
-							);
-							if (!$stmt->success) {
-								die('Database update fail (E101): ' . $stmt->error);
-							}
-						}
-						if (!empty($kindergeld_gueltig_bis)) {
-							$stmt = db()->preparedStatement(
-								"INSERT INTO mitarbeiter_kindergeld
-								SET MitarbeiterID = :id, GenehmigtBis = :date
-								ON DUPLICATE KEY UPDATE MitarbeiterID = :id",
-								array(':id' => $mitarbeiter_id, ':date' => $kindergeld_gueltig_bis)
-							);
-							if (!$stmt->success) {
-								die('Database update fail (Kindergeld): ' . $stmt->error);
-							}
-						}
-						if (!empty($letzte_g35)) {
-							$stmt = db()->preparedStatement(
-								"INSERT INTO mitarbeiter_g35
-								SET MitarbeiterID = :id, G35Datum = :date
-								ON DUPLICATE KEY UPDATE MitarbeiterID = :id",
-								array(':id' => $mitarbeiter_id, ':date' => $letzte_g35)
-							);
-							if (!$stmt->success) {
-								die('Database update fail (G35): ' . $stmt->error);
-							}
-						}
-						if (!empty($debr_versandt) || !empty($debr_wann)) {
-							$stmt = db()->preparedStatement(
-								"INSERT INTO mitarbeiter_debriefing	SET
-									MitarbeiterID = :id,
-									BogenVersandt = :versandt,
-									DurchfuehrungWann = :wann,
-									DurchfuehrungWer = :wer,
-									Kommentar = :kommentar
-								ON DUPLICATE KEY UPDATE MitarbeiterID = :id",
-								array(
-									':id' => $mitarbeiter_id,
-									':versandt' => _dataOrDefault($debr_versandt, '0000-00-00'),
-									':wann' => _dataOrDefault($debr_wann, '0000-00-00'),
-									':wer' => _dataOrDefault($debr_wer),
-									':kommentar' => _dataOrDefault($debr_kommentar),
-								)
-							);
-							if (!$stmt->success) {
-								die('Database update fail (Debriefing): ' . $stmt->error);
+						if (!empty($statement)) {
+							$statement_num++;
+							$values = array(
+								'%table' => TABLE_STATEMENTS,
+								':group_id' => $group_id,
+								':issue_id' => $issue_id,
+								':statement' => $statement,
+							);					
+						
+							$s = db()->preparedStatement($statement_query, $values);
+							if (!$s->success) {
+								set_message("Problem with Statement in row {$row_num}: " . $s->error, MSG_TYPE_ERR);
 							}
 						}
 					}
+					set_message("{$statement_num} Statements imported.", MSG_TYPE_INFO);
+				} else {
+					set_message("Group ID or Issue ID not found.", MSG_TYPE_ERR);
 				}
 			} else {
-				set_message("Bitte XLS, XLSX oder ODS importieren.", MSG_TYPE_ERR);
+				set_message("Please upload XLS, XLSX or ODS.", MSG_TYPE_ERR);
 			}
 		} else{ 
 			set_message($_FILES['spreadsheet']['error'], MSG_TYPE_ERR);
 		}
 	} else {
-		print_r($_FILES);
-		die('blah');
+		set_message('Error Uploading: ' . print_r($_FILES, true), MSG_TYPE_ERR);
 	}
 }
 
