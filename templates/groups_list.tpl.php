@@ -1,5 +1,11 @@
 <h2>Groups</h2>
 
+<div class="form-group">
+	<button class="btn btn-primary" onclick="edit_group('<?php print(htmlentities(NEW_ENTRY_ID)); ?>')">
+		<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Group
+	</button>
+</div>
+
 <table class="table table-striped">
 <tr>
   <th>Name</th>
@@ -19,9 +25,6 @@
   </tr>
 <?php } ?>
 </table>
-<button class="btn btn-primary" onclick="edit_group('<?php print(htmlentities(NEW_ENTRY_ID)); ?>')">
-	<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Group
-</button>
 
 <script type="text/javascript">
 function edit_group(group_id) {

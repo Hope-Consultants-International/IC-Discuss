@@ -1,5 +1,11 @@
 <h2>Issues</h2>
 
+<div class="form-group">
+	<button class="btn btn-primary" onclick="edit_issue('<?php print(htmlentities(NEW_ENTRY_ID)); ?>')">
+		<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Issue
+	</button>
+</div>
+
 <table class="table table-striped">
 <tr>
   <th>Name</th>
@@ -21,9 +27,6 @@
   </tr>
 <?php } ?>
 </table>
-<button class="btn btn-primary" onclick="edit_issue('<?php print(htmlentities(NEW_ENTRY_ID)); ?>')">
-	<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Issue
-</button>
 
 <script type="text/javascript">
 function edit_issue(issue_id) {

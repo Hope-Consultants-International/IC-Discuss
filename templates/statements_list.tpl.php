@@ -1,5 +1,11 @@
 <h2>Statements</h2>
 
+<div class="form-group">
+	<button class="btn btn-primary" onclick="edit_statement('<?php print(htmlentities(NEW_ENTRY_ID)); ?>')">
+		<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Statement
+	</button>
+</div>
+
 <table class="table table-striped">
 <tr>
   <th>Issue</th>
@@ -23,9 +29,6 @@
   </tr>
 <?php } ?>
 </table>
-<button class="btn btn-primary" onclick="edit_statement('<?php print(htmlentities(NEW_ENTRY_ID)); ?>')">
-	<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Statement
-</button>
 
 <script type="text/javascript">
 function edit_statement(statement_id) {
