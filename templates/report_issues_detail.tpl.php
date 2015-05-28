@@ -44,6 +44,7 @@
 
 <?php if (DEBUG) { ?>
 <div class="hidden-print">
+	<h2>Debug</h2>
 	<pre>$issues = <?php print_r($issues); ?></pre>
 </div>
 <?php } ?>

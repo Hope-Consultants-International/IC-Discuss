@@ -63,6 +63,40 @@ switch ($report_type) {
 		$vars['issues'] = $issues;
 		break;
 	case 'groups':
+		$s_issues = db()->preparedStatement(
+			"SELECT IssueId, Title, Description FROM `%table` ORDER BY Title",
+			array('%table' => TABLE_ISSUES)
+		);
+		$issues = $s_issues->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_CLASS);
+		$issues = array_map('reset', $issues);
+	
+		$groups = array();
+		$s_groups = db()->preparedStatement(
+			"SELECT GroupId, Name FROM `%table`
+				ORDER BY Name",
+			array('%table' => TABLE_GROUPS)
+		);
+		while ($group = $s_groups->fetchObject()) {
+			$group_issues = array();
+			foreach ($issues as $issue_id => $issue) {
+				$group_issue = clone $issue;
+				$statements = array();
+				$s_statements = db()->preparedStatement(
+					"SELECT StatementId, Statement FROM `%table`
+						WHERE IssueId = :iid AND GroupId = :gid
+						ORDER BY Statement",
+					array('%table' => TABLE_STATEMENTS, ':iid' => $issue_id, ':gid' => $group->GroupId)
+				);
+				while ($statement = $s_statements->fetchObject()) {
+					$statements[] = $statement;
+				}
+				$group_issue->statements = $statements;
+				$group_issues[] = $group_issue;
+			}
+			$group->issues = $group_issues;
+			$groups[] = $group;
+		}
+		$vars['groups'] = $groups;
 		break;
 	default:
 		die('Unknown Report Type');
