@@ -40,7 +40,31 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
 		    <li class=" <?php print(($current_page=='Upload')?'active':''); ?>"><a href="upload.php">Upload XLS</a></li>
-			<li class=" <?php print(($current_page=='Summary')?'active':''); ?>"><a href="summary.php">Summary</a></li>
+			<li class=" <?php print(($current_page=='Synthesize')?'active':''); ?>"><a href="synthesize.php">Synthesize</a></li>
+			<li class="dropdown <?php print((strpos($current_page,'Report|') !== false)?'active':''); ?>">
+			  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Report <span class="caret"></span></a>
+			  <ul class="dropdown-menu" role="menu">
+			    <li>
+				  <a href="report.php?type=issues_short">
+				    <span class="glyphicon glyphicon-triangle-right" style="font-size:10px; <?php print((strpos($current_page,'Report|issues_short') !== false)?'':'visibility:hidden'); ?>">&nbsp</span>
+					Issues - Short
+				  </a>
+				</li>
+				<li>
+				  <a href="report.php?type=issues_detail">
+				    <span class="glyphicon glyphicon-triangle-right" style="font-size:10px; <?php print((strpos($current_page,'Report|issues_detail') !== false)?'':'visibility:hidden'); ?>">&nbsp</span>
+					Issues - Details
+				  </a>
+				</li>
+				<li class="divider"></li>
+				<li>
+				  <a href="report.php?type=groups">
+				    <span class="glyphicon glyphicon-triangle-right" style="font-size:10px; <?php print((strpos($current_page,'Report|groups') !== false)?'':'visibility:hidden'); ?>">&nbsp</span>
+					Groups
+				  </a>
+				</li>
+			  </ul>
+			</li>
 			<li class="dropdown <?php print((strpos($current_page,'Manage|') !== false)?'active':''); ?>">
 			  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Manage <span class="caret"></span></a>
 			  <ul class="dropdown-menu" role="menu">
