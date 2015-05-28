@@ -80,6 +80,12 @@
 					Issues
 				  </a>
 				</li>
+				<li>
+				  <a href="statements.php">
+				    <span class="glyphicon glyphicon-triangle-right" style="font-size:10px; <?php print((strpos($current_page,'|Statements') !== false)?'':'visibility:hidden'); ?>">&nbsp</span>
+					Statements
+				  </a>
+				</li>
 			  </ul>
 			</li>
           </ul>
