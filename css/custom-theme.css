@@ -17,3 +17,58 @@
 	cursor: inherit;
 	display: block;
 }
+
+html, body {
+	height: 100%;
+}
+
+.container {
+	height: calc(100% - 10em)
+}
+
+.synth-box {
+	border: 1px solid black;
+	overflow: auto;
+	padding-top:1em;
+	padding-bottom:1em;
+}
+.synth-summary {
+	width: 100%;
+}
+.synth-summary-text {
+	width: 100%;
+}
+.synth-statement, .synth-summary  {
+	border: 2px dotted #EEE;
+	padding: 0.2em;
+	margin-bottom: 0.5em;
+}
+.synth-statement:hover {
+	cursor: grab;
+}
+
+/* columns of same height styles */
+.row-full-height {
+	height: 100%;
+}
+.col-full-height {
+	height: 100%;
+	vertical-align: middle;
+}
+.row-same-height {
+	width: 100%;
+}
+
+/* vertical alignment styles */
+.col-top {
+	vertical-align: top;
+}
+.col-middle {
+	vertical-align: middle;
+}
+.col-bottom {
+	vertical-align: bottom;
+}
+.col-centered {
+	text-align: center;
+}

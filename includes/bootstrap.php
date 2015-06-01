@@ -48,6 +48,26 @@ define('TABLE_ISSUES', 'issues');
 define('TABLE_STATEMENTS', 'statements');
 define('TABLE_SUMMARIES', 'summaries');
 
+ function currentdir($url) {
+    // note: anything without a scheme ("example.com", "example.com:80/", etc.) is a folder
+    // remove query (protection against "?url=http://example.com/")
+    if ($first_query = strpos($url, '?')) $url = substr($url, 0, $first_query);
+    // remove fragment (protection against "#http://example.com/")
+    if ($first_fragment = strpos($url, '#')) $url = substr($url, 0, $first_fragment);
+    // folder only
+    $last_slash = strrpos($url, '/');
+    if (!$last_slash) {
+        return '/';
+    }
+    // add ending slash to "http://example.com"
+    if (($first_colon = strpos($url, '://')) !== false && $first_colon + 2 == $last_slash) {
+        return $url . '/';
+    }
+    return substr($url, 0, $last_slash + 1);
+}
+
+define('BASE_URL', currentdir($_SERVER["REQUEST_SCHEME"].'://'.$_SERVER["SERVER_NAME"].':'.$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"]));
+
 /**
  * Get a Template instance.
  *
@@ -123,9 +143,17 @@ function get_messages($type = null) {
 }
 
 function display($title, $current_page, $template, $vars = array()) {
+	$s_issues = db()->preparedStatement(
+		"SELECT IssueId, Title FROM `%table` ORDER BY Title",
+		array('%table' => TABLE_ISSUES)
+	);
+	$issues = $s_issues->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_COLUMN);
+	$issues = array_map('reset', $issues);
+	
 	$main_vars = array(
 		'page_title' => $title,
 		'current_page' => $current_page,
+		'issues' => $issues,
 		'inhalt' => template_engine()->render($template, $vars),
 	);
 	print(template_engine()->render('main.tpl.php', $main_vars));

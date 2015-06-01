@@ -9,7 +9,12 @@
 	<!-- HTML Kommentar -->
 	
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="jquery/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="jquery/jquery-2.1.4.min.js"></script>
+	
+	<!-- jQuery UI -->
+	<link rel="stylesheet" href="jquery-ui/jquery-ui.structure.min.css">
+	<link rel="stylesheet" href="jquery-ui/jquery-ui.theme.min.css">
+	<script type="text/javascript" src="jquery-ui/jquery-ui.min.js"></script>
 	
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
@@ -40,7 +45,19 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
 		    <li class=" <?php print(($current_page=='Upload')?'active':''); ?>"><a href="upload.php">Upload XLS</a></li>
-			<li class=" <?php print(($current_page=='Synthesize')?'active':''); ?>"><a href="synthesize.php">Synthesize</a></li>
+			<li class="dropdown <?php print((strpos($current_page,'Synthesize|') !== false)?'active':''); ?>">
+			  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Synthesize <span class="caret"></span></a>
+			  <ul class="dropdown-menu" role="menu">
+				<?php foreach ($issues as $id => $title) { ?>
+			    <li>
+				  <a href="synthesize.php?issue=<?php print($id); ?>">
+				    <span class="glyphicon glyphicon-triangle-right" style="font-size:10px; <?php print((strpos($current_page,'Synthesize|'.$id) !== false)?'':'visibility:hidden'); ?>">&nbsp</span>
+					<?php print(htmlentities($title)); ?>
+				  </a>
+				</li>
+				<?php } ?>
+			  </ul>
+			</li>
 			<li class="dropdown <?php print((strpos($current_page,'Report|') !== false)?'active':''); ?>">
 			  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Report <span class="caret"></span></a>
 			  <ul class="dropdown-menu" role="menu">
@@ -94,8 +111,8 @@
     </nav>
 	<!-- Inhalt -->	
     <div style="height:4em"></div>
-	<div class="container messages">
-		<div class="row">
+	<div class="container">
+		<div class="row messages">
 		<?php
 			$message_types = array(
 				MSG_TYPE_ERR => 'alert-danger',
