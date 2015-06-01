@@ -55,6 +55,6 @@
 
 <script type="text/javascript">
 function edit_cancel() {
-	document.location = "<?php print(htmlentities($page_url)); ?>?action=list";
+	document.location = '<?php print(htmlentities($page_url)); ?>?action=list';
 }
 </script>

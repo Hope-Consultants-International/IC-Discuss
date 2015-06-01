@@ -38,22 +38,22 @@
 
 <script type="text/javascript">
 function edit_issue(issue_id) {
-	document.location = "<?php print(htmlentities($page_url)); ?>?action=edit&id=" + issue_id;
+	document.location = '<?php print(htmlentities($page_url)); ?>?action=edit&id=' + issue_id;
 }
 function delete_issue(issue_id, issue_title) {
 	bootbox.dialog({
-		message: "Do you want to delete issue \"" + issue_title + "\"",
-		title: "<?php print(htmlentities(APP_TITLE)); ?>",
+		message: 'Do you want to delete issue "' + issue_title + '"',
+		title: '<?php print(htmlentities(APP_TITLE)); ?>',
 		buttons: {
 			cancel: {
 				label: "Don't Delete",
-				className: "btn-default",			
+				className: 'btn-default'
 			},
 			delete: {
-				label: "Delete",
-				className: "btn-danger",
+				label: 'Delete',
+				className: 'btn-danger',
 				callback: function() {
-					document.location = "<?php print(htmlentities($page_url)); ?>?action=delete&id=" + issue_id;
+					document.location = '<?php print(htmlentities($page_url)); ?>?action=delete&id=' + issue_id;
 				}
 			}
 		}

@@ -23,7 +23,7 @@
 		<div class="col-sm-10 offset">
 			<div class="checkbox">
 				<label>
-					<input type="checkbox" name="AllowUpload" value="1" <?php if($issue_upload) { print("checked"); } ?>>
+					<input type="checkbox" name="AllowUpload" value="1" <?php if($issue_upload) { print('checked'); } ?>>
 					Allow XLS uploads
 				</label>
 			</div>
@@ -45,6 +45,6 @@
 
 <script type="text/javascript">
 function edit_cancel() {
-	document.location = "<?php print(htmlentities($page_url)); ?>?action=list";
+	document.location = '<?php print(htmlentities($page_url)); ?>?action=list';
 }
 </script>

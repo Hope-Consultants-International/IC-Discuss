@@ -28,22 +28,22 @@
 
 <script type="text/javascript">
 function edit_group(group_id) {
-	document.location = "<?php print(htmlentities($page_url)); ?>?action=edit&id=" + group_id;
+	document.location = '<?php print(htmlentities($page_url)); ?>?action=edit&id=' + group_id;
 }
 function delete_group(group_id, group_name) {
 	bootbox.dialog({
-		message: "Do you want to delete group \"" + group_name + "\"",
-		title: "<?php print(htmlentities(APP_TITLE)); ?>",
+		message: 'Do you want to delete group "' + group_name + '"',
+		title: '<?php print(htmlentities(APP_TITLE)); ?>',
 		buttons: {
 			cancel: {
 				label: "Don't Delete",
-				className: "btn-default",			
+				className: 'btn-default'
 			},
 			delete: {
-				label: "Delete",
-				className: "btn-danger",
+				label: 'Delete',
+				className: 'btn-danger',
 				callback: function() {
-					document.location = "<?php print(htmlentities($page_url)); ?>?action=delete&id=" + group_id;
+					document.location = '<?php print(htmlentities($page_url)); ?>?action=delete&id=' + group_id;
 				}
 			}
 		}
