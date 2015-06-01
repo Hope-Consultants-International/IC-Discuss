@@ -1,8 +1,12 @@
-<!DOCTYPE html>
+<?php
+require_once 'includes/bootstrap.php';
+
+assert_access(SECTION_MANAGE);
+
+?><!DOCTYPE html>
 <html><head><title>DB Update</title></head>
 <body><pre>
 <?php
-require_once 'includes/bootstrap.php';
 
 // check if update table exists and create if necessary
 $s = db()->preparedStatement(

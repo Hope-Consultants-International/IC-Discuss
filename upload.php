@@ -1,7 +1,8 @@
 <?php
-
 require_once 'includes/bootstrap.php';
 require_once 'php-excel/Classes/PHPExcel.php';
+
+assert_access(SECTION_UPLOAD);
 
 define('ISSUE_TAG', 'Topic/Issue: ');
 define('ISSUE_CELL', 'A2');

@@ -44,20 +44,25 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-		    <li class=" <?php print(($current_page=='Upload')?'active':''); ?>"><a href="upload.php">Upload XLS</a></li>
-			<li class="dropdown <?php print((strpos($current_page,'Synthesize|') !== false)?'active':''); ?>">
-			  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Synthesize <span class="caret"></span></a>
-			  <ul class="dropdown-menu" role="menu">
-				<?php foreach ($issues as $id => $title) { ?>
-			    <li>
-				  <a href="synthesize.php?issue=<?php print($id); ?>">
-				    <span class="glyphicon glyphicon-triangle-right" style="font-size:10px; <?php print((strpos($current_page,'Synthesize|'.$id) !== false)?'':'visibility:hidden'); ?>">&nbsp</span>
-					<?php print(htmlentities($title)); ?>
-				  </a>
+			<?php if (check_access(SECTION_UPLOAD)) { ?>
+				<li class=" <?php print(($current_page=='Upload')?'active':''); ?>"><a href="upload.php">Upload XLS</a></li>
+			<?php } ?>
+			<?php if (check_access(SECTION_SYNTHESIZE)) { ?>
+				<li class="dropdown <?php print((strpos($current_page,'Synthesize|') !== false)?'active':''); ?>">
+				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Synthesize <span class="caret"></span></a>
+				  <ul class="dropdown-menu" role="menu">
+					<?php foreach ($issues as $id => $title) { ?>
+					<li>
+					  <a href="synthesize.php?issue=<?php print($id); ?>">
+						<span class="glyphicon glyphicon-triangle-right" style="font-size:10px; <?php print((strpos($current_page,'Synthesize|'.$id) !== false)?'':'visibility:hidden'); ?>">&nbsp</span>
+						<?php print(htmlentities($title)); ?>
+					  </a>
+					</li>
+					<?php } ?>
+				  </ul>
 				</li>
-				<?php } ?>
-			  </ul>
-			</li>
+			<?php } ?>
+			<?php if (check_access(SECTION_SYNTHESIZE)) { ?>
 			<li class="dropdown <?php print((strpos($current_page,'Report|') !== false)?'active':''); ?>">
 			  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Report <span class="caret"></span></a>
 			  <ul class="dropdown-menu" role="menu">
@@ -82,6 +87,8 @@
 				</li>
 			  </ul>
 			</li>
+			<?php } ?>
+			<?php if (check_access(SECTION_MANAGE)) { ?>
 			<li class="dropdown <?php print((strpos($current_page,'Manage|') !== false)?'active':''); ?>">
 			  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Manage <span class="caret"></span></a>
 			  <ul class="dropdown-menu" role="menu">
@@ -105,6 +112,7 @@
 				</li>
 			  </ul>
 			</li>
+			<?php } ?>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

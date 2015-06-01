@@ -1,6 +1,8 @@
 <?php
 require_once 'includes/bootstrap.php';
 
+assert_access(SECTION_SYNTHESIZE);
+
 $issue_id = isset($_REQUEST['issue']) ? $_REQUEST['issue'] : null;
 $statement_id = isset($_REQUEST['statement']) ? $_REQUEST['statement'] : null;
 $summary_id = isset($_REQUEST['summary']) ? $_REQUEST['summary'] : null;

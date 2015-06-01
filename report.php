@@ -1,6 +1,8 @@
 <?php
 require_once 'includes/bootstrap.php';
 
+assert_access(SECTION_SYNTHESIZE);
+
 $report_type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'normal';
 
 $vars=array();

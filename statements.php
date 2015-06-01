@@ -1,6 +1,8 @@
 <?php
 require_once 'includes/bootstrap.php';
 
+assert_access(SECTION_MANAGE);
+
 function _requestOrDefault($parameter, $default = '', $null_value = null) {
 	$value = (isset($_REQUEST[$parameter])) ? $_REQUEST[$parameter] : $default;
 	if ($value === $null_value) {
