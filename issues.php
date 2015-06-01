@@ -97,6 +97,7 @@ switch ($action) {
 			$vars = array(
 				'issues' => $issues,
 				'page_url' => $page_url,
+				'download_url' => BASE_URL . 'download_template.php',
 			);
 			display(APP_TITLE, 'Manage|Issues', 'issues_list.tpl.php', $vars);
 		break;

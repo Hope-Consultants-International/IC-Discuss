@@ -19,12 +19,14 @@
 	<td><?php print(htmlentities($data->GroupName)); ?></td>
 	<td><?php print(htmlentities($data->Statement)); ?></td>
 	<td>
-		<button class="btn btn-default" onclick="edit_statement('<?php print(htmlentities($id)); ?>')">
-			<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
-		</button>
-		<button class="btn btn-danger" onclick="delete_statement('<?php print(htmlentities($id)); ?>', '<?php print(htmlentities($data->Statement)); ?>')">
-			<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
-		</button>
+		<div class="btn-group">
+			<button class="btn btn-default" onclick="edit_statement('<?php print(htmlentities($id)); ?>')">
+				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+			</button>
+			<button class="btn btn-danger" onclick="delete_statement('<?php print(htmlentities($id)); ?>', '<?php print(htmlentities($data->Statement)); ?>')">
+				<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
+			</button>
+		</div>
 	</td>
   </tr>
 <?php } ?>

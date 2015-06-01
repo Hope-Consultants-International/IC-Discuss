@@ -27,6 +27,7 @@ unset($conf);
 // our own libraries
 require_once CLIENT_PATH . 'includes/db.php';
 require_once CLIENT_PATH . 'includes/template.php';
+require_once CLIENT_PATH . 'includes/utils.php';
 
 // debugging
 define('DEBUG', $ini['debug']);
@@ -56,6 +57,17 @@ define('ACCESS_ENABLED', isset($ini['Access']['enabled']) ? $ini['Access']['enab
 if (ACCESS_ENABLED && !isset($_SERVER['REMOTE_USER'])) {
 	die('Access Control Not Possible.');
 }
+
+// XLS Template stuff
+define('XLS_TEMPLATE', 'includes/template.xls');
+define('GROUP_TAG', 'Group: ');
+define('GROUP_CELL', 'A2');
+define('ISSUE_TAG', 'Topic/Issue: ');
+define('ISSUE_CELL', 'A3');
+define('DESCRIPTION_CELL', 'A4');
+define('DATA_COLUMN', 'A');
+define('DATA_ROW_MIN', '6');
+define('DATA_ROW_MAX', '200');
 
  function currentdir($url) {
     // note: anything without a scheme ("example.com", "example.com:80/", etc.) is a folder

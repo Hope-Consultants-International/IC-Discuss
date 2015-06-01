@@ -4,14 +4,6 @@ require_once 'php-excel/Classes/PHPExcel.php';
 
 assert_access(SECTION_UPLOAD);
 
-define('ISSUE_TAG', 'Topic/Issue: ');
-define('ISSUE_CELL', 'A2');
-define('GROUP_TAG', 'Group: ');
-define('GROUP_CELL', 'A3');
-define('DATA_COLUMN', 'A');
-define('DATA_ROW_MIN', '5');
-define('DATA_ROW_MAX', '200');
-
 function _dataOrDefault($data, $default = '') {
 	return empty($data) ? $default : $data;
 }

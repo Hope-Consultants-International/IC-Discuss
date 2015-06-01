@@ -25,18 +25,26 @@
 		<?php } ?>
 	</td>
 	<td>
-		<button class="btn btn-default" onclick="edit_issue('<?php print(htmlentities($id)); ?>')">
-			<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
-		</button>
-		<button class="btn btn-danger" onclick="delete_issue('<?php print(htmlentities($id)); ?>', '<?php print(htmlentities($data->Title)); ?>')">
-			<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
-		</button>
+		<div class="btn-group">
+			<button class="btn btn-default" onclick="edit_issue('<?php print(htmlentities($id)); ?>')">
+				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+			</button>
+			<button class="btn btn-default" onclick="download_issue('<?php print(htmlentities($id)); ?>')">
+				<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download XLS Templates
+			</button>
+			<button class="btn btn-danger" onclick="delete_issue('<?php print(htmlentities($id)); ?>', '<?php print(htmlentities($data->Title)); ?>')">
+				<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
+			</button>
+		</div>
 	</td>
   </tr>
 <?php } ?>
 </table>
 
 <script type="text/javascript">
+function download_issue(issue_id) {
+	document.location = '<?php print(htmlentities($download_url)); ?>?issue=' + issue_id;
+}
 function edit_issue(issue_id) {
 	document.location = '<?php print(htmlentities($page_url)); ?>?action=edit&id=' + issue_id;
 }

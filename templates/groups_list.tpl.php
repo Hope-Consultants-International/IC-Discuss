@@ -15,18 +15,26 @@
   <tr>
 	<td><?php print(htmlentities($data->Name)); ?></td>
 	<td>
-		<button class="btn btn-default" onclick="edit_group('<?php print(htmlentities($id)); ?>')">
-			<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
-		</button>
-		<button class="btn btn-danger" onclick="delete_group('<?php print(htmlentities($id)); ?>', '<?php print(htmlentities($data->Name)); ?>')">
-			<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
-		</button>
+		<div class="btn-group">
+			<button class="btn btn-default" onclick="edit_group('<?php print(htmlentities($id)); ?>')">
+				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+			</button>
+			<button class="btn btn-default" onclick="download_group('<?php print(htmlentities($id)); ?>')">
+				<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download XLS Templates
+			</button>
+			<button class="btn btn-danger" onclick="delete_group('<?php print(htmlentities($id)); ?>', '<?php print(htmlentities($data->Name)); ?>')">
+				<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
+			</button>
+		</div>
 	</td>
   </tr>
 <?php } ?>
 </table>
 
 <script type="text/javascript">
+function download_group(group_id) {
+	document.location = '<?php print(htmlentities($download_url)); ?>?group=' + group_id;
+}
 function edit_group(group_id) {
 	document.location = '<?php print(htmlentities($page_url)); ?>?action=edit&id=' + group_id;
 }

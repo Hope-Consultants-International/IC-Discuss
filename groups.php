@@ -89,6 +89,7 @@ switch ($action) {
 			$vars = array(
 				'groups' => $groups,
 				'page_url' => $page_url,
+				'download_url' => BASE_URL . 'download_template.php',
 			);
 			display(APP_TITLE, 'Manage|Groups', 'groups_list.tpl.php', $vars);
 		break;
