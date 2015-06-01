@@ -1,4 +1,5 @@
 const debug = <?php print( ($debug) ? 'true' : 'false' ); ?>;
+const ajaxHandlerURL = "<?php print(htmlentities($handler_url)); ?>";
 const input_timer = 750;
 
 function get_db_id(element) {
@@ -52,13 +53,9 @@ function do_summary_update(summary_id) {
 	});
 }
 
-function new_summary() {
-	var statement = $( this ).closest(".synth-statement");
-	var statement_text = statement.find(".statement-text").text();
-	
+function add_new_summary(statement) {
 	var statement_id = get_db_id(statement);
-	console.debug("New Summary from Statement " + statement_id);
-	
+	var statement_text = statement.find(".statement-text").text();
 	var data = {
 		action: "new_summary",
 		statement: statement_id
@@ -76,10 +73,10 @@ function new_summary() {
 				console.info("Update success: " + reply['message']);
 				var summary_id = reply['summary_id'];
 	
-				$( "#synth-summaries" ).append('<div class="synth-summary" id="summary-' + summary_id + '"></div>');
+				$('<div class="synth-summary" id="summary-' + summary_id + '"></div>').insertBefore(".synth-placeholder");
 				var summary = $( "#summary-" + summary_id );
-				summary.append('<div class="form-group"><textarea class="synth-summary-text">' + statement_text + '</textarea></div>');
-				summary.append('<div class="btn-group" role="group"><button class="btn btn-danger synth-delete"><span class="glyphicon glyphicon-trash" aria-hidden="true" onclick=""></span> Delete</button></div>');
+				summary.append('<button class="btn btn-danger synth-delete" title="Remove Summary"><span class="glyphicon glyphicon-trash" aria-hidden="true" onclick=""></span></button></div>');
+				summary.append('<textarea class="synth-summary-text">' + statement_text + '</textarea>');
 				
 				// since this is a new object, we have to make it droppable
 				// and bind event handlers
@@ -94,6 +91,13 @@ function new_summary() {
 			}
 		}
 	});
+}
+
+function new_summary() {
+	var statement = $( this ).closest(".synth-statement");	
+	var statement_id = get_db_id(statement);
+	console.debug("New Summary from Statement " + statement_id);
+	add_new_summary(statement);
 }
 
 function delete_summary() {
@@ -131,12 +135,11 @@ function delete_summary() {
 	});
 }
 
-var ajaxHandlerURL = "<?php print(htmlentities($handler_url)); ?>";
-
 function make_summary_droppable(summary) {
 	summary.droppable({
 		activeClass: "ui-state-default",
 		hoverClass: "ui-state-hover",
+		greedy: true,
 		drop: function( event, ui ) {
 			// add object
 			ui.draggable.appendTo( this );
@@ -171,6 +174,17 @@ function make_summary_droppable(summary) {
 					}
 				}
 			});
+		}
+	});
+}
+
+function make_placeholder_droppable(placeholder) {
+	placeholder.droppable({
+		activeClass: "ui-state-default",
+		hoverClass: "ui-state-hover",
+		drop: function( event, ui ) {
+			// add the new summary
+			add_new_summary(ui.draggable);
 		}
 	});
 }
@@ -258,6 +272,9 @@ $(function() {
 	});
 	$( "#synth-statements" ).each( function( index ) {
 		make_statement_droppable( $(this) );
+	});
+	$( ".synth-placeholder" ).each( function( index ) {
+		make_placeholder_droppable( $(this) );
 	});
 	
 	// fire updates on input

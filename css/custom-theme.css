@@ -32,14 +32,44 @@ html, body {
 	padding-top:1em;
 	padding-bottom:1em;
 }
+
+/* styles for summaries */
 .synth-summary {
 	width: 100%;
+	position: relative;
+	border: 2px solid #888;
+	padding: 0.4em;
+	margin-bottom: 0.5em;
 }
 .synth-summary-text {
-	width: 100%;
+	width: calc(100% - 3em);
+	font-size: 110%;
+	font-weight: bold;
 }
-.synth-statement, .synth-summary  {
-	border: 2px dotted #EEE;
+.synth-delete {
+	position: absolute;
+	top: 0.4em;
+	right: 0.4em;
+}
+.synth-placeholder {
+	height: 10em;
+	width: 100%;
+	border: 2px dotted #888;
+	display: table; 
+}
+.synth-placeholder p {
+	display: table-cell; 
+	text-align: center;
+	vertical-align: middle;
+	font-size: 150%;
+	font-weight: bold;
+	font-variant: small-caps;
+	color: #aaa;
+}
+
+/* styles for statements */
+.synth-statement {
+	border: 2px dashed #aaa;
 	padding: 0.2em;
 	margin-bottom: 0.5em;
 }
