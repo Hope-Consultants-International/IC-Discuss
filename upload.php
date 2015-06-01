@@ -51,7 +51,6 @@ if ($action == 'import') {
 				} elseif ($stmt->foundRows != 1) {
 					set_message('Issue not found: ' . $issue, MSG_TYPE_ERR);
 				} else {
-					set_message('Issue: ' . $issue, MSG_TYPE_INFO);
 					$issue_id = $stmt->fetchColumn(0);
 				}
 				
@@ -67,11 +66,8 @@ if ($action == 'import') {
 				} elseif ($stmt->foundRows != 1) {
 					set_message('Group not found: ' . $group, MSG_TYPE_ERR);
 				} else {
-					set_message('Group: ' . $group, MSG_TYPE_INFO);
 					$group_id = $stmt->fetchColumn(0);
 				}
-				
-				
 				
 				if (!is_null($group_id) && !is_null($issue_id)) {
 					// Delete current statements
@@ -111,7 +107,7 @@ if ($action == 'import') {
 							}
 						}
 					}
-					set_message("{$statement_num} Statements imported.", MSG_TYPE_INFO);
+					set_message("{$statement_num} Statements imported. (Group: {$group} / Issue: ${issue})", MSG_TYPE_INFO);
 				} else {
 					set_message("Group ID or Issue ID not found.", MSG_TYPE_ERR);
 				}
