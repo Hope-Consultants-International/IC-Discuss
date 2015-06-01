@@ -126,12 +126,18 @@ if (!is_null($issue_id) && is_null($group_id)) {
 	} else {
 		abort('Could not open temporary file.');
 	}
-} elseif (!is_null($issue) && !is_null($group)) {
-	// we want to send one file, with the group and issue
-	$issue = Utils::get_issue($issue_id);
-	if (!is_null($issue)) {
-		list ($filename, $tmpfile) = create_template($group, $issue);
+} elseif (!is_null($issue_id) && !is_null($group_id)) {
+	$group = Utils::get_group($group_id);
+	if (is_null($group)) {
+		abort('Group not found.');
 	}
+	
+	$issue = Utils::get_issue($issue_id);
+	if (is_null($issue)) {
+		abort('Issue not found.');
+	}	
+	
+	list ($filename, $tmpfile) = create_template($group, $issue);
 } else {
 	abort('No group and no issue.');
 }
