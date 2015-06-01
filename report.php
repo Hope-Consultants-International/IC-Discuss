@@ -19,11 +19,12 @@ switch ($report_type) {
 			// get summaries
 			$summaries = array();
 			$s_summaries = db()->preparedStatement(
-				"SELECT su.SummaryId, su.Summary
-					FROM `%sutable` su JOIN `%sttable` st ON su.SummaryId = st.SummaryId
+				"SELECT su.SummaryId, su.Summary, COUNT(DISTINCT st.GroupId) as NumGroups
+					FROM `%sutable` su
+						JOIN `%sttable` st ON su.SummaryId = st.SummaryId
 					WHERE su.IssueId = :id
 					GROUP BY su.SummaryId
-					ORDER BY COUNT(*) DESC, su.Summary",
+					ORDER BY COUNT(DISTINCT st.GroupId) DESC, COUNT(*) DESC, su.Summary",
 				array('%sutable' => TABLE_SUMMARIES, '%sttable' => TABLE_STATEMENTS, ':id' => $issue->IssueId)
 			);
 			while ($summary = $s_summaries->fetchObject()) {
@@ -55,6 +56,7 @@ switch ($report_type) {
 					'SummaryId' => null,
 					'Summary' => $statement->Statement,
 					'statements' => array($statement),
+					'NumGroups' => 1,
 				);
 				$summaries[] = $summary;
 			}

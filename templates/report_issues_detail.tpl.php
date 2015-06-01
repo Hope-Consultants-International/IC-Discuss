@@ -17,6 +17,7 @@
 			<?php foreach ($issue->summaries as $summary) { ?>
 				<?php
 				$num_statements = count($summary->statements);
+				$num_groups = $summary->NumGroups;
 				if ($num_statements == 1) {
 				?>
 					<li>
@@ -26,7 +27,11 @@
 				<?php } else { ?>
 					<li>
 						<?php print(htmlentities($summary->Summary)); ?><br>
-						<small><?php print($num_statements); ?> Statements</small>
+						<small>
+							<?php print($num_groups); ?> Group<?php print(($num_groups > 1) ? 's' : ''); ?>
+							/
+							<?php print($num_statements); ?> Statement<?php print(($num_statements > 1) ? 's' : ''); ?>
+						</small>
 						<ul>
 							<?php foreach ($summary->statements as $statement) { ?>
 								<li>
