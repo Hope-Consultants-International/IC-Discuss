@@ -43,7 +43,7 @@ if ($action == 'import') {
 				$issue = $sheet->getCell(ISSUE_CELL)->getvalue();
 				$issue = str_replace(ISSUE_TAG, '', $issue);
 				$stmt = db()->preparedStatement(
-					"SELECT IssueId FROM `%table` WHERE Title = :issue",
+					"SELECT IssueId, AllowUpload FROM `%table` WHERE Title = :issue",
 					array('%table' => TABLE_ISSUES, ':issue' => $issue)
 				);
 				if ($stmt->foundRows > 1) {
@@ -51,7 +51,13 @@ if ($action == 'import') {
 				} elseif ($stmt->foundRows != 1) {
 					set_message('Issue not found: ' . $issue, MSG_TYPE_ERR);
 				} else {
-					$issue_id = $stmt->fetchColumn(0);
+					$issue_obj = $stmt->fetchObject();
+					if ($issue_obj->AllowUpload) {
+						$issue_id = $issue_obj->IssueId;
+					} else {
+						set_message('Uploads for this Issue are disabled: ' . $issue, MSG_TYPE_WARN);
+						$issue_id = false;
+					}
 				}
 				
 				$group_id = null;
@@ -69,7 +75,7 @@ if ($action == 'import') {
 					$group_id = $stmt->fetchColumn(0);
 				}
 				
-				if (!is_null($group_id) && !is_null($issue_id)) {
+				if (!is_null($group_id) && !is_null($issue_id) && ($issue_id !== false)) {
 					// Delete current statements
 					$s = db()->preparedStatement(
 						"DELETE FROM `%table` WHERE GroupId = :group_id AND IssueId = :issue_id",
@@ -109,7 +115,9 @@ if ($action == 'import') {
 					}
 					set_message("{$statement_num} Statements imported. (Group: {$group} / Issue: ${issue})", MSG_TYPE_INFO);
 				} else {
-					set_message("Group ID or Issue ID not found.", MSG_TYPE_ERR);
+					if ($issue_id !== false) {
+						set_message("Group ID or Issue ID not found.", MSG_TYPE_ERR);
+					}
 				}
 			} else {
 				set_message("Please upload XLS, XLSX or ODS.", MSG_TYPE_ERR);

@@ -10,12 +10,20 @@
 <tr>
   <th>Name</th>
   <th>Description</th>
+  <th>XLS Upload</th>
   <th>Actions</th>
 </tr>
 <?php foreach ($issues as $id => $data) { ?>
   <tr>
 	<td><?php print(htmlentities($data->Title)); ?></td>
 	<td><?php print(htmlentities($data->Description)); ?></td>
+	<td>
+		<?php if ($data->AllowUpload) { ?>
+			<span class="glyphicon glyphicon-ok" aria-label="Yes"></span>
+		<?php } else { ?>
+			<span class="glyphicon glyphicon-remove" aria-label="No"></span>
+		<?php } ?>
+	</td>
 	<td>
 		<button class="btn btn-default" onclick="edit_issue('<?php print(htmlentities($id)); ?>')">
 			<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit

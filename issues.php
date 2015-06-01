@@ -40,11 +40,12 @@ switch ($action) {
 			'%table' => TABLE_ISSUES,
 			':title' => _requestOrDefault('IssueTitle'),
 			':description' => _requestOrDefault('IssueDescription'),
+			':upload' => (_requestOrDefault('AllowUpload', false) ? 1 : 0),
 		);
 		if ($new_issue) {
-			$query = "INSERT INTO `%table` SET Title = :title, Description = :description";
+			$query = "INSERT INTO `%table` SET Title = :title, Description = :description, AllowUpload = :upload";
 		} else {
-			$query = "UPDATE `%table` SET Title = :title, Description = :description WHERE IssueId = :id";
+			$query = "UPDATE `%table` SET Title = :title, Description = :description, AllowUpload = :upload WHERE IssueId = :id";
 			$values[':id'] = $issue_id;
 		}
 		$stmt = db()->preparedStatement($query, $values);
@@ -60,14 +61,16 @@ switch ($action) {
 				$title = 'New Issue';
 				$issue_title = '';
 				$issue_description= '';
+				$issue_allow_upload = true;
 			} else {
-				$query = "SELECT Title, Description FROM `%table` WHERE IssueId = :id";
+				$query = "SELECT Title, Description, AllowUpload FROM `%table` WHERE IssueId = :id";
 				$values = array('%table' => TABLE_ISSUES, ':id' => $issue_id);
 				$stmt = db()->preparedStatement($query, $values);
 				if ($stmt->foundRows == 1) {
 					$issue = $stmt->fetchObject();
 					$issue_title = $issue->Title;
 					$issue_description = $issue->Description;
+					$issue_allow_upload = $issue->AllowUpload;
 				} else {
 					die('Issue not found: ' . $issue_id);
 				}
@@ -77,6 +80,7 @@ switch ($action) {
 				'issue_id' => $issue_id,
 				'issue_title' => $issue_title,
 				'issue_description' => $issue_description,
+				'issue_upload' => $issue_allow_upload,
 				'page_url' => $page_url,
 				'title' => $title,
 			);
@@ -84,7 +88,7 @@ switch ($action) {
 		break;
 	case 'list':
 			$issues = array();
-			$query = "SELECT IssueId, Title, Description FROM `%table`";
+			$query = "SELECT IssueId, Title, Description, AllowUpload FROM `%table`";
 			$values = array('%table' => TABLE_ISSUES);
 			$stmt = db()->preparedStatement($query, $values);
 			while ($issue = $stmt->fetchObject()) {
