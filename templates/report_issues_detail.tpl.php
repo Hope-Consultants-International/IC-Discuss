@@ -22,15 +22,15 @@
 				?>
 					<li>
 						<?php print(htmlentities($summary->Summary)); ?><br>
-						<small>Group: <?php print(htmlentities($summary->statements[0]->GroupName)); ?></small>
+						<small><b>1</b> Group / <b>1</b> Statement: <?php print(htmlentities($summary->statements[0]->GroupName)); ?></small>
 					</li>
 				<?php } else { ?>
 					<li>
 						<?php print(htmlentities($summary->Summary)); ?><br>
 						<small>
-							<?php print($num_groups); ?> Group<?php print(($num_groups > 1) ? 's' : ''); ?>
+							<b><?php print($num_groups); ?></b> Group<?php print(($num_groups > 1) ? 's' : ''); ?>
 							/
-							<?php print($num_statements); ?> Statement<?php print(($num_statements > 1) ? 's' : ''); ?>
+							<b><?php print($num_statements); ?></b> Statement<?php print(($num_statements > 1) ? 's' : ''); ?>
 						</small>
 						<ul>
 							<?php foreach ($summary->statements as $statement) { ?>
