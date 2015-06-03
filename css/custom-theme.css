@@ -47,15 +47,17 @@ html, body {
 	font-weight: bold;
 	height: 4.7em;
 }
-.synth-summary-delete {
+.synth-summary-expand, .synth-summary-collapse, .synth-summary-delete {
 	position: absolute;
-	top: 0.4em;
+	width: 2.6em;
+	height: 2.4em;
 	right: 0.4em;
 }
+.synth-summary-delete {
+	top: 0.4em;
+}
 .synth-summary-expand, .synth-summary-collapse {
-	position: absolute;
 	top: 3em;
-	right: 0.4em;
 }
 .synth-placeholder {
 	height: 10em;
