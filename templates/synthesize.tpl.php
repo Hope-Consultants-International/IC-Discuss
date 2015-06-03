@@ -20,11 +20,19 @@
 		<h3 class="position:sticky">Summaries</h3>
 		<?php foreach ($summaries as $summary) { ?>
 		<div class="synth-summary" id="summary-<?php print($summary->SummaryId); ?>">
-			<button class="btn btn-danger synth-delete" title="Remove Summary">
+			<button class="btn btn-danger synth-summary-delete" title="Remove Summary">
 				<span class="glyphicon glyphicon-trash" aria-hidden="true" onclick=""></span>
 			</button>
+			<button class="btn btn-default synth-summary-collapse" title="Collapse Statements">
+				<span class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span>
+			</button>
+			<button class="btn btn-default synth-summary-expand" title="Expand Statements">
+				<span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+			</button>
 			<textarea class="synth-summary-text"><?php print(htmlentities($summary->Summary)); ?></textarea>
-			<?php foreach ($summary->statements as $statement) { emitStatement($statement, false); } ?>
+			<div class="synth-summary-statements">
+				<?php foreach ($summary->statements as $statement) { emitStatement($statement, false); } ?>
+			</div>
 		</div>
 		<?php } ?>
 		<div class="synth-placeholder">

@@ -45,10 +45,16 @@ html, body {
 	width: calc(100% - 3em);
 	font-size: 110%;
 	font-weight: bold;
+	height: 4.7em;
 }
-.synth-delete {
+.synth-summary-delete {
 	position: absolute;
 	top: 0.4em;
+	right: 0.4em;
+}
+.synth-summary-expand, .synth-summary-collapse {
+	position: absolute;
+	top: 3em;
 	right: 0.4em;
 }
 .synth-placeholder {

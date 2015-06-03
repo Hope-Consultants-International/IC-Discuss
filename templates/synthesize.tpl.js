@@ -1,6 +1,10 @@
 const debug = <?php print( ($debug) ? 'true' : 'false' ); ?>;
 const ajaxHandlerURL = '<?php print(htmlentities($handler_url)); ?>';
 const input_timer = 750;
+// animation speed
+const animate_fast = 100;
+const animate_normal = 200;
+const animate_slow = 400;
 
 function get_db_id(element) {
 	return element.attr('id').split('-')[1];
@@ -74,6 +78,28 @@ function do_summary_update(summary_id) {
 	});
 }
 
+function summary_collapse() {
+	var summary = $( this ).closest('.synth-summary');
+	summary.find( '.synth-summary-statements' ).slideUp(
+		animate_normal,
+		function(){
+			summary.find( '.synth-summary-statements' ).hide();
+			summary.find( '.synth-summary-collapse').fadeOut(animate_fast);
+			summary.find( '.synth-summary-expand').fadeIn(animate_fast);
+		}
+	);
+}
+function summary_expand() {
+	var summary = $( this ).closest('.synth-summary');
+	summary.find( '.synth-summary-statements' ).slideDown(
+		animate_normal,
+		function(){
+			summary.find( '.synth-summary-collapse').fadeIn(animate_fast);
+			summary.find( '.synth-summary-expand').fadeOut(animate_fast);
+		}
+	);
+}
+
 function add_new_summary(statement) {
 	var statement_id = get_db_id(statement);
 	var statement_text = statement.find('.statement-text').text();
@@ -96,17 +122,24 @@ function add_new_summary(statement) {
 	
 				$('<div class="synth-summary" id="summary-' + summary_id + '"></div>').insertBefore('.synth-placeholder');
 				var summary = $( '#summary-' + summary_id );
-				summary.append('<button class="btn btn-danger synth-delete" title="Remove Summary"><span class="glyphicon glyphicon-trash" aria-hidden="true" onclick=""></span></button></div>');
+				summary.append('<button class="btn btn-danger synth-summary-delete" title="Remove Summary"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>');
+				summary.append('<button class="btn btn-default synth-summary-collapse" title="Collapse Statements"><span class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span></button>');
+				summary.append('<button class="btn btn-default synth-summary-expand" title="Expand Statements"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span></button>');
 				summary.append('<textarea class="synth-summary-text">' + statement_text + '</textarea>');
+				summary.append('<div class="synth-summary-statements" />');
+				
 				
 				// since this is a new object, we have to make it droppable
 				// and bind event handlers
 				make_summary_droppable(summary);
-				summary.find('.synth-delete').on( 'click', delete_summary);
+				summary.find('.synth-summary-delete').on( 'click', delete_summary);
 				summary.find('.synth-summary-text').on('input', queue_summary_update);
+				summary.find('.synth-summary-collapse').on('click', summary_collapse);
+				summary.find('.synth-summary-expand').on('click', summary_expand);
+				summary.find('.synth-summary-expand').css('display', 'none');
 				
-				statement.appendTo(summary);
-				statement.find('.btn-group').fadeOut(50);
+				statement.appendTo(summary.find( '.synth-summary-statements' ));
+				statement.find('.btn-group').fadeOut(animate_fast);
 			} else {
 				console.error('Update failure: ' + reply['message']);
 				reload_screen();
@@ -129,7 +162,7 @@ function delete_summary() {
 		
 	summary.find('.synth-statement').each(function( index ) {
 		$( this ).appendTo($( '#synth-statements' ))
-		$( this ).find( '.btn-group').fadeIn(50);
+		$( this ).find( '.btn-group').fadeIn(animate_fast);
 	});
 	summary.remove();
 
@@ -165,9 +198,9 @@ function make_summary_droppable(summary) {
 		greedy: true,
 		drop: function( event, ui ) {
 			// add object
-			ui.draggable.appendTo( this );
+			ui.draggable.appendTo( $( this ).find('.synth-summary-statements') );
 			// remove buttons
-			ui.draggable.find( '.btn-group').fadeOut(50);
+			ui.draggable.find( '.btn-group').fadeOut(animate_fast);
 			
 			// do the data update in the background
 			var statement_id = get_db_id(ui.draggable);
@@ -221,7 +254,7 @@ function make_statement_droppable(statement) {
 			// add object
 			ui.draggable.appendTo( this );
 			// remove buttons
-			ui.draggable.find('.btn-group').fadeIn(50);
+			ui.draggable.find('.btn-group').fadeIn(animate_fast);
 			
 			// do the data update in the background
 			var statement_id = get_db_id(ui.draggable);
@@ -273,14 +306,14 @@ function make_statement_draggable(statement) {
 			$(event.target).attr('data-old-summary-id', old_summary_id);
 			
 			// remove old object
-			$( event.target ).fadeOut(100);
+			$( event.target ).slideUp(animate_normal);
 
 			// make sure the draggable object doesn't resize
 			ui.helper.css('width', $( '#' + event.target.id ).css('width'));
 			ui.helper.css('cursor', 'grabbing');
 		},
 		stop: function( event, ui ) {
-			$( event.target ).fadeIn(100);
+			$( event.target ).slideDown(animate_normal);
 		}
     });
 }
@@ -307,5 +340,8 @@ $(function() {
 	
 	// bind buttons
 	$( '.synth-new' ).on( 'click', new_summary);
-	$( '.synth-delete' ).on( 'click', delete_summary);
+	$( '.synth-summary-delete' ).on( 'click', delete_summary);
+	$( '.synth-summary-collapse' ).on('click', summary_collapse);
+	$( '.synth-summary-expand' ).on('click', summary_expand);
+	$( '.synth-summary-expand' ).css('display', 'none');
 });
