@@ -14,7 +14,8 @@ class Utils {
 					GroupId,
 					IssueId,
 					Statement,
-					Highlight
+					Highlight,
+					Weight
 				FROM `%table` WHERE StatementId = :id",
 				array( '%table' => TABLE_STATEMENTS, ':id' => $statement_id)
 			);

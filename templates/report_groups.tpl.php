@@ -18,6 +18,7 @@
 			<?php foreach ($issue->statements as $statement) { ?>
 				<li>
 					<?php print(htmlentities($statement->Statement)); ?>
+					<small>(Weight: <?php print(htmlentities($statement->Weight)); ?>)</small>
 				</li>
 			<?php } ?>
 			</ul>

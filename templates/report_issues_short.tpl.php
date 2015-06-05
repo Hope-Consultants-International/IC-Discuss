@@ -25,6 +25,10 @@
 							<b><?php print($num_groups); ?></b> Group<?php print(($num_groups > 1) ? 's' : ''); ?>
 							/
 							<b><?php print($num_statements); ?></b> Statement<?php print(($num_statements > 1) ? 's' : ''); ?>
+							/
+							Avg. Weight: <b><?php print(number_format($summary->AverageWeight, 2)); ?></b>
+							/
+							Total Weight:  <b><?php print(number_format($summary->GroupWeight, 2)); ?></b>
 						</small>
 					</li>
 				<?php } ?>

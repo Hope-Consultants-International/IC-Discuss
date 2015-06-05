@@ -24,6 +24,10 @@
 	<!-- Bootbox -->
 	<script type="text/javascript" src="bootbox/js/bootbox.min.js"></script>
 	
+	<!-- Bootstrap - TouchSpin -->
+	<link rel="stylesheet" href="bootstrap-touchspin/jquery.bootstrap-touchspin.min.css">
+	<script type="text/javascript" src="bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+	
 	<!-- our own CSS, so it can override everything else -->
 	<link rel="stylesheet" href="css/custom-theme.css">
   </head>

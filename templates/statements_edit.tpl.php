@@ -39,6 +39,14 @@
 			</div>
 		</div>
 	</div>
+	<div class="col-sm-10">
+		<div class="form-group">
+			<label for="Weight" class="col-sm-2 control-label">Weight</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="Weight" name="Weight" placeholder="Weight" value="<?php print(htmlentities($weight)); ?>">
+			</div>
+		</div>
+	</div>
 	<div class="form-group">
 		<div class="col-sm-10">
 			<div class="btn-group" role="group">
@@ -57,4 +65,10 @@
 function edit_cancel() {
 	document.location = '<?php print(htmlentities($page_url)); ?>?action=list';
 }
+$( 'input[name="Weight"]' ).TouchSpin({
+	min: 0,
+	max: 1000,
+	step: 1,
+	decimals: 0
+});
 </script>

@@ -41,11 +41,12 @@ switch ($action) {
 			':statement' => _requestOrDefault('Statement'),
 			':group_id' => _requestOrDefault('GroupId'),
 			':issue_id' => _requestOrDefault('IssueId'),
+			':weight' => _requestOrDefault('Weight', 0),
 		);
 		if ($new_statement) {
-			$query = "INSERT INTO `%table` SET Statement = :statement, GroupId = :group_id, IssueId = :issue_id";
+			$query = "INSERT INTO `%table` SET Statement = :statement, GroupId = :group_id, IssueId = :issue_id, Weight = :weight";
 		} else {
-			$query = "UPDATE `%table` SET Statement = :statement, GroupId = :group_id, IssueId = :issue_id WHERE StatementId = :id";
+			$query = "UPDATE `%table` SET Statement = :statement, GroupId = :group_id, IssueId = :issue_id, Weight = :weight WHERE StatementId = :id";
 			$values[':id'] = $statement_id;
 		}
 		$stmt = db()->preparedStatement($query, $values);
@@ -76,8 +77,9 @@ switch ($action) {
 				$statement = '';
 				$group_id = null;
 				$issue_id = null;
+				$weight = 0;
 			} else {
-				$query = "SELECT Statement, GroupId, IssueId FROM `%table` WHERE StatementId = :id";
+				$query = "SELECT Statement, GroupId, IssueId, Weight FROM `%table` WHERE StatementId = :id";
 				$values = array('%table' => TABLE_STATEMENTS, ':id' => $statement_id);
 				$stmt = db()->preparedStatement($query, $values);
 				if ($stmt->foundRows == 1) {
@@ -85,6 +87,7 @@ switch ($action) {
 					$statement = $obj->Statement;
 					$group_id = $obj->GroupId;
 					$issue_id = $obj->IssueId;
+					$weight = $obj->Weight;
 				} else {
 					die('Statement not found: ' . $statement_id);
 				}
@@ -97,6 +100,7 @@ switch ($action) {
 				'groups' => $groups,
 				'issue_id' => $issue_id,
 				'issues' => $issues,
+				'weight' => $weight,
 				'page_url' => $page_url,
 				'title' => $title,
 			);
@@ -106,7 +110,7 @@ switch ($action) {
 			$statements = array();
 			$values = array('%table' => TABLE_ISSUES);
 			$stmt = db()->preparedStatement(
-				"SELECT s.StatementId, s.GroupId, s.IssueId, i.Title AS IssueTitle, g.Name AS GroupName, s.Statement
+				"SELECT s.StatementId, s.GroupId, s.IssueId, i.Title AS IssueTitle, g.Name AS GroupName, s.Statement, s.Weight
 					FROM `%stable` s
 						JOIN `%gtable` g ON s.GroupId = g.GroupId
 						JOIN `%itable` i ON s.IssueId = i.IssueId

@@ -57,6 +57,15 @@ if ($db_version < $current_version) {
 	}
 }
 
+$current_version++;
+if ($db_version < $current_version) {
+	$sql = "ALTER TABLE `statements` ADD `Weight` INT NOT NULL DEFAULT '0'";
+	$s = db()->preparedStatement($sql);
+	if (!$s->success) {
+		die(sprintf('Error updating to version %d:<p><b>Query</b><br>%s</p>', $current_version, $sql));
+	}
+}
+
 // ---- NEW UPDATES GO HERE ----
 
 // save new version to database	

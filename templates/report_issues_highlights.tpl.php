@@ -25,9 +25,15 @@
 						<b><?php print($num_groups); ?></b> Group<?php print(($num_groups > 1) ? 's' : ''); ?>
 						/
 						<b><?php print($num_statements); ?></b> Statement<?php print(($num_statements > 1) ? 's' : ''); ?>
+						/
+						Avg. Weight: <b><?php print(number_format($summary->AverageWeight, 2)); ?></b>
+						/
+						Total Weight:  <b><?php print(number_format($summary->GroupWeight, 2)); ?></b>
 					</small>
-					<?php if ($num_statements == 1) { ?>
-						<small>(Group: <?php print(htmlentities($summary->statements[0]->GroupName)); ?>)</small>
+					<?php if ($num_statements == 1) { 
+						$statement = $summary->statements[0]; ?>
+						<small>(Group: <?php print(htmlentities($statement->GroupName)); ?> /
+							Weight: <?php print(htmlentities($statement->Weight)); ?>)</small>
 					<?php } else { ?>
 						<ul>
 							<?php
@@ -36,7 +42,10 @@
 							?>
 								<li>
 									<?php print(htmlentities($statement->Statement)); ?><br>
-									<small>Group: <?php print(htmlentities($statement->GroupName)); ?></small>
+									<small>
+										Group: <?php print(htmlentities($statement->GroupName)); ?> /
+										Weight: <?php print(htmlentities($statement->Weight)); ?>
+									</small>
 								</li>
 							<?php
 								} 

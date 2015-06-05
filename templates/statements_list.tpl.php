@@ -11,6 +11,7 @@
   <th>Issue</th>
   <th>Group</th>
   <th>Statement</th>
+  <th>Weight</th>
   <th>Actions</th>
 </tr>
 <?php foreach ($statements as $id => $data) { ?>
@@ -18,6 +19,7 @@
 	<td><?php print(htmlentities($data->IssueTitle)); ?></td>
 	<td><?php print(htmlentities($data->GroupName)); ?></td>
 	<td><?php print(htmlentities($data->Statement)); ?></td>
+	<td><?php print(htmlentities($data->Weight)); ?></td>
 	<td>
 		<div class="btn-group">
 			<button class="btn btn-default" onclick="edit_statement('<?php print(htmlentities($id)); ?>')">
