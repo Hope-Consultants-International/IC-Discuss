@@ -24,10 +24,10 @@ $s_summaries = db()->preparedStatement(
 );
 while ($summary = $s_summaries->fetchObject()) {
 	$s_statements = db()->preparedStatement(
-		"SELECT s.StatementId, s.StatementId, s.Statement, g.Name as GroupName
+		"SELECT s.StatementId, s.StatementId, s.Statement, s.Highlight, g.Name as GroupName
 			FROM `%stable` s JOIN `%gtable` g on s.GroupId = g.GroupId
 			WHERE s.SummaryId = :id
-			ORDER BY g.Name, s.Statement",
+			ORDER BY s.Highlight DESC, g.Name, s.Statement",
 		array('%stable' => TABLE_STATEMENTS, '%gtable' => TABLE_GROUPS, ':id' => $summary->SummaryId)
 	);
 	$statements = $s_statements->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_CLASS);
@@ -37,7 +37,7 @@ while ($summary = $s_summaries->fetchObject()) {
 
 // unbound statements
 $s_statements = db()->preparedStatement(
-	"SELECT s.StatementId, s.StatementId, s.Statement, g.Name as GroupName
+	"SELECT s.StatementId, s.StatementId, s.Statement, s.Highlight, g.Name as GroupName
 		FROM `%stable` s JOIN `%gtable` g on s.GroupId = g.GroupId
 		WHERE s.SummaryId IS NULL AND IssueId = :issue_id
 		ORDER BY g.Name, s.Statement",

@@ -8,7 +8,14 @@ class Utils {
 			return null;
 		} elseif (!isset($cache[$statement_id])) {
 			$s = db()->preparedStatement(
-				"SELECT StatementId, SummaryId, GroupId, IssueId, Statement FROM `%table` WHERE StatementId = :id",
+				"SELECT
+					StatementId,
+					SummaryId,
+					GroupId,
+					IssueId,
+					Statement,
+					Highlight
+				FROM `%table` WHERE StatementId = :id",
 				array( '%table' => TABLE_STATEMENTS, ':id' => $statement_id)
 			);
 			if ($s->foundRows == 1) {

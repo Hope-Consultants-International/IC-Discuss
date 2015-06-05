@@ -2,15 +2,11 @@
 
 <?php function emitStatement($statement, $display_buttons = true) { ?>
 	<div class="synth-statement" id="statement-<?php print($statement->StatementId); ?>">
+		<div class="synth-statement-highlight <?php if ($statement->Highlight) { print("highlighted"); } ?>">
+			<span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+		</div>
 		<span class="statement-text"><?php print(htmlentities($statement->Statement)); ?></span><br>
 		<small><em><?php print(htmlentities($statement->GroupName)); ?></em></small><br>
-		<!-- 
-		<div class="btn-group" role="group"<?php if (!$display_buttons) { print(' style="display:none"'); } ?>>
-			<button class="btn btn-default synth-new">
-				<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> New Summary
-			</button>
-		</div>
-		-->
 	</div>
 <?php } ?>
 

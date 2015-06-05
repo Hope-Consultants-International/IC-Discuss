@@ -85,6 +85,35 @@ html, body {
 	cursor: grab;
 }
 
+/* statement highlighting */
+.synth-statement-highlight {
+    float:right;
+    clear: both;
+	font-size: 20pt;
+}
+.synth-statement-highlight > span {
+	background-color: transparent;
+    display: inline-block;
+    position: relative;
+    width: 1.1em;
+    height: 1.1em;
+    color: lightgrey;
+}
+.synth-statement-highlight > span:hover:before,
+.synth-statement-highlight.highlighted > span:before {
+	background-color: transparent;
+    content:"\2605";
+    position: absolute;
+    color: gold;
+	opacity: 0.5;
+}
+.synth-statement-highlight.highlighted > span:before {
+	opacity: 1;
+}
+.synth-statement-highlight > span:hover {
+    cursor: pointer;
+}
+
 /* columns of same height styles */
 .row-full-height {
 	height: 100%;

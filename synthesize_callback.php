@@ -7,7 +7,7 @@ $issue_id = isset($_REQUEST['issue']) ? $_REQUEST['issue'] : null;
 $statement_id = isset($_REQUEST['statement']) ? $_REQUEST['statement'] : null;
 $summary_id = isset($_REQUEST['summary']) ? $_REQUEST['summary'] : null;
 $summary_id_old = isset($_REQUEST['summary_old']) ? $_REQUEST['summary_old'] : null;
-$summary_text = isset($_REQUEST['summary_text']) ? $_REQUEST['summary_text'] : null;
+
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
 
 function check_statement_exists($statement_id) {
@@ -22,9 +22,6 @@ function check_summary_exists($summary_id) {
 
 function check_statement_link($statement_id, $summary_id) {
 	$statement = Utils::get_statement($statement_id);
-	if (!is_null($statement)) {
-		header('X-Debug', (is_null($statement->SummaryId)) ? 'null' : $statement->SummaryId);
-	}
 	return (!is_null($statement)
 	  && $statement->SummaryId == $summary_id);
 }
@@ -127,23 +124,59 @@ try {
 			}
 			break;
 		case 'update_summary':
-			if (check_summary_exists($summary_id)
-			  && !is_null($summary_text)) {
-				$s_update = db()->preparedStatement(
-					'UPDATE `%table` SET Summary = :summary WHERE SummaryId = :summary_id',
-					array(
-						'%table' => TABLE_SUMMARIES,
-						':summary' => $summary_text,
-						':summary_id' => $summary_id
-					)
-				);
-				if (!$s_update->success) {
+			if (check_summary_exists($summary_id)) {
+				$summary_text = isset($_REQUEST['summary_text']) ? $_REQUEST['summary_text'] : null;
+				if (!is_null($summary_text)) {
+					$s_update = db()->preparedStatement(
+						'UPDATE `%table` SET Summary = :summary WHERE SummaryId = :summary_id',
+						array(
+							'%table' => TABLE_SUMMARIES,
+							':summary' => $summary_text,
+							':summary_id' => $summary_id
+						)
+					);
+					if (!$s_update->success) {
+						$reply->success = false;
+						$reply->message = 'Could not update Summary';
+					}
+				} else {
 					$reply->success = false;
-					$reply->message = 'Could not update Summary';
+					$reply->message = 'New Summary text not set';
 				}
 			} else {
 				$reply->success = false;
-				$reply->message = 'Prerequisites not met';
+				$reply->message = 'Summary does not exist';
+			}
+			break;
+		case 'highlight_statement':
+			if (check_statement_exists($statement_id)) {
+				$highlight = isset($_REQUEST['highlight']) ? $_REQUEST['highlight'] : null;
+				if (is_null($highlight)) {
+					$reply->success = false;
+					$reply->message = 'Highlight value not set';
+					break;
+				}
+				$highlight = ($highlight == 'true') ? 1 : 0;
+				if (Utils::get_statement($statement_id)->Highlight != $highlight) {
+					$s_update = db()->preparedStatement(
+						'UPDATE `%table` SET Highlight = :highlight WHERE StatementId = :statement_id',
+						array(
+							'%table' => TABLE_STATEMENTS,
+							':highlight' => ($highlight ? 1 : 0),
+							':statement_id' => $statement_id
+						)
+					);
+					if (!$s_update->success) {
+						$reply->success = false;
+						$reply->message = 'Could not update Statement';
+					}
+				} else {
+					$reply->success = false;
+					$reply->message = 'Highlight already ' . ($highlight ? 'true' : 'false');
+				}
+			} else {
+				$reply->success = false;
+				$reply->message = 'Statement does not exist';
 			}
 			break;
 		default:

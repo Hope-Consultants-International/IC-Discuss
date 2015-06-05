@@ -30,6 +30,45 @@ function reload_screen() {
 	});
 }
 
+function reset_highlight(highlight) {
+	var is_highlighted = highlight.hasClass('highlighted');
+	if (is_highlighted) {
+		statement_highlight.call(highlight);
+	}
+}
+
+function statement_highlight() {
+    var highlight = $(this);
+    var statement = highlight.closest('.synth-statement');
+    var statement_id = get_db_id(statement);
+
+    var was_highlighted = highlight.hasClass('highlighted');
+    highlight.toggleClass('highlighted');
+    console.debug('Set Highlight of Statement ' + statement_id + ' from ' + (was_highlighted ? 'true' : 'false') + ' to ' + (!was_highlighted ? 'true' : 'false'));
+	var data = {
+		action: 'highlight_statement',
+		statement: statement_id,
+		highlight: !was_highlighted
+	};
+	var jqxhr = $.ajax({
+		type: 'POST',
+		url: ajaxHandlerURL,
+		data: data,
+		dataType: 'json',
+		error: function(jqXHR_obj, message, error) {
+			console.error('Could not send update: ' + message);
+		},
+		success: function(reply, message) {
+			if (reply['success']) {
+				console.info('Update success: ' + reply['message']);
+			} else {
+				console.error('Update failure: ' + reply['message']);
+				reload_screen();
+			}
+		}
+	});
+}
+
 // we want to send updates as soon as they are entered,
 // so we set a timeout while input is received and 
 // execute the update when there is no input on the summary for 1s
@@ -78,6 +117,7 @@ function do_summary_update(summary_id) {
 	});
 }
 
+// handles clicks on the collapse button
 function summary_collapse() {
 	var summary = $( this ).closest('.synth-summary');
 	summary.find( '.synth-summary-statements' ).slideUp(
@@ -89,6 +129,8 @@ function summary_collapse() {
 		}
 	);
 }
+
+// handles clicks on the expand button
 function summary_expand() {
 	var summary = $( this ).closest('.synth-summary');
 	summary.find( '.synth-summary-statements' ).slideDown(
@@ -139,7 +181,7 @@ function add_new_summary(statement) {
 				summary.find('.synth-summary-expand').css('display', 'none');
 				
 				statement.appendTo(summary.find( '.synth-summary-statements' ));
-				statement.find('.btn-group').fadeOut(animate_fast);
+				statement.find( '.synth-statement-highlight' ).slideDown(animate_fast);
 			} else {
 				console.error('Update failure: ' + reply['message']);
 				reload_screen();
@@ -161,8 +203,16 @@ function delete_summary() {
 	cancel_summary_update(summary_id);
 		
 	summary.find('.synth-statement').each(function( index ) {
-		$( this ).appendTo($( '#synth-statements' ))
-		$( this ).find( '.btn-group').fadeIn(animate_fast);
+		$( this ).slideUp(animate_fast, function() {
+			var statement = $( this );
+			statement.appendTo($( '#synth-statements'));
+			statement.slideDown(animate_fast);
+			statement.find( '.synth-statement-highlight' ).slideUp(animate_fast);
+			make_statement_draggable(statement);
+			var highlight = statement.find( '.synth-statement-highlight' );
+			highlight.on('click', statement_highlight);
+			reset_highlight(highlight);
+		});
 	});
 	summary.remove();
 
@@ -199,8 +249,8 @@ function make_summary_droppable(summary) {
 		drop: function( event, ui ) {
 			// add object
 			ui.draggable.appendTo( $( this ).find('.synth-summary-statements') );
-			// remove buttons
-			ui.draggable.find( '.btn-group').fadeOut(animate_fast);
+			// show highlighting
+			ui.draggable.find( '.synth-statement-highlight' ).slideDown(animate_fast);
 			
 			// do the data update in the background
 			var statement_id = get_db_id(ui.draggable);
@@ -253,8 +303,10 @@ function make_statement_droppable(statement) {
 		drop: function( event, ui ) {
 			// add object
 			ui.draggable.appendTo( this );
-			// remove buttons
-			ui.draggable.find('.btn-group').fadeIn(animate_fast);
+			// hide highlighting
+			var highlight = ui.draggable.find( '.synth-statement-highlight' );
+			highlight.slideUp(animate_fast);
+			reset_highlight(highlight);
 			
 			// do the data update in the background
 			var statement_id = get_db_id(ui.draggable);
@@ -344,4 +396,5 @@ $(function() {
 	$( '.synth-summary-collapse' ).on('click', summary_collapse);
 	$( '.synth-summary-expand' ).on('click', summary_expand);
 	$( '.synth-summary-expand' ).css('display', 'none');
+	$( '.synth-statement-highlight' ).on('click', statement_highlight);
 });
