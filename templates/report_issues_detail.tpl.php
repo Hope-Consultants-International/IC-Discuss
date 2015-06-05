@@ -26,9 +26,9 @@
 						/
 						<b><?php print($num_statements); ?></b> Statement<?php print(($num_statements > 1) ? 's' : ''); ?>
 						/
-						Avg. Weight: <b><?php print(number_format($summary->AverageWeight, 2)); ?></b>
+						<b><?php print(number_format($summary->AverageWeight, 2)); ?></b> Avg. Weight
 						/
-						Total Weight:  <b><?php print(number_format($summary->GroupWeight, 2)); ?></b>
+						<b><?php print(number_format($summary->GroupWeight, 2)); ?></b> Total Weight
 					</small>
 					<?php if ($num_statements == 1) { ?>
 						<small>(Group: <?php print(htmlentities($summary->statements[0]->GroupName)); ?> /
