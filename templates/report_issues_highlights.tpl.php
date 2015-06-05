@@ -1,6 +1,6 @@
-<h2>Detailed Issue Report</h2>
+<h2>Issue Report with Highlights</h2>
 <p>
-	This is a detailed report of all issues/statements and which Groups made them.
+	This is a report of all issues with summaries and highlighted statements.
 	In printouts, it will print each issue on a new page.
 </p>
 
@@ -30,12 +30,18 @@
 						<small>(Group: <?php print(htmlentities($summary->statements[0]->GroupName)); ?>)</small>
 					<?php } else { ?>
 						<ul>
-							<?php foreach ($summary->statements as $statement) { ?>
+							<?php
+							foreach ($summary->statements as $statement) { 
+								if ($statement->Highlight) {
+							?>
 								<li>
 									<?php print(htmlentities($statement->Statement)); ?><br>
 									<small>Group: <?php print(htmlentities($statement->GroupName)); ?></small>
 								</li>
-							<?php } ?>
+							<?php
+								} 
+							} 
+							?>
 						</ul>
 					<?php } ?>
 				</li>

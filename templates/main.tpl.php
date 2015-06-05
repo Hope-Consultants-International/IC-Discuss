@@ -73,6 +73,12 @@
 				  </a>
 				</li>
 				<li>
+				  <a href="report.php?type=issues_highlights">
+				    <span class="glyphicon glyphicon-triangle-right" style="font-size:10px; <?php print((strpos($current_page,'Report|issues_highlights') !== false)?'':'visibility:hidden'); ?>">&nbsp</span>
+					Issues - Highlights
+				  </a>
+				</li>
+				<li>
 				  <a href="report.php?type=issues_detail">
 				    <span class="glyphicon glyphicon-triangle-right" style="font-size:10px; <?php print((strpos($current_page,'Report|issues_detail') !== false)?'':'visibility:hidden'); ?>">&nbsp</span>
 					Issues - Details
