@@ -65,8 +65,9 @@ define('GROUP_CELL', 'A2');
 define('ISSUE_TAG', 'Topic/Issue: ');
 define('ISSUE_CELL', 'A3');
 define('DESCRIPTION_CELL', 'A4');
-define('DATA_COLUMN', 'A');
-define('DATA_ROW_MIN', '6');
+define('DATA_COLUMN_STATEMENT', 'A');
+define('DATA_COLUMN_WEIGHT', 'B');
+define('DATA_ROW_MIN', '7');
 define('DATA_ROW_MAX', '200');
 
  function currentdir($url) {

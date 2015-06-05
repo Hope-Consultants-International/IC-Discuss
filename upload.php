@@ -78,17 +78,19 @@ if ($action == 'import') {
 						GroupId = :group_id,
 						IssueId = :issue_id,
 						SummaryId = NULL,
-						Statement = :statement
+						Statement = :statement,
+						Weight = :weight
 					";
 					
 					//  Read Data into Array
 					$highestRow = min($sheet->getHighestDataRow(), DATA_ROW_MAX);
-					$data = $sheet->rangeToArray(DATA_COLUMN . DATA_ROW_MIN . ':' . DATA_COLUMN . $highestRow, NULL, TRUE, FALSE);
+					$data = $sheet->rangeToArray(DATA_COLUMN_STATEMENT . DATA_ROW_MIN . ':' . DATA_COLUMN_WEIGHT . $highestRow, NULL, TRUE, FALSE);
 					$row_num = DATA_ROW_MIN - 1;
 					$statement_num = 0;
 					foreach ($data as $row) {
 						$row_num++;
 						$statement = _dataOrDefault($row[0]);
+						$weight = intval(_dataOrDefault($row[1], 0));
 						
 						if (!empty($statement)) {
 							$statement_num++;
@@ -97,6 +99,7 @@ if ($action == 'import') {
 								':group_id' => $group_id,
 								':issue_id' => $issue_id,
 								':statement' => $statement,
+								':weight' => $weight,
 							);					
 						
 							$s = db()->preparedStatement($statement_query, $values);

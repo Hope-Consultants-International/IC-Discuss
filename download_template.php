@@ -41,7 +41,7 @@ function create_template($group, $issue, $to_string = false) {
 	$objRichText->createText($issue->Description);
 	$sheet->setCellValue(DESCRIPTION_CELL, $objRichText);
 	
-	$sheet->setSelectedCells(DATA_COLUMN . DATA_ROW_MIN);
+	$sheet->setSelectedCells(DATA_COLUMN_STATEMENT . DATA_ROW_MIN);
 	
 	$objPHPExcel->getProperties()->setCreator("IC-Discuss");
 	
