@@ -1,8 +1,8 @@
 <h2 style="overflow:hidden; white-space: nowrap;">Synthesize "<?php print(htmlentities($issue_title)); ?>"</h2>
 
-<?php function emitStatement($statement, $display_buttons = true) { ?>
+<?php function emitStatement($statement, $display_highlight) { ?>
 	<div class="synth-statement" id="statement-<?php print($statement->StatementId); ?>">
-		<div class="synth-statement-highlight <?php if ($statement->Highlight) { print("highlighted"); } ?>">
+		<div class="synth-statement-highlight <?php if ($statement->Highlight) { print("highlighted"); } ?>" <?php if (!$display_highlight) {print('style="display:none;"'); } ?>>
 			<span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
 		</div>
 		<span class="statement-text"><?php print(htmlentities($statement->Statement)); ?></span><br>
@@ -27,7 +27,7 @@
 			</button>
 			<textarea class="synth-summary-text"><?php print(htmlentities($summary->Summary)); ?></textarea>
 			<div class="synth-summary-statements">
-				<?php foreach ($summary->statements as $statement) { emitStatement($statement, false); } ?>
+				<?php foreach ($summary->statements as $statement) { emitStatement($statement, true); } ?>
 			</div>
 		</div>
 		<?php } ?>
@@ -37,7 +37,7 @@
 	</div>
 	<div class="col-xs-6 col-xs-height col-full-height synth-box" id="synth-statements">
 		<h3 class="position:sticky">Statements</h3>
-		<?php foreach ($statements as $statement) { emitStatement($statement); } ?>
+		<?php foreach ($statements as $statement) { emitStatement($statement, false); } ?>
 	  </div>
 	</div>
 </div>
