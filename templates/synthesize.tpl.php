@@ -5,7 +5,7 @@
 		<div class="synth-statement-highlight <?php if ($statement->Highlight) { print("highlighted"); } ?>" <?php if (!$display_highlight) {print('style="display:none;"'); } ?>>
 			<span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
 		</div>
-		<span class="statement-text"><?php print(htmlentities($statement->Statement)); ?></span><br>
+		<div class="statement-text"><?php print(htmlentities($statement->Statement)); ?></div>
 		<small><em><?php print(htmlentities($statement->GroupName)); ?></em></small><br>
 	</div>
 <?php } ?>

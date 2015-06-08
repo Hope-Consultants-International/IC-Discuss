@@ -173,12 +173,7 @@ function add_new_summary(statement) {
 				
 				// since this is a new object, we have to make it droppable
 				// and bind event handlers
-				make_summary_droppable(summary);
-				summary.find('.synth-summary-delete').on( 'click', delete_summary);
-				summary.find('.synth-summary-text').on('input', queue_summary_update);
-				summary.find('.synth-summary-collapse').on('click', summary_collapse);
-				summary.find('.synth-summary-expand').on('click', summary_expand);
-				summary.find('.synth-summary-expand').css('display', 'none');
+				init_summary(summary);
 				
 				statement.appendTo(summary.find( '.synth-summary-statements' ));
 				statement.find( '.synth-statement-highlight' ).slideDown(animate_fast);
@@ -245,7 +240,7 @@ function make_summary_droppable(summary) {
 	summary.droppable({
 		activeClass: 'ui-state-default',
 		hoverClass: 'ui-state-hover',
-		greedy: true,
+		accept: '.synth-statement',
 		drop: function( event, ui ) {
 			// add object
 			ui.draggable.appendTo( $( this ).find('.synth-summary-statements') );
@@ -289,6 +284,7 @@ function make_placeholder_droppable(placeholder) {
 	placeholder.droppable({
 		activeClass: 'ui-state-default',
 		hoverClass: 'ui-state-hover',
+		accept: '.synth-statement',
 		drop: function( event, ui ) {
 			// add the new summary
 			add_new_summary(ui.draggable);
@@ -300,6 +296,7 @@ function make_statement_droppable(statement) {
 	statement.droppable({
 		activeClass: 'ui-state-default',
 		hoverClass: 'ui-state-hover',
+		accept: '.synth-statement',
 		drop: function( event, ui ) {
 			// add object
 			ui.draggable.appendTo( this );
@@ -343,7 +340,7 @@ function make_statement_draggable(statement) {
 	statement.draggable({
 		appendTo: 'body',
 		helper: 'clone',
-		containment: '#synth-main',
+		//containment: '#synth-main',
 		revert: 'invalid',
 		start: function( event, ui ) {
 			var old_summary_id = null;
@@ -362,12 +359,22 @@ function make_statement_draggable(statement) {
 
 			// make sure the draggable object doesn't resize
 			ui.helper.css('width', $( '#' + event.target.id ).css('width'));
+			
 			ui.helper.css('cursor', 'grabbing');
 		},
 		stop: function( event, ui ) {
 			$( event.target ).slideDown(animate_normal);
 		}
     });
+}
+
+function init_summary(summary) {
+	make_summary_droppable(summary);
+	summary.find('.synth-summary-delete').on( 'click', delete_summary);
+	summary.find('.synth-summary-text').on('input', queue_summary_update);
+	summary.find('.synth-summary-collapse').on('click', summary_collapse);
+	summary.find('.synth-summary-expand').on('click', summary_expand);
+	summary.find('.synth-summary-expand').css('display', 'none');
 }
 
 $(function() {
@@ -378,7 +385,7 @@ $(function() {
 	
 	// prepare drop areas
     $( '.synth-summary' ).each( function( index ) {
-		make_summary_droppable( $(this) );
+		init_summary( $(this) );
 	});
 	$( '#synth-statements' ).each( function( index ) {
 		make_statement_droppable( $(this) );
@@ -387,14 +394,7 @@ $(function() {
 		make_placeholder_droppable( $(this) );
 	});
 	
-	// fire updates on input
-	$( '.synth-summary' ).find('.synth-summary-text').on('input', queue_summary_update);
-	
 	// bind buttons
 	$( '.synth-new' ).on( 'click', new_summary);
-	$( '.synth-summary-delete' ).on( 'click', delete_summary);
-	$( '.synth-summary-collapse' ).on('click', summary_collapse);
-	$( '.synth-summary-expand' ).on('click', summary_expand);
-	$( '.synth-summary-expand' ).css('display', 'none');
 	$( '.synth-statement-highlight' ).on('click', statement_highlight);
 });
