@@ -46,11 +46,11 @@ $s_statements = db()->preparedStatement(
 $statements = $s_statements->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_CLASS);
 $statements = array_map('reset', $statements);
 
-$script_vars = array(
-	'handler_url' => BASE_URL . 'synthesize_callback.php',
-	'debug' => DEBUG,
-);
-$script = template_engine()->render('synthesize.tpl.js', $script_vars);
+$script = <<<EOJS
+	const debug = %s;
+	const ajaxHandlerURL = '%s';
+EOJS;
+$script = sprintf($script, ((DEBUG) ? 'true' : 'false' ), htmlentities(BASE_URL . 'synthesize_callback.php'));
 
 $vars = array(
 	'issue_id' => $issue_id,

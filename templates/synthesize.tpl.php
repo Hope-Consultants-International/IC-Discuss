@@ -43,8 +43,9 @@
 </div>
 
 <script>
-  <?php print($script); ?>
+<?php print($script); ?>
 </script>
+<script type="text/javascript" src="js/synthesize.js?v=<?php print(RESOURCE_VERSION); ?>"></script>
 
 <?php if (DEBUG) { ?>
 <div class="hidden-print">

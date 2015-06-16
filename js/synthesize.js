@@ -1,6 +1,6 @@
-const debug = <?php print( ($debug) ? 'true' : 'false' ); ?>;
-const ajaxHandlerURL = '<?php print(htmlentities($handler_url)); ?>';
+// timeout for input submit
 const input_timer = 750;
+
 // animation speed
 const animate_fast = 100;
 const animate_normal = 200;

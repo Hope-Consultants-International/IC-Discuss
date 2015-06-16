@@ -5,6 +5,13 @@
  * Load commonly used libraries and initialize constants
  */
 
+ /* 
+  * We need to set a version number that changes every time css or js files change,
+  * to make sure they get reloaded and not loaded from cache.
+  */
+ define('RESOURCE_VERSION', '1.0');
+ 
+ 
 /*
  * Set some important path constants
  */

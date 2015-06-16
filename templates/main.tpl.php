@@ -29,7 +29,7 @@
 	<script type="text/javascript" src="bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
 	
 	<!-- our own CSS, so it can override everything else -->
-	<link rel="stylesheet" href="css/custom-theme.css?version=1.0">
+	<link rel="stylesheet" href="css/custom-theme.css?version=<?php print(RESOURCE_VERSION); ?>">
   </head>
   <body role="document">
     <!-- Fixed navbar -->
