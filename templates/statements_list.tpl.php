@@ -12,7 +12,7 @@
   <th>Group</th>
   <th>Statement</th>
   <th>Weight</th>
-  <th>Actions</th>
+  <th style="width:15em">Actions</th>
 </tr>
 <?php foreach ($statements as $id => $data) { ?>
   <tr>
@@ -20,7 +20,7 @@
 	<td><?php print(htmlentities($data->GroupName)); ?></td>
 	<td><?php print(htmlentities($data->Statement)); ?></td>
 	<td><?php print(htmlentities($data->Weight)); ?></td>
-	<td>
+	<td style="width:15em">
 		<div class="btn-group">
 			<button class="btn btn-default" onclick="edit_statement('<?php print(htmlentities($id)); ?>')">
 				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit

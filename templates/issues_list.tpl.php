@@ -25,7 +25,7 @@
 		<?php } ?>
 	</td>
 	<td>
-		<div class="btn-group">
+		<div class="btn-group-vertical">
 			<button class="btn btn-default" onclick="edit_issue('<?php print(htmlentities($id)); ?>')">
 				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
 			</button>

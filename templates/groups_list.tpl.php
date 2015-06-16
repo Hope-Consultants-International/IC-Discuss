@@ -9,12 +9,12 @@
 <table class="table table-striped">
 <tr>
   <th>Name</th>
-  <th>Actions</th>
+  <th class="col-md-5">Actions</th>
 </tr>
 <?php foreach ($groups as $id => $data) { ?>
   <tr>
 	<td><?php print(htmlentities($data->Name)); ?></td>
-	<td>
+	<td class="col-md-5">
 		<div class="btn-group">
 			<button class="btn btn-default" onclick="edit_group('<?php print(htmlentities($id)); ?>')">
 				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
