@@ -30,8 +30,9 @@
 						/
 						<b><?php print(number_format($summary->GroupWeight, 2)); ?></b> Total Weight
 					</small>
-					<?php if ($num_statements == 1) { ?>
-						<small>(Group: <?php print(htmlentities($summary->statements[0]->GroupName)); ?> /
+					<?php if ($num_statements == 1) {
+						$statement = $summary->statements[0]; ?>
+						<small>(Group: <?php print(htmlentities($statement->GroupName)); ?> /
 							Weight: <?php print(htmlentities($statement->Weight)); ?>)</small>
 					<?php } else { ?>
 						<ul>
