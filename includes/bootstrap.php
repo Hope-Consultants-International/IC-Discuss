@@ -66,7 +66,7 @@ if (ACCESS_ENABLED && !isset($_SERVER['REMOTE_USER'])) {
 }
 
 // XLS Template stuff
-define('XLS_TEMPLATE', 'includes/template.xls');
+define('XLS_TEMPLATE', 'templates/form.xls');
 define('GROUP_TAG', 'Group: ');
 define('GROUP_CELL', 'A2');
 define('ISSUE_TAG', 'Topic/Issue: ');
