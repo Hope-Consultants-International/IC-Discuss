@@ -9,11 +9,19 @@
 <table class="table table-striped">
 <tr>
   <th>Name</th>
+  <th>Frontpage</th>
   <th class="col-md-5">Actions</th>
 </tr>
 <?php foreach ($groups as $id => $data) { ?>
   <tr>
 	<td><?php print(htmlentities($data->Name)); ?></td>
+	<td>
+		<?php if ($data->Frontpage) { ?>
+			<span class="glyphicon glyphicon-ok" aria-label="Yes"></span>
+		<?php } else { ?>
+			<span class="glyphicon glyphicon-remove" aria-label="No"></span>
+		<?php } ?>
+	</td>
 	<td class="col-md-5">
 		<div class="btn-group">
 			<button class="btn btn-default" onclick="edit_group('<?php print(htmlentities($id)); ?>')">
