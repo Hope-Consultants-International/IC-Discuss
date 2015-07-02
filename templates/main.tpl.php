@@ -123,6 +123,7 @@
 			  </ul>
 			</li>
 			<?php } ?>
+			<li class=" <?php print(($current_page=='Help')?'active':''); ?>"><a href="help.php">Help<?php if (ACCESS_ENABLED) { print(" / Login"); } ?></a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
