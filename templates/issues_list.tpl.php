@@ -12,7 +12,7 @@
   <th>Description</th>
   <th>XLS Upload</th>
   <th>Frontpage</th>
-  <th>Actions</th>
+  <th class="col-xs-3">Actions</th>
 </tr>
 <?php foreach ($issues as $id => $data) { ?>
   <tr>
