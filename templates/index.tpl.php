@@ -23,7 +23,7 @@
 	<?php } ?>
 	<div class="form-group">
 		<label for="Statement">Your Statement</label>
-		<textarea class="form-control" rows="3" id="Statement" name="Statement" placeholder="Please enter your statement." required></textarea>
+		<textarea class="form-control" rows="3" id="Statement" name="Statement" placeholder="Please enter your statement." required maxlength="250"></textarea>
 	</div>
 	<div class="form-group">
 		<div class="btn-group">
@@ -32,6 +32,12 @@
 		</div>
     </div>
 </form>
+<script>
+$( '#Statement' ).keyup(function() {
+	$(this).val($(this).val().replace(/[\n\v]+/g, ' '));
+	$(this).val($(this).val().replace(/\s{2,}/g, ' '));
+});
+</script>
 <?php } else { ?>
 <p>
 	We currently don't accept statements.
