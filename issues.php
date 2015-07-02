@@ -41,11 +41,12 @@ switch ($action) {
 			':title' => _requestOrDefault('IssueTitle'),
 			':description' => _requestOrDefault('IssueDescription'),
 			':upload' => (_requestOrDefault('AllowUpload', false) ? 1 : 0),
+			':frontpage' => (_requestOrDefault('Frontpage', false) ? 1 : 0),
 		);
 		if ($new_issue) {
-			$query = "INSERT INTO `%table` SET Title = :title, Description = :description, AllowUpload = :upload";
+			$query = "INSERT INTO `%table` SET Title = :title, Description = :description, AllowUpload = :upload, Frontpage = :frontpage";
 		} else {
-			$query = "UPDATE `%table` SET Title = :title, Description = :description, AllowUpload = :upload WHERE IssueId = :id";
+			$query = "UPDATE `%table` SET Title = :title, Description = :description, AllowUpload = :upload, Frontpage = :frontpage WHERE IssueId = :id";
 			$values[':id'] = $issue_id;
 		}
 		$stmt = db()->preparedStatement($query, $values);
@@ -62,8 +63,9 @@ switch ($action) {
 				$issue_title = '';
 				$issue_description= '';
 				$issue_allow_upload = true;
+				$issue_frontpage = false;
 			} else {
-				$query = "SELECT Title, Description, AllowUpload FROM `%table` WHERE IssueId = :id";
+				$query = "SELECT Title, Description, AllowUpload, Frontpage FROM `%table` WHERE IssueId = :id";
 				$values = array('%table' => TABLE_ISSUES, ':id' => $issue_id);
 				$stmt = db()->preparedStatement($query, $values);
 				if ($stmt->foundRows == 1) {
@@ -71,6 +73,7 @@ switch ($action) {
 					$issue_title = $issue->Title;
 					$issue_description = $issue->Description;
 					$issue_allow_upload = $issue->AllowUpload;
+					$issue_frontpage = $issue->Frontpage;
 				} else {
 					die('Issue not found: ' . $issue_id);
 				}
@@ -81,6 +84,7 @@ switch ($action) {
 				'issue_title' => $issue_title,
 				'issue_description' => $issue_description,
 				'issue_upload' => $issue_allow_upload,
+				'issue_frontpage' => $issue_frontpage,
 				'page_url' => $page_url,
 				'title' => $title,
 			);
@@ -88,7 +92,7 @@ switch ($action) {
 		break;
 	case 'list':
 			$issues = array();
-			$query = "SELECT IssueId, Title, Description, AllowUpload FROM `%table`";
+			$query = "SELECT IssueId, Title, Description, AllowUpload, Frontpage FROM `%table`";
 			$values = array('%table' => TABLE_ISSUES);
 			$stmt = db()->preparedStatement($query, $values);
 			while ($issue = $stmt->fetchObject()) {

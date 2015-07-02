@@ -11,6 +11,7 @@
   <th>Name</th>
   <th>Description</th>
   <th>XLS Upload</th>
+  <th>Frontpage</th>
   <th>Actions</th>
 </tr>
 <?php foreach ($issues as $id => $data) { ?>
@@ -19,6 +20,13 @@
 	<td><?php print(htmlentities($data->Description)); ?></td>
 	<td>
 		<?php if ($data->AllowUpload) { ?>
+			<span class="glyphicon glyphicon-ok" aria-label="Yes"></span>
+		<?php } else { ?>
+			<span class="glyphicon glyphicon-remove" aria-label="No"></span>
+		<?php } ?>
+	</td>
+	<td>
+		<?php if ($data->Frontpage) { ?>
 			<span class="glyphicon glyphicon-ok" aria-label="Yes"></span>
 		<?php } else { ?>
 			<span class="glyphicon glyphicon-remove" aria-label="No"></span>

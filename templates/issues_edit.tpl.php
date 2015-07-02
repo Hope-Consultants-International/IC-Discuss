@@ -30,6 +30,16 @@
 		</div>
 	</div>
 	<div class="form-group">
+		<div class="col-sm-10 offset">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="Frontpage" value="1" <?php if($issue_frontpage) { print('checked'); } ?>>
+					On Frontpage
+				</label>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
 		<div class="col-sm-10">
 			<div class="btn-group" role="group">
 				<button type="submit" class="btn btn-primary">
