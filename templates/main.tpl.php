@@ -95,6 +95,13 @@
 					Groups
 				  </a>
 				</li>
+				<li class="divider"></li>
+				<li>
+				  <a href="liveticker.php">
+				    <span class="glyphicon glyphicon-triangle-right" style="font-size:10px; <?php print((strpos($current_page,'Report|Live-Ticker') !== false)?'':'visibility:hidden'); ?>">&nbsp</span>
+					Live-Ticker
+				  </a>
+				</li>
 			  </ul>
 			</li>
 			<?php } ?>
