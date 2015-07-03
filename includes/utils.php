@@ -87,4 +87,17 @@ class Utils {
 		$string = preg_replace('/_+/', '_', $string);
 		return $string;
 	}
+	
+	static function javascript_string($string) {
+		// htmlentities
+		$string = htmlentities($string);
+		
+		// no single quotes
+		$string = str_replace('\'', '\\\'', $string);
+		
+		// replace whitespaces
+		$string = preg_replace('/\s+/', ' ', $string);
+		
+		return $string;
+	}
 }

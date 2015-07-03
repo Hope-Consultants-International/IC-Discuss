@@ -30,7 +30,7 @@
 			<button class="btn btn-default" onclick="download_group('<?php print(htmlentities($id)); ?>')">
 				<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download XLS Templates
 			</button>
-			<button class="btn btn-danger" onclick="delete_group('<?php print(htmlentities($id)); ?>', '<?php print(htmlentities($data->Name)); ?>')">
+			<button class="btn btn-danger" onclick="delete_group('<?php print(htmlentities($id)); ?>', '<?php print(Utils::javascript_string($data->Name)); ?>')">
 				<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
 			</button>
 		</div>
