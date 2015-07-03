@@ -52,7 +52,7 @@ class Utils {
 			return null;
 		} elseif (!isset($cache[$issue_id])) {
 			$s = db()->preparedStatement(
-				"SELECT IssueId, Title, Description, AllowUpload FROM `%table` WHERE IssueId = :id",
+				"SELECT IssueId, Title, Description, AllowUpload, Frontpage FROM `%table` WHERE IssueId = :id",
 				array( '%table' => TABLE_ISSUES, ':id' => $issue_id)
 			);
 			if ($s->foundRows == 1) {
@@ -70,7 +70,7 @@ class Utils {
 			return null;
 		} elseif (!isset($cache[$group_id])) {
 			$s = db()->preparedStatement(
-				"SELECT GroupId, Name FROM `%table` WHERE GroupId = :id",
+				"SELECT GroupId, Name, Frontpage FROM `%table` WHERE GroupId = :id",
 				array( '%table' => TABLE_GROUPS, ':id' => $group_id)
 			);
 			if ($s->foundRows == 1) {
