@@ -12,7 +12,7 @@ $s_issues = db()->preparedStatement(
 $issues = $s_issues->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_COLUMN);
 $issues = array_map('reset', $issues);
 
-if (is_null($issue_id)) {
+if (is_null($issue_id) || !array_key_exists($issue_id, $issues)) {
 	$issue_id = key($issues);
 }
 
