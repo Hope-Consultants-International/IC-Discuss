@@ -1,7 +1,7 @@
 <h2><?php print(htmlentities($title)); ?></h2>
 
 <?php if (count($issues) > 0) { ?>
-<form method="post" accept-charset="UTF-8">
+<form method="post" accept-charset="UTF-8" class="form-horizontal">
 	<?php
 	if (count($issues) == 1) {
 		$value = reset($issues);
@@ -11,24 +11,30 @@
 		<h3><?php print(htmlentities($value)); ?></h3>
 	<?php } else { ?>
 		<div class="form-group">
-			<label for="IssueId">Select Issue</label>
-			<select class="form-control" name="IssueId" id="IssueId">
-				<?php foreach ($issues as $key => $value) { ?>
-					<option value="<?php print($key); ?>" <?php if($key == $last_issue) { print('selected'); } ?>>
-						<?php print(htmlentities($value)); ?>
-					</option>
-				<?php } ?>
-			</select>
+			<div class="col-md-6">
+				<label for="IssueId">Select Issue</label>
+				<select class="form-control col-md-6" name="IssueId" id="IssueId">
+					<?php foreach ($issues as $key => $value) { ?>
+						<option value="<?php print($key); ?>" <?php if($key == $last_issue) { print('selected'); } ?>>
+							<?php print(htmlentities($value)); ?>
+						</option>
+					<?php } ?>
+				</select>
+			</div>
 		</div>
 	<?php } ?>
 	<div class="form-group">
-		<label for="Statement">Your Statement</label>
-		<textarea class="form-control" rows="3" id="Statement" name="Statement" placeholder="Please enter your statement." required maxlength="250"></textarea>
+		<div class="col-md-6">
+			<label for="Statement">Your Statement</label>
+			<textarea class="form-control" rows="3" id="Statement" name="Statement" placeholder="Please enter your statement." required maxlength="250"></textarea>
+		</div>
 	</div>
 	<div class="form-group">
-		<div class="btn-group">
-			<button type="submit" class="btn btn-primary">Submit</button>
-			<button type="reset" class="btn btn-default">Reset</button>
+		<div class="col-md-6">
+			<div class="btn-group">
+				<button type="submit" class="btn btn-primary">Submit</button>
+				<button type="reset" class="btn btn-default">Reset</button>
+			</div>
 		</div>
     </div>
 </form>
