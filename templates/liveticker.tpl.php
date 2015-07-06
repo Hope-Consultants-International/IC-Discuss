@@ -1,6 +1,14 @@
-<h2 style="overflow:hidden; white-space: nowrap;">Live-Ticker <span id="text-issue-title"></span></h2>
+<h2 style="overflow:hidden; white-space: nowrap;">Live-Ticker<span id="text-issue-title"></span></h2>
 </div>
-<div id="scroller">
+<div id="ticker-options">
+	<select id="issue_id">
+		<option value="0" <?php if ($issue_id == 0) { print("selected"); } ?>>All Frontpage Issues</option>
+		<?php foreach ($issues as $id => $value) { ?>
+			<option value="<?php print($id); ?>" <?php if ($issue_id == $id) { print("selected"); } ?>><?php print(htmlentities($value)); ?></option>
+		<?php } ?>
+	</select>
+</div>
+<div id="ticker-scroller">
 </div>
 
 <script>

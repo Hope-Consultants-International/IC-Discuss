@@ -114,6 +114,13 @@ html, body {
     cursor: pointer;
 }
 
+/* Live Ticker */
+#ticker-options {
+	position: absolute;
+	top: 5em;
+	right: 0.2em;
+}
+
 .ticker-statement {
 	width: 100%;
 	position: relative;
@@ -121,6 +128,11 @@ html, body {
 	padding: 0.4em;
 	margin-bottom: 0.5em;
 	font-size: 200%;
+}
+
+.ticker-statement span.issue {
+	font-style: italic;
+	font-size: 50%;
 }
 
 /* columns of same height styles */
