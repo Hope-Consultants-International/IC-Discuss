@@ -29,8 +29,8 @@ function poll_issue() {
 			if (reply['success']) {
 				console.info('Update success: ' + reply['message']);
 				$.each(reply['data'], function( index, value ) {
-					if (index > max_statement_id) {
-						max_statement_id = index;
+					if (parseInt(index) > max_statement_id) {
+						max_statement_id = parseInt(index);
 					}
 					console.debug(index + " - " + value);
 					$("<div class='ticker-statement' id='statement-" + index +"'></div>").hide().prependTo("#scroller");
