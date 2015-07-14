@@ -43,6 +43,9 @@ function poll_issue() {
 						$( this ).remove();
 					});
 					scroller.slideDown(animate_fast);
+					
+					// skip first_update stuff from now
+					max_statement_id = -1;
 				}
 
 				$.each(reply['data'], function( index, value ) {
