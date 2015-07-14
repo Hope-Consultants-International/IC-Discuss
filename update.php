@@ -84,6 +84,15 @@ if ($db_version < $current_version) {
 	}
 }
 
+$current_version++;
+if ($db_version < $current_version) {
+	$sql = "ALTER TABLE `issues` ADD `Folder` VARCHAR(250) NOT NULL DEFAULT ''";
+	$s = db()->preparedStatement($sql);
+	if (!$s->success) {
+		die(sprintf('Error updating to version %d:<p><b>Query</b><br>%s</p>', $current_version, $sql));
+	}
+}
+
 // ---- NEW UPDATES GO HERE ----
 
 // save new version to database	

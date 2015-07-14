@@ -89,6 +89,9 @@ if (!is_null($issue_id) && is_null($group_id)) {
 		if ($s->success) {
 			while ($group = $s->fetchObject()) {
 				list ($xlsname, $xlsfile) = create_template($group, $issue, true);
+				if (!empty($issue->Folder)) {
+					$xlsname = Utils::sanitize_filename($issue->Folder) . DIRECTORY_SEPARATOR . $xlsname;
+				}
 				$zip->addFromString($xlsname, $xlsfile);
 			}
 			
@@ -112,12 +115,15 @@ if (!is_null($issue_id) && is_null($group_id)) {
 	if ($res === true) {
 		
 		$s = db()->preparedStatement(
-			"SELECT IssueId, Title, Description, AllowUpload FROM `%table` ORDER BY Title",
+			"SELECT IssueId, Title, Description, Folder, AllowUpload FROM `%table` ORDER BY Title",
 			array( '%table' => TABLE_ISSUES )
 		);
 		if ($s->success) {
 			while ($issue = $s->fetchObject()) {
 				list ($xlsname, $xlsfile) = create_template($group, $issue, true);
+				if (!empty($issue->Folder)) {
+					$xlsname = Utils::sanitize_filename($issue->Folder) . DIRECTORY_SEPARATOR . $xlsname;
+				}
 				$zip->addFromString($xlsname, $xlsfile);
 			}
 			

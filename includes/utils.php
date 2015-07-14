@@ -52,7 +52,7 @@ class Utils {
 			return null;
 		} elseif (!isset($cache[$issue_id])) {
 			$s = db()->preparedStatement(
-				"SELECT IssueId, Title, Description, AllowUpload, Frontpage FROM `%table` WHERE IssueId = :id",
+				"SELECT IssueId, Title, Description, Folder, AllowUpload, Frontpage FROM `%table` WHERE IssueId = :id",
 				array( '%table' => TABLE_ISSUES, ':id' => $issue_id)
 			);
 			if ($s->foundRows == 1) {
@@ -83,7 +83,7 @@ class Utils {
 	}
 	
 	static function sanitize_filename($string) {
-		$string = preg_replace("/[^A-Za-z0-9-_\.]/", '_', $string);
+		$string = preg_replace("/[^A-Za-z0-9-_\. ]/", '_', $string);
 		$string = preg_replace('/_+/', '_', $string);
 		return $string;
 	}

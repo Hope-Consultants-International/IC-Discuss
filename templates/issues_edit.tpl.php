@@ -19,6 +19,15 @@
 			</div>
 		</div>
 	</div>
+	<div class="col-sm-10">
+		<div class="form-group">
+			<label for="Folder" class="col-sm-2 control-label">Folder</label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control" id="Folder" name="Folder" placeholder="Folder" value="<?php print(htmlentities($issue_folder)); ?>">
+				<p class="help-block">When downloading XLS templates in ZIP files, the issue will be placed in this folder.</p>
+			</div>
+		</div>
+	</div>
 	<div class="form-group">
 		<div class="col-sm-10 offset">
 			<div class="checkbox">

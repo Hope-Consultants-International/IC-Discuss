@@ -42,11 +42,12 @@ switch ($action) {
 			':description' => _requestOrDefault('IssueDescription'),
 			':upload' => (_requestOrDefault('AllowUpload', false) ? 1 : 0),
 			':frontpage' => (_requestOrDefault('Frontpage', false) ? 1 : 0),
+			':folder' => _requestOrDefault('Folder'),
 		);
 		if ($new_issue) {
-			$query = "INSERT INTO `%table` SET Title = :title, Description = :description, AllowUpload = :upload, Frontpage = :frontpage";
+			$query = "INSERT INTO `%table` SET Title = :title, Description = :description, AllowUpload = :upload, Frontpage = :frontpage, Folder = :folder";
 		} else {
-			$query = "UPDATE `%table` SET Title = :title, Description = :description, AllowUpload = :upload, Frontpage = :frontpage WHERE IssueId = :id";
+			$query = "UPDATE `%table` SET Title = :title, Description = :description, AllowUpload = :upload, Frontpage = :frontpage, Folder = :folder WHERE IssueId = :id";
 			$values[':id'] = $issue_id;
 		}
 		$stmt = db()->preparedStatement($query, $values);
@@ -64,8 +65,9 @@ switch ($action) {
 				$issue_description= '';
 				$issue_allow_upload = true;
 				$issue_frontpage = false;
+				$issue_folder = '';
 			} else {
-				$query = "SELECT Title, Description, AllowUpload, Frontpage FROM `%table` WHERE IssueId = :id";
+				$query = "SELECT Title, Description, AllowUpload, Frontpage, Folder FROM `%table` WHERE IssueId = :id";
 				$values = array('%table' => TABLE_ISSUES, ':id' => $issue_id);
 				$stmt = db()->preparedStatement($query, $values);
 				if ($stmt->foundRows == 1) {
@@ -74,6 +76,7 @@ switch ($action) {
 					$issue_description = $issue->Description;
 					$issue_allow_upload = $issue->AllowUpload;
 					$issue_frontpage = $issue->Frontpage;
+					$issue_folder = $issue->Folder;
 				} else {
 					die('Issue not found: ' . $issue_id);
 				}
@@ -85,6 +88,7 @@ switch ($action) {
 				'issue_description' => $issue_description,
 				'issue_upload' => $issue_allow_upload,
 				'issue_frontpage' => $issue_frontpage,
+				'issue_folder' => $issue_folder,
 				'page_url' => $page_url,
 				'title' => $title,
 			);
