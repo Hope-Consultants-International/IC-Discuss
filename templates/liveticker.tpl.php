@@ -4,10 +4,6 @@
 	<form class="form-inline">
 		<div class="form-group">
 			<select id="issue_id">
-				<option value="0" <?php if ($issue_id == 0) { print("selected"); } ?>>All Frontpage Issues</option>
-				<?php foreach ($issues as $id => $value) { ?>
-					<option value="<?php print($id); ?>" <?php if ($issue_id == $id) { print("selected"); } ?>><?php print(htmlentities($value)); ?></option>
-				<?php } ?>
 			</select>
 		</div>
 		<div id="ticker-buttons" class="form-group">
@@ -28,7 +24,6 @@
 <?php if (DEBUG) { ?>
 <div class="hidden-print">
 	<h2>Debug</h2>
-	<pre>$summaries = <?php print_r($summaries); ?></pre>
-	<pre>$statements = <?php print_r($statements); ?></pre>
+	<pre>$issues = <?php print_r($issues); ?></pre>
 </div>
 <?php } ?>
