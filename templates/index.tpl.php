@@ -1,32 +1,18 @@
 <h2><?php print(htmlentities($title)); ?></h2>
 
-<?php if (count($issues) > 0) { ?>
-<form method="post" accept-charset="UTF-8" class="form-horizontal">
-	<?php
-	if (count($issues) == 1) {
-		$value = reset($issues);
-		$key = key($issues);
-	?>
-		<input type="hidden" name="IssueId" id="IssueId" value="<?php print($key); ?>">
-		<h3><?php print(htmlentities($value)); ?></h3>
-	<?php } else { ?>
-		<div class="form-group">
-			<div class="col-md-6">
-				<label for="IssueId">Select Issue</label>
-				<select class="form-control col-md-6" name="IssueId" id="IssueId">
-					<?php foreach ($issues as $key => $value) { ?>
-						<option value="<?php print($key); ?>" <?php if($key == $last_issue) { print('selected'); } ?>>
-							<?php print(htmlentities($value)); ?>
-						</option>
-					<?php } ?>
-				</select>
-			</div>
+<form method="post" accept-charset="UTF-8" class="form-horizontal" id="frontpage-statement" style="display:none">
+	<h3 id="frontpage-issue-title"></h3>
+	<div class="form-group" id="frontpage-issue-select">
+		<div class="col-md-6">
+			<label for="issue_id">Select Issue</label>
+			<select class="form-control col-md-6" name="issue_id" id="issue_id">
+			</select>
 		</div>
-	<?php } ?>
+	</div>
 	<div class="form-group">
 		<div class="col-md-6">
-			<label for="Statement">Your Statement</label>
-			<textarea class="form-control" rows="3" id="Statement" name="Statement" placeholder="Please enter your statement." required maxlength="250"></textarea>
+			<label for="statement">Your Statement</label>
+			<textarea class="form-control" rows="3" id="statement" name="statement" placeholder="Please enter your statement." required maxlength="250"></textarea>
 		</div>
 	</div>
 	<div class="form-group">
@@ -38,14 +24,14 @@
 		</div>
     </div>
 </form>
+
+<div id="frontpage-no-issues" style="display:none">
+	<p>
+		We currently don't accept statements.
+	</p>
+</div>
+
 <script>
-$( '#Statement' ).keyup(function() {
-	$(this).val($(this).val().replace(/[\n\v]+/g, ' '));
-	$(this).val($(this).val().replace(/\s{2,}/g, ' '));
-});
+<?php print($script); ?>
 </script>
-<?php } else { ?>
-<p>
-	We currently don't accept statements.
-</p>
-<?php } ?>
+<script type="text/javascript" src="js/index.js?v=<?php print(RESOURCE_VERSION); ?>"></script>
