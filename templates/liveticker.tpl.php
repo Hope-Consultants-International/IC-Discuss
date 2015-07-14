@@ -1,12 +1,21 @@
 <h2 style="overflow:hidden; white-space: nowrap;">Live-Ticker<span id="text-issue-title"></span></h2>
 </div>
 <div id="ticker-options">
-	<select id="issue_id">
-		<option value="0" <?php if ($issue_id == 0) { print("selected"); } ?>>All Frontpage Issues</option>
-		<?php foreach ($issues as $id => $value) { ?>
-			<option value="<?php print($id); ?>" <?php if ($issue_id == $id) { print("selected"); } ?>><?php print(htmlentities($value)); ?></option>
-		<?php } ?>
-	</select>
+	<form class="form-inline">
+		<div class="form-group">
+			<select id="issue_id">
+				<option value="0" <?php if ($issue_id == 0) { print("selected"); } ?>>All Frontpage Issues</option>
+				<?php foreach ($issues as $id => $value) { ?>
+					<option value="<?php print($id); ?>" <?php if ($issue_id == $id) { print("selected"); } ?>><?php print(htmlentities($value)); ?></option>
+				<?php } ?>
+			</select>
+		</div>
+		<div id="ticker-buttons" class="form-group">
+			<button id="pauseButton" type="button" class="btn btn-default btn-xs">
+				<span class="glyphicon glyphicon-pause"></span>
+			</button>
+		</div>
+	</form>
 </div>
 <div id="ticker-scroller">
 </div>

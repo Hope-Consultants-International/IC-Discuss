@@ -7,6 +7,7 @@ const animate_normal = 200;
 const animate_slow = 400;
 
 var max_statement_id = 0;
+var paused = false;
 var issues = {};
 
 var poll_timer = null;
@@ -29,6 +30,7 @@ function poll_issue() {
 		success: function(reply, message) {
 			if (reply['success']) {
 				console.info('Update success: ' + reply['message']);
+				var first_update = (max_statement_id == 0);
 				$.each(reply['data'], function( index, value ) {
 					
 					var statement_id = parseInt(index);
@@ -45,9 +47,12 @@ function poll_issue() {
 						var issue = $("<br><span class='issue'></span>");
 						issue.text(issues[statement_issue_id]);
 						statement.append(issue);
-					}					
+					}
 					statement.hide().prependTo( '#ticker-scroller' ).fadeIn(animate_slow);
 				});
+				if (first_update) {
+					insert_divider();
+				}
 			} else {
 				console.error('Update failure: ' + reply['message']);
 				reload_screen();
@@ -56,6 +61,15 @@ function poll_issue() {
 	});
 	
 	poll_timer = setTimeout(function() { poll_issue(); }, poll_interval);
+}
+
+function insert_divider() {
+	var first_child = $( '#ticker-scroller' ).children().first();
+	console.log(first_child);
+	if (first_child.hasClass('ticker-divider')) {
+	} else {
+		$('#ticker-scroller').prepend('<hr class="ticker-divider">');
+	}
 }
 
 function reload_screen() {
@@ -137,5 +151,17 @@ $( document ).ready(function() {
 			// start polling again
 			poll_issue();
 			update_title();
+	});
+	$('#pauseButton').click(function () {
+		if (paused) {
+			insert_divider();
+			poll_issue();			
+			$(this).html('<span class="glyphicon glyphicon-pause"></span>');
+			paused = false;
+		} else {
+			clearTimeout(poll_timer);
+			$(this).html('<span class="glyphicon glyphicon-play"></span>');
+			paused = true;
+		}
 	});
 });
