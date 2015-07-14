@@ -96,6 +96,7 @@ function reload_screen() {
 	bootbox.dialog({
 		title: "Error updating data",
 		message: "<p>An error occurred trying to update some data.</p><p>For example the Issue might no longer be on the Frontpage.</p><p>You can Reload the page or Cancel to keep the current page frozen</p>",
+		closeButton: false,
 		buttons: {
 			cancel: {
 				label: "Cancel",

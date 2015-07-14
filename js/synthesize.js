@@ -14,6 +14,7 @@ function reload_screen() {
 	bootbox.dialog({
 		title: "Data Inconsistency",
 		message: "<p>Data on server is not consistent with your working data.</p><p>This page should be reloaded</p>",
+		closeButton: false,
 		buttons: {
 			cancel: {
 				label: "Cancel",
