@@ -39,7 +39,7 @@ function poll_issue() {
 					// clear out div
 					var scroller = $( '#ticker-scroller' );
 					scroller.slideUp(animate_normal);
-					scroller.find( '.ticker-statement' ).each(function( index ) {
+					scroller.children().each(function( index ) {
 						$( this ).remove();
 					});
 					scroller.slideDown(animate_fast);
