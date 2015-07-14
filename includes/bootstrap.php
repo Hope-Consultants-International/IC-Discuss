@@ -183,7 +183,7 @@ function display($title, $current_page, $template, $vars = array()) {
 		'page_title' => $title,
 		'current_page' => $current_page,
 		'issues' => $issues,
-		'inhalt' => template_engine()->render($template, $vars),
+		'contents' => template_engine()->render($template, $vars),
 	);
 	print(template_engine()->render('main.tpl.php', $main_vars));
 }
@@ -216,6 +216,14 @@ function check_access($section) {
 		}
 	}
 	return true;
+}
+
+function is_logged_in() {
+    if (ACCESS_ENABLED) {
+        return (!empty($_SERVER['REMOTE_USER']));
+    } else {
+        return true;
+    }
 }
 
 function assert_access($section) {

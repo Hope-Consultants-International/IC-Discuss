@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
   <head>
-  	<!-- Anmeldung Bootstrap -->
+    <!-- Bootstrap -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php print(htmlentities($page_title)); ?></title>
-	<!-- HTML Kommentar -->
 	
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script type="text/javascript" src="jquery/jquery-2.1.4.min.js"></script>
@@ -130,12 +129,15 @@
 			  </ul>
 			</li>
 			<?php } ?>
-			<li class=" <?php print(($current_page=='Help')?'active':''); ?>"><a href="help.php">Help<?php if (ACCESS_ENABLED) { print(" / Login"); } ?></a></li>
+			<li class=" <?php print(($current_page=='Help')?'active':''); ?>"><a href="help.php">Help<?php if (!is_logged_in()) { print(" / Login"); } ?></a></li>
+            <?php if (ACCESS_ENABLED && is_logged_in()) { ?>
+                <li class=" <?php print(($current_page=='Logout')?'active':''); ?>"><a href="logout.php">Logout</a></li>
+            <?php } ?>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
-	<!-- Inhalt -->	
+	<!-- Contents -->
     <div style="height:4em"></div>
 	<div class="container">
 		<div class="row messages">
@@ -155,7 +157,7 @@
 		?>
 		</div>
 		<div class="row theme-showcase" role="main">
-		<?php print($inhalt); ?>
+		<?php print($contents); ?>
 	  </div>
 	</div>
   </body>
