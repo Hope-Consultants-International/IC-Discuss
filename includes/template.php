@@ -1,6 +1,4 @@
 <?php
-// $Id$
-
 /**
  * This class provides template support for backend.
  * 
@@ -15,8 +13,11 @@
  * 
  * Use templates as a way of generating a user interface without having
  * to edit significant amounts of code.
- * @file
- * @package TemplateLib
+ *
+ * PHP version 5
+ *
+ * @package    IC-Discuss
+ * @subpackage TemplateLib
  */
 
 /**
@@ -25,6 +26,8 @@
  * It provides tools for rendering templates, including one
  * template inside of another, and controlling the output of templates.
  *
+ * @package    IC-Discuss
+ * @subpackage TemplateLib
  */
 class Template {
 
@@ -78,8 +81,9 @@ class Template {
      * 
      * @param string $template Path to the template to render. If the path is relative,
      *   the default template path will be used.
-     * @param array $args Associative array of arguments that will be imported into 
-     * the template's namespace. 
+     * @param array  $args     Associative array of arguments that will be imported into 
+     * the template's namespace.
+     *
      * @return String containing the rendered template contents.
      */
     public function render($template, $args = array()) {
@@ -89,13 +93,13 @@ class Template {
         //@ob_end_flush(); 
     
         ob_start();
-        $template = $this->getRealPath($template);
+        $template = $this->_getRealPath($template);
         if ($template !== false) {
             // This use of extract() comes from Drupal 6's code:
-            if(count($args) > 0) {
+            if (count($args) > 0) {
                 extract($args, EXTR_SKIP);
             }
-            include($template);
+            include $template;
         }
         $r = ob_get_contents();
         ob_end_clean();
@@ -111,17 +115,19 @@ class Template {
      *
      * @param string $template Path to template file. If the path does not have a slash
      *   in it, it is assumed to be relative to the default template path.
-     * @param array $args Zero or more variables that should be added to this template.
+     * @param array  $args     Zero or more variables that should be added to this template.
      *
      * @see Template::render($template)
+     *
+     * @return nothing
      */
     public function includeTemplate($template, $args = array()) {
-        $template = $this->getRealPath($template);
+        $template = $this->_getRealPath($template);
         if ($template !== false) {
             if (count($args) > 0) {
                 extract($args, EXTR_SKIP);
             }
-            include($template);
+            include $template;
         }
     }
 
@@ -134,7 +140,11 @@ class Template {
      *
      * @return string best language match
      */
-    public static function preferred_language($available_languages, $http_accept_language="auto", $request_language_attr='language') {
+    public static function preferredLanguage(
+        $available_languages,
+        $http_accept_language="auto",
+        $request_language_attr='language'
+    ) {
 
         // if $http_accept_language was left out, read it from the HTTP-Header
         if ($http_accept_language == "auto") {
@@ -166,9 +176,9 @@ class Template {
 
         foreach ($hits as $arr) {
             // read data from the array of this hit
-            $langprefix = strtolower ($arr[1]);
+            $langprefix = strtolower($arr[1]);
             if (!empty($arr[3])) {
-                $langrange = strtolower ($arr[3]);
+                $langrange = strtolower($arr[3]);
                 $language = $langprefix . "-" . $langrange;
             } else {
                 $language = $langprefix;
@@ -179,10 +189,10 @@ class Template {
             }
      
             // find q-maximal language 
-            if (in_array($language,$available_languages) && ($qvalue > $bestqval)) {
+            if (in_array($language, $available_languages) && ($qvalue > $bestqval)) {
                 $bestlang = $language;
                 $bestqval = $qvalue;
-            } else if (in_array($langprefix,$available_languages) && (($qvalue*0.9) > $bestqval)) {
+            } else if (in_array($langprefix, $available_languages) && (($qvalue*0.9) > $bestqval)) {
                 // if no direct hit, try the prefix only but decrease q-value by 10% (as http_negotiate_language does)
                 $bestlang = $langprefix;
                 $bestqval = $qvalue*0.9;
@@ -198,14 +208,14 @@ class Template {
      *
      * @return string The full path to the template.
      */
-    private function getRealPath($template) {
+    private function _getRealPath($template) {
     
         // Chop of leading dot
         if (strpos($template, '../') === 0) {
             $template = substr($template, 1);
         }
     
-        if(strpos($template, '/') === 0) {
+        if (strpos($template, '/') === 0) {
             // path is absolute
             $final_template = $template;
         } else {
@@ -229,7 +239,7 @@ class Template {
                     $final_template = $this->_template_path . '/' . $template;
                 } else {
                     // use language accept header
-                    $lang = self::preferred_language($template_languages, 'auto', $this->_request_language_attr);
+                    $lang = self::preferredLanguage($template_languages, 'auto', $this->_request_language_attr);
                     $final_template = $this->_template_path . '/' . $lang . '/' . $template;
                 }
             }
