@@ -3,16 +3,8 @@ require_once 'includes/bootstrap.php';
 
 assert_access(SECTION_MANAGE);
 
-function _requestOrDefault($parameter, $default = '', $null_value = null) {
-	$value = (isset($_REQUEST[$parameter])) ? $_REQUEST[$parameter] : $default;
-	if ($value === $null_value) {
-		$value = null;
-	}
-	return $value;
-}
-
-$issue_id = isset($_REQUEST['id']) ? $_REQUEST['id'] : NEW_ENTRY_ID;
-$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'list';
+$issue_id = Utils::requestOrDefault('id', NEW_ENTRY_ID);
+$action = Utils::requestOrDefault('action', 'list');
 $page_url = strtok($_SERVER["REQUEST_URI"], '?');
 
 // new issue?
@@ -38,11 +30,11 @@ switch ($action) {
 		// get values for issue table
 		$values = array(
 			'%table' => TABLE_ISSUES,
-			':title' => _requestOrDefault('IssueTitle'),
-			':description' => _requestOrDefault('IssueDescription'),
-			':upload' => (_requestOrDefault('AllowUpload', false) ? 1 : 0),
-			':frontpage' => (_requestOrDefault('Frontpage', false) ? 1 : 0),
-			':folder' => _requestOrDefault('Folder'),
+			':title' => Utils::requestOrDefault('IssueTitle'),
+			':description' => Utils::requestOrDefault('IssueDescription'),
+			':upload' => (Utils::requestOrDefault('AllowUpload', false) ? 1 : 0),
+			':frontpage' => (Utils::requestOrDefault('Frontpage', false) ? 1 : 0),
+			':folder' => Utils::requestOrDefault('Folder'),
 		);
 		if ($new_issue) {
 			$query = "INSERT INTO `%table` SET Title = :title, Description = :description, AllowUpload = :upload, Frontpage = :frontpage, Folder = :folder";

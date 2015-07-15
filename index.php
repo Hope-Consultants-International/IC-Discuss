@@ -1,14 +1,6 @@
 <?php
 require_once 'includes/bootstrap.php';
 
-function _requestOrDefault($parameter, $default = '', $null_value = null) {
-	$value = (isset($_REQUEST[$parameter])) ? $_REQUEST[$parameter] : $default;
-	if ($value === $null_value) {
-		$value = null;
-	}
-	return $value;
-}
-
 $group_id = null;
 $issues = array();
 
@@ -29,12 +21,12 @@ if ($stmt->foundRows == 1) {
 }
 
 // get issue id
-$issue_id = _requestOrDefault('issue_id', null);
+$issue_id = Utils::requestOrDefault('issue_id', null);
 if (!array_key_exists($issue_id, $issues)) {
 	$issue_id = null;
 }
 
-$action = _requestOrDefault('action', 'display');
+$action = Utils::requestOrDefault('action', 'display');
 switch ($action) {
 	case 'get_issues':
 		$reply = (object) array(
@@ -50,7 +42,7 @@ switch ($action) {
 		print(json_encode($reply));
 		break;
 	case 'add_statement':
-		$statement = _requestOrDefault('statement');
+		$statement = Utils::requestOrDefault('statement');
 		if (!is_null($issue_id) && !is_null($group_id) && !empty($statement)) {
 			$stmt = db()->preparedStatement(
 				"INSERT INTO `%table` SET GroupId = :group, IssueId = :issue, Statement = :statement",

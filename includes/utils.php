@@ -100,4 +100,12 @@ class Utils {
 		
 		return $string;
 	}
+	
+	static function requestOrDefault($parameter, $default = '', $null_value = null) {
+		$value = (isset($_REQUEST[$parameter])) ? $_REQUEST[$parameter] : $default;
+		if ($value === $null_value) {
+			$value = null;
+		}
+		return $value;
+	}
 }

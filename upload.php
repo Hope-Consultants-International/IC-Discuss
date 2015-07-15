@@ -8,7 +8,7 @@ function _dataOrDefault($data, $default = '') {
 	return empty($data) ? $default : $data;
 }
 
-$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'nothing';
+$action = Utils::requestOrDefault('action', 'nothing');
 
 if ($action == 'import') {
 	if(isset($_FILES['spreadsheet']) &&

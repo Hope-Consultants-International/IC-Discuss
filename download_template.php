@@ -6,8 +6,8 @@ assert_access(SECTION_MANAGE);
 
 ignore_user_abort(true);
 
-$group_id = isset($_REQUEST['group']) ? $_REQUEST['group'] : null;
-$issue_id = isset($_REQUEST['issue']) ? $_REQUEST['issue'] : null;
+$group_id = Utils::requestOrDefault('group', null);
+$issue_id = Utils::requestOrDefault('issue', null);
 
 function abort($message) {
 	header('HTTP/1.0 400 Bad Request');

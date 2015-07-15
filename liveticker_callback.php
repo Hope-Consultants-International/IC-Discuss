@@ -3,10 +3,10 @@ require_once 'includes/bootstrap.php';
 
 assert_access(SECTION_SYNTHESIZE);
 
-$issue_id = isset($_REQUEST['issue']) ? $_REQUEST['issue'] : null;
-$max_statement_id = isset($_REQUEST['statement']) ? intval($_REQUEST['statement']) : 0;
+$issue_id = Utils::requestOrDefault('issue', null);
+$max_statement_id = Utils::requestOrDefault('statement', 0);
 
-$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
+$action = Utils::requestOrDefault('action', null);
 
 function check_issue_exists($issue_id) {
 	return (!is_null($issue_id)

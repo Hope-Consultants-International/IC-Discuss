@@ -3,16 +3,8 @@ require_once 'includes/bootstrap.php';
 
 assert_access(SECTION_MANAGE);
 
-function _requestOrDefault($parameter, $default = '', $null_value = null) {
-	$value = (isset($_REQUEST[$parameter])) ? $_REQUEST[$parameter] : $default;
-	if ($value === $null_value) {
-		$value = null;
-	}
-	return $value;
-}
-
-$statement_id = isset($_REQUEST['id']) ? $_REQUEST['id'] : NEW_ENTRY_ID;
-$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'list';
+$statement_id = Utils::requestOrDefault('id', NEW_ENTRY_ID);
+$action = Utils::requestOrDefault('action', 'list');
 $page_url = strtok($_SERVER["REQUEST_URI"], '?');
 
 // new statement?
@@ -38,10 +30,10 @@ switch ($action) {
 		// get values for statement table
 		$values = array(
 			'%table' => TABLE_STATEMENTS,
-			':statement' => _requestOrDefault('Statement'),
-			':group_id' => _requestOrDefault('GroupId'),
-			':issue_id' => _requestOrDefault('IssueId'),
-			':weight' => _requestOrDefault('Weight', 0),
+			':statement' => Utils::requestOrDefault('Statement'),
+			':group_id' => Utils::requestOrDefault('GroupId'),
+			':issue_id' => Utils::requestOrDefault('IssueId'),
+			':weight' => Utils::requestOrDefault('Weight', 0),
 		);
 		if ($new_statement) {
 			$query = "INSERT INTO `%table` SET Statement = :statement, GroupId = :group_id, IssueId = :issue_id, Weight = :weight";

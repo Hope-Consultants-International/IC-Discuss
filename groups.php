@@ -3,16 +3,8 @@ require_once 'includes/bootstrap.php';
 
 assert_access(SECTION_MANAGE);
 
-function _requestOrDefault($parameter, $default = '', $null_value = null) {
-	$value = (isset($_REQUEST[$parameter])) ? $_REQUEST[$parameter] : $default;
-	if ($value === $null_value) {
-		$value = null;
-	}
-	return $value;
-}
-
-$group_id = isset($_REQUEST['id']) ? $_REQUEST['id'] : NEW_ENTRY_ID;
-$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'list';
+$group_id = Utils::requestOrDefault('id', NEW_ENTRY_ID);
+$action = Utils::requestOrDefault('action', 'list');
 $page_url = strtok($_SERVER["REQUEST_URI"], '?');
 
 // new group?
@@ -38,8 +30,8 @@ switch ($action) {
 		// get values for groups table
 		$values = array(
 			'%table' => TABLE_GROUPS,
-			':name' => _requestOrDefault('GroupName'),
-			':frontpage' => (_requestOrDefault('Frontpage', false) ? 1 : 0),
+			':name' => Utils::requestOrDefault('GroupName'),
+			':frontpage' => (Utils::requestOrDefault('Frontpage', false) ? 1 : 0),
 		);
 		if ($new_group) {
 			$query = "INSERT INTO `%table` SET Name = :name, Frontpage = :frontpage";

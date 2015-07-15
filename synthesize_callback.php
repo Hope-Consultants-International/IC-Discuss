@@ -3,12 +3,12 @@ require_once 'includes/bootstrap.php';
 
 assert_access(SECTION_SYNTHESIZE);
 
-$issue_id = isset($_REQUEST['issue']) ? $_REQUEST['issue'] : null;
-$statement_id = isset($_REQUEST['statement']) ? $_REQUEST['statement'] : null;
-$summary_id = isset($_REQUEST['summary']) ? $_REQUEST['summary'] : null;
-$summary_id_old = isset($_REQUEST['summary_old']) ? $_REQUEST['summary_old'] : null;
+$issue_id = Utils::requestOrDefault('issue', null);
+$statement_id = Utils::requestOrDefault('statement', null);
+$summary_id = Utils::requestOrDefault('summary', null);
+$summary_id_old = Utils::requestOrDefault('summary_old', null);
 
-$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
+$action = Utils::requestOrDefault('action', null);
 
 function check_statement_exists($statement_id) {
 	return (!is_null($statement_id)
@@ -125,7 +125,7 @@ try {
 			break;
 		case 'update_summary':
 			if (check_summary_exists($summary_id)) {
-				$summary_text = isset($_REQUEST['summary_text']) ? $_REQUEST['summary_text'] : null;
+				$summary_text = Utils::requestOrDefault('summary_text', null);
 				if (!is_null($summary_text)) {
 					$s_update = db()->preparedStatement(
 						'UPDATE `%table` SET Summary = :summary WHERE SummaryId = :summary_id',
@@ -150,7 +150,7 @@ try {
 			break;
 		case 'highlight_statement':
 			if (check_statement_exists($statement_id)) {
-				$highlight = isset($_REQUEST['highlight']) ? $_REQUEST['highlight'] : null;
+				$highlight = Utils::requestOrDefault('highlight', null);
 				if (is_null($highlight)) {
 					$reply->success = false;
 					$reply->message = 'Highlight value not set';

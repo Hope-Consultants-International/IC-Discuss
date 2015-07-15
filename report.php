@@ -3,7 +3,7 @@ require_once 'includes/bootstrap.php';
 
 assert_access(SECTION_SYNTHESIZE);
 
-$report_type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'normal';
+$report_type = Utils::requestOrDefault('type', 'normal');
 
 $vars=array();
 switch ($report_type) {

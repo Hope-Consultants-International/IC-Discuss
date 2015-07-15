@@ -3,7 +3,7 @@ require_once 'includes/bootstrap.php';
 
 assert_access(SECTION_SYNTHESIZE);
 
-$issue_id = isset($_REQUEST['issue']) ? $_REQUEST['issue'] : 0;
+$issue_id = Utils::requestOrDefault('issue', 0);
 
 $s_issues = db()->preparedStatement(
 	"SELECT IssueId, Title FROM `%table` WHERE Frontpage = 1 ORDER BY Title",
