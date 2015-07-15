@@ -94,15 +94,11 @@
 					Groups
 				  </a>
 				</li>
-				<li class="divider"></li>
-				<li>
-				  <a href="liveticker.php">
-				    <span class="glyphicon glyphicon-triangle-right" style="font-size:10px; <?php print((strpos($current_page,'Report|Live-Ticker') !== false)?'':'visibility:hidden'); ?>">&nbsp</span>
-					Live-Ticker
-				  </a>
-				</li>
 			  </ul>
 			</li>
+            <?php } ?>
+            <?php if (check_access(array(SECTION_SYNTHESIZE, SECTION_TICKER))) { ?>
+                <li class=" <?php print(($current_page == 'Live-Ticker')?'active':''); ?>"><a href="liveticker.php">Live-Ticker</a></li>
 			<?php } ?>
 			<?php if (check_access(SECTION_MANAGE)) { ?>
 			<li class="dropdown <?php print((strpos($current_page,'Manage|') !== false)?'active':''); ?>">

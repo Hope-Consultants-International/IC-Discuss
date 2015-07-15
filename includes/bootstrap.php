@@ -12,7 +12,7 @@
  define('RESOURCE_VERSION', '1.3');
  
  
-/*
+/**
  * Set some important path constants
  */
 $path = dirname(__FILE__);
@@ -60,6 +60,7 @@ define('TABLE_SUMMARIES', 'summaries');
 define('SECTION_UPLOAD', 'upload');
 define('SECTION_SYNTHESIZE', 'synthesize');
 define('SECTION_MANAGE', 'manage');
+define('SECTION_TICKER', 'ticker');
 define('ACCESS_ENABLED', isset($ini['Access']['enabled']) ? $ini['Access']['enabled'] : false);
 if (ACCESS_ENABLED && !isset($_SERVER['REMOTE_USER'])) {
 	die('Access Control Not Possible.');
@@ -77,7 +78,7 @@ define('DATA_COLUMN_WEIGHT', 'B');
 define('DATA_ROW_MIN', '7');
 define('DATA_ROW_MAX', '200');
 
- function currentdir($url) {
+function currentdir($url) {
     // note: anything without a scheme ("example.com", "example.com:80/", etc.) is a folder
     // remove query (protection against "?url=http://example.com/")
     if ($first_query = strpos($url, '?')) $url = substr($url, 0, $first_query);
@@ -123,7 +124,7 @@ function db() {
     return $_db;
 }
 
-/**#@+
+/**
  * Message type.
  * @see set_message()
  */
@@ -171,6 +172,18 @@ function get_messages($type = null) {
     return $_msg_store;
 }
 
+/**
+ * Output a page to the browser
+ *
+ * Renders a template and embeds it in the standard page template for output
+ *
+ * @param $title        string title of the page
+ * @param $current_page string page identifier for menu
+ * @param $template     string template to use for the page
+ * @param $vars         array  variables to pass to page template
+ *
+ * @return nothing
+ */
 function display($title, $current_page, $template, $vars = array()) {
 	$s_issues = db()->preparedStatement(
 		"SELECT IssueId, Title FROM `%table` ORDER BY Title",
@@ -191,18 +204,19 @@ function display($title, $current_page, $template, $vars = array()) {
 /**
  * Check if user is allowed access
  *
- * Returns true if read control is not active or if the user is allowed.
+ * Returns true if access control is not active or if the user is allowed.
+ * (if array of sections is given, returns true if access is allowed to any section)
  * Returns false if the user is not allowed
  *
- * @params $section string access to which section? 
+ * @param $sections mixed array of sections or string of section access should be checked against
  *
  * @return boolean true if allowed
  */
-function check_access($section) {
+function check_access($sections) {
 	global $ini;
 	static $users = null;
 	if (is_null($users)) {
-		$sections = array(SECTION_UPLOAD, SECTION_SYNTHESIZE, SECTION_MANAGE);
+		$sections = array(SECTION_UPLOAD, SECTION_SYNTHESIZE, SECTION_MANAGE, SECTION_TICKER);
 		foreach ($sections as $sect) {
 			$list = (isset($ini['Access'][$sect]) && is_array($ini['Access'][$sect])) ? $ini['Access'][$sect] : array();
 			$list = array_map('strtolower', $list);
@@ -210,14 +224,29 @@ function check_access($section) {
 		}
 	}
 	if (ACCESS_ENABLED) {
-		if (!isset($users[$section])
-		  || !in_array(strtolower($_SERVER['REMOTE_USER']), $users[$section])) {
-			return false;
+        $allowed = false;
+        if (!is_array($sections)) {
+            $sections = array($sections);
+        }
+        foreach ($sections as $section) {
+            if (isset($users[$section])
+              && in_array(strtolower($_SERVER['REMOTE_USER']), $users[$section])) {
+                $allowed = true;
+                break;
+            }
 		}
+        return $allowed;
 	}
 	return true;
 }
 
+/**
+ * Check if a user is logged in
+ *
+ * Always returns true if access controls are disabled
+ *
+ * @return boolean true if a user is logged in false otherwise
+ */
 function is_logged_in() {
     if (ACCESS_ENABLED) {
         return (!empty($_SERVER['REMOTE_USER']));
@@ -226,10 +255,20 @@ function is_logged_in() {
     }
 }
 
-function assert_access($section) {
-	if (!check_access($section)) {
-		header('HTTP/1.0 401 Unauthorized');
-		print('Unauthorized');
-		exit(0);
-	}
+/**
+ * Make sure access is permitted for the user
+ *
+ * @param $sections mixed array of sections or string of section access should be checked against
+ *
+ * @return boolean true if access is allowed, script ends with 401 error otherwise
+ */
+function assert_access($sections = array()) {
+    if (ACCESS_ENABLED) {
+        if (!check_access($sections)) {
+            header('HTTP/1.0 401 Unauthorized');
+            print('Unauthorized');
+            exit(0);
+        }
+    }
+    return true;
 }

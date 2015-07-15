@@ -1,7 +1,7 @@
 <?php
 require_once 'includes/bootstrap.php';
 
-assert_access(SECTION_SYNTHESIZE);
+assert_access(array(SECTION_SYNTHESIZE, SECTION_TICKER));
 
 $issue_id = Utils::requestOrDefault('issue', 0);
 
@@ -33,4 +33,4 @@ $vars = array(
 	'script' => $script,
 	'issues' => $issues,
 );
-display(APP_TITLE, 'Report|Live-Ticker', 'liveticker.tpl.php', $vars);
+display(APP_TITLE, 'Live-Ticker', 'liveticker.tpl.php', $vars);
