@@ -2,7 +2,7 @@
 require_once 'includes/bootstrap.php';
 require_once 'php-excel/Classes/PHPExcel.php';
 
-assert_access(SECTION_MANAGE);
+assertAccess(SECTION_MANAGE);
 
 ignore_user_abort(true);
 

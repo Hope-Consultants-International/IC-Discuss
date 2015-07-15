@@ -2,7 +2,7 @@
 require_once 'includes/bootstrap.php';
 require_once 'php-excel/Classes/PHPExcel.php';
 
-assert_access(SECTION_UPLOAD);
+assertAccess(SECTION_UPLOAD);
 
 function _dataOrDefault($data, $default = '') {
 	return empty($data) ? $default : $data;
@@ -39,15 +39,15 @@ if ($action == 'import') {
 					array('%table' => TABLE_ISSUES, ':issue' => $issue)
 				);
 				if ($stmt->foundRows > 1) {
-					set_message('Ambiguous Issue: ' . $issue, MSG_TYPE_ERR);
+					setMessage('Ambiguous Issue: ' . $issue, MSG_TYPE_ERR);
 				} elseif ($stmt->foundRows != 1) {
-					set_message('Issue not found: ' . $issue, MSG_TYPE_ERR);
+					setMessage('Issue not found: ' . $issue, MSG_TYPE_ERR);
 				} else {
 					$issue_obj = $stmt->fetchObject();
 					if ($issue_obj->AllowUpload) {
 						$issue_id = $issue_obj->IssueId;
 					} else {
-						set_message('Uploads for this Issue are disabled: ' . $issue, MSG_TYPE_WARN);
+						setMessage('Uploads for this Issue are disabled: ' . $issue, MSG_TYPE_WARN);
 						$issue_id = false;
 					}
 				}
@@ -60,9 +60,9 @@ if ($action == 'import') {
 					array('%table' => TABLE_GROUPS, ':group' => $group)
 				);
 				if ($stmt->foundRows > 1) {
-					set_message('Ambiguous Group: ' . $group, MSG_TYPE_ERR);
+					setMessage('Ambiguous Group: ' . $group, MSG_TYPE_ERR);
 				} elseif ($stmt->foundRows != 1) {
-					set_message('Group not found: ' . $group, MSG_TYPE_ERR);
+					setMessage('Group not found: ' . $group, MSG_TYPE_ERR);
 				} else {
 					$group_id = $stmt->fetchColumn(0);
 				}
@@ -104,24 +104,24 @@ if ($action == 'import') {
 						
 							$s = db()->preparedStatement($statement_query, $values);
 							if (!$s->success) {
-								set_message("Problem with Statement in row {$row_num}: " . $s->error, MSG_TYPE_ERR);
+								setMessage("Problem with Statement in row {$row_num}: " . $s->error, MSG_TYPE_ERR);
 							}
 						}
 					}
-					set_message("{$statement_num} Statements imported. (Group: {$group} / Issue: ${issue})", MSG_TYPE_INFO);
+					setMessage("{$statement_num} Statements imported. (Group: {$group} / Issue: ${issue})", MSG_TYPE_INFO);
 				} else {
 					if ($issue_id !== false) {
-						set_message("Group ID or Issue ID not found.", MSG_TYPE_ERR);
+						setMessage("Group ID or Issue ID not found.", MSG_TYPE_ERR);
 					}
 				}
 			} else {
-				set_message("Please upload XLS, XLSX or ODS.", MSG_TYPE_ERR);
+				setMessage("Please upload XLS, XLSX or ODS.", MSG_TYPE_ERR);
 			}
 		} else{ 
-			set_message($_FILES['spreadsheet']['error'], MSG_TYPE_ERR);
+			setMessage($_FILES['spreadsheet']['error'], MSG_TYPE_ERR);
 		}
 	} else {
-		set_message('Error Uploading: ' . print_r($_FILES, true), MSG_TYPE_ERR);
+		setMessage('Error Uploading: ' . print_r($_FILES, true), MSG_TYPE_ERR);
 	}
 }
 

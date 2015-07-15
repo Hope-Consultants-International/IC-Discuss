@@ -1,7 +1,7 @@
 <?php
 require_once 'includes/bootstrap.php';
 
-assert_access(array(SECTION_SYNTHESIZE, SECTION_TICKER));
+assertAccess(array(SECTION_SYNTHESIZE, SECTION_TICKER));
 
 $issue_id = Utils::requestOrDefault('issue', 0);
 

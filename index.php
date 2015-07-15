@@ -54,9 +54,9 @@ switch ($action) {
 				)
 			);
 			if (!$stmt->success) {
-				set_message('Could not add statement.', MSG_TYPE_ERR);
+				setMessage('Could not add statement.', MSG_TYPE_ERR);
 			} else {
-				set_message('Statement added.', MSG_TYPE_INFO);
+				setMessage('Statement added.', MSG_TYPE_INFO);
 			}
 		}
 	case 'display':

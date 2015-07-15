@@ -1,7 +1,7 @@
 <?php
 require_once 'includes/bootstrap.php';
 
-assert_access(SECTION_MANAGE);
+assertAccess(SECTION_MANAGE);
 
 $group_id = Utils::requestOrDefault('id', NEW_ENTRY_ID);
 $action = Utils::requestOrDefault('action', 'list');
@@ -98,7 +98,7 @@ switch ($action) {
 				}
 			}
 			if (!$got_default_group) {
-				set_message("No Group for Frontpage set!", MSG_TYPE_WARN);
+				setMessage("No Group for Frontpage set!", MSG_TYPE_WARN);
 			}
 			$vars = array(
 				'groups' => $groups,

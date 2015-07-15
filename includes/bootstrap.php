@@ -3,13 +3,18 @@
  * Initialize the system for use.
  *
  * Load commonly used libraries and initialize constants
+ *
+ * PHP version 5.3
+ *
+ * @package    IC-Discuss
+ * @subpackage System
  */
 
- /* 
+ /**
   * We need to set a version number that changes every time css or js files change,
   * to make sure they get reloaded and not loaded from cache.
   */
- define('RESOURCE_VERSION', '1.3');
+define('RESOURCE_VERSION', '1.3');
  
  
 /**
@@ -78,12 +83,23 @@ define('DATA_COLUMN_WEIGHT', 'B');
 define('DATA_ROW_MIN', '7');
 define('DATA_ROW_MAX', '200');
 
+/**
+ * Get the current directory from a URL
+ *
+ * @param string $url URL for page
+ *
+ * @return string URL of current directory with ending slash
+ */
 function currentdir($url) {
     // note: anything without a scheme ("example.com", "example.com:80/", etc.) is a folder
     // remove query (protection against "?url=http://example.com/")
-    if ($first_query = strpos($url, '?')) $url = substr($url, 0, $first_query);
+    if ($first_query = strpos($url, '?')) {
+        $url = substr($url, 0, $first_query);
+    }
     // remove fragment (protection against "#http://example.com/")
-    if ($first_fragment = strpos($url, '#')) $url = substr($url, 0, $first_fragment);
+    if ($first_fragment = strpos($url, '#')) {
+        $url = substr($url, 0, $first_fragment);
+    }
     // folder only
     $last_slash = strrpos($url, '/');
     if (!$last_slash) {
@@ -96,7 +112,15 @@ function currentdir($url) {
     return substr($url, 0, $last_slash + 1);
 }
 
-define('BASE_URL', currentdir($_SERVER["REQUEST_SCHEME"].'://'.$_SERVER["SERVER_NAME"].':'.$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"]));
+define(
+    'BASE_URL',
+    currentdir(
+        $_SERVER["REQUEST_SCHEME"]
+        . '://' . $_SERVER["SERVER_NAME"]
+        . ':' . $_SERVER["SERVER_PORT"]
+        . $_SERVER["REQUEST_URI"]
+    )
+);
 
 /**
  * Get a Template instance.
@@ -105,7 +129,7 @@ define('BASE_URL', currentdir($_SERVER["REQUEST_SCHEME"].'://'.$_SERVER["SERVER_
  *
  * @return Template An initialized Template object
  */
-function template_engine() {
+function templateEngine() {
     static $_template_engine = null;
     if (is_null($_template_engine)) {
         $_template_engine = new Template(TEMPLATE_PATH, array('en', 'es'));
@@ -115,6 +139,8 @@ function template_engine() {
 
 /**
  * Get a Database instance
+ *
+ * @return DB object
  */
 function db() {
     static $_db = null;
@@ -126,7 +152,7 @@ function db() {
 
 /**
  * Message type.
- * @see set_message()
+ * @see setMessage()
  */
 define('MSG_TYPE_INFO', 6); // syslog.h: LOG_INFO
 define('MSG_TYPE_WARN', 4); // syslog.h: LOG_WARNING
@@ -141,10 +167,10 @@ $_msg_store = array();
  * @param int    $msg_type One of the MSG_TYPE_* constants defined in {@link bootstrap.php}.
  *
  * @return void nothing
- * @see get_messages()
+ * @see getMessages()
  * @see MSG_TYPE_INFO
  */
-function set_message($msg, $msg_type = MSG_TYPE_INFO) {
+function setMessage($msg, $msg_type = MSG_TYPE_INFO) {
     global $_msg_store;
     $_msg_store[$msg_type][] = $msg;
 }
@@ -161,10 +187,10 @@ function set_message($msg, $msg_type = MSG_TYPE_INFO) {
  * @param int $type One of the MSG_TYPE_* constants defined in {@link bootstrap.php} (default: null).
  *
  * @return array Array of messages.
- * @see set_message()
+ * @see setMessage()
  * @see MSG_TYPE_INFO
  */
-function get_messages($type = null) {
+function getMessages($type = null) {
     global $_msg_store;
     if (isset($type)) {
         return (isset($_msg_store[$type])) ? $_msg_store[$type] : array();
@@ -177,10 +203,10 @@ function get_messages($type = null) {
  *
  * Renders a template and embeds it in the standard page template for output
  *
- * @param $title        string title of the page
- * @param $current_page string page identifier for menu
- * @param $template     string template to use for the page
- * @param $vars         array  variables to pass to page template
+ * @param string $title        title of the page
+ * @param string $current_page page identifier for menu
+ * @param string $template     template to use for the page
+ * @param array  $vars         variables to pass to page template
  *
  * @return nothing
  */
@@ -196,9 +222,9 @@ function display($title, $current_page, $template, $vars = array()) {
 		'page_title' => $title,
 		'current_page' => $current_page,
 		'issues' => $issues,
-		'contents' => template_engine()->render($template, $vars),
+		'contents' => templateEngine()->render($template, $vars),
 	);
-	print(template_engine()->render('main.tpl.php', $main_vars));
+	print(templateEngine()->render('main.tpl.php', $main_vars));
 }
 
 /**
@@ -208,11 +234,11 @@ function display($title, $current_page, $template, $vars = array()) {
  * (if array of sections is given, returns true if access is allowed to any section)
  * Returns false if the user is not allowed
  *
- * @param $sections mixed array of sections or string of section access should be checked against
+ * @param mixed $sections array of sections or string of section access should be checked against
  *
  * @return boolean true if allowed
  */
-function check_access($sections) {
+function checkAccess($sections) {
 	global $ini;
 	static $users = null;
 	if (is_null($users)) {
@@ -230,7 +256,8 @@ function check_access($sections) {
         }
         foreach ($sections as $section) {
             if (isset($users[$section])
-              && in_array(strtolower($_SERVER['REMOTE_USER']), $users[$section])) {
+                && in_array(strtolower($_SERVER['REMOTE_USER']), $users[$section])
+            ) {
                 $allowed = true;
                 break;
             }
@@ -247,7 +274,7 @@ function check_access($sections) {
  *
  * @return boolean true if a user is logged in false otherwise
  */
-function is_logged_in() {
+function isLoggedIn() {
     if (ACCESS_ENABLED) {
         return (!empty($_SERVER['REMOTE_USER']));
     } else {
@@ -258,13 +285,13 @@ function is_logged_in() {
 /**
  * Make sure access is permitted for the user
  *
- * @param $sections mixed array of sections or string of section access should be checked against
+ * @param mixed $sections array of sections or string of section access should be checked against
  *
  * @return boolean true if access is allowed, script ends with 401 error otherwise
  */
-function assert_access($sections = array()) {
+function assertAccess($sections = array()) {
     if (ACCESS_ENABLED) {
-        if (!check_access($sections)) {
+        if (!checkAccess($sections)) {
             header('HTTP/1.0 401 Unauthorized');
             print('Unauthorized');
             exit(0);

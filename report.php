@@ -1,7 +1,7 @@
 <?php
 require_once 'includes/bootstrap.php';
 
-assert_access(SECTION_SYNTHESIZE);
+assertAccess(SECTION_SYNTHESIZE);
 
 $report_type = Utils::requestOrDefault('type', 'normal');
 

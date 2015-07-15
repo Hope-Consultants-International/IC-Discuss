@@ -1,7 +1,7 @@
 <?php
 require_once 'includes/bootstrap.php';
 
-assert_access(SECTION_MANAGE);
+assertAccess(SECTION_MANAGE);
 
 ?><!DOCTYPE html>
 <html><head><title>DB Update</title></head>

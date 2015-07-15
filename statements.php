@@ -1,7 +1,7 @@
 <?php
 require_once 'includes/bootstrap.php';
 
-assert_access(SECTION_MANAGE);
+assertAccess(SECTION_MANAGE);
 
 $statement_id = Utils::requestOrDefault('id', NEW_ENTRY_ID);
 $action = Utils::requestOrDefault('action', 'list');

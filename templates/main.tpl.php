@@ -47,10 +47,10 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-			<?php if (check_access(SECTION_UPLOAD)) { ?>
+			<?php if (checkAccess(SECTION_UPLOAD)) { ?>
 				<li class=" <?php print(($current_page=='Upload')?'active':''); ?>"><a href="upload.php">Upload XLS</a></li>
 			<?php } ?>
-			<?php if (check_access(SECTION_SYNTHESIZE)) { ?>
+			<?php if (checkAccess(SECTION_SYNTHESIZE)) { ?>
 				<li class="dropdown <?php print((strpos($current_page,'Synthesize|') !== false)?'active':''); ?>">
 				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Synthesize <span class="caret"></span></a>
 				  <ul class="dropdown-menu" role="menu">
@@ -65,7 +65,7 @@
 				  </ul>
 				</li>
 			<?php } ?>
-			<?php if (check_access(SECTION_SYNTHESIZE)) { ?>
+			<?php if (checkAccess(SECTION_SYNTHESIZE)) { ?>
 			<li class="dropdown <?php print((strpos($current_page,'Report|') !== false)?'active':''); ?>">
 			  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Report <span class="caret"></span></a>
 			  <ul class="dropdown-menu" role="menu">
@@ -97,10 +97,10 @@
 			  </ul>
 			</li>
             <?php } ?>
-            <?php if (check_access(array(SECTION_SYNTHESIZE, SECTION_TICKER))) { ?>
+            <?php if (checkAccess(array(SECTION_SYNTHESIZE, SECTION_TICKER))) { ?>
                 <li class=" <?php print(($current_page == 'Live-Ticker')?'active':''); ?>"><a href="liveticker.php">Live-Ticker</a></li>
 			<?php } ?>
-			<?php if (check_access(SECTION_MANAGE)) { ?>
+			<?php if (checkAccess(SECTION_MANAGE)) { ?>
 			<li class="dropdown <?php print((strpos($current_page,'Manage|') !== false)?'active':''); ?>">
 			  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Manage <span class="caret"></span></a>
 			  <ul class="dropdown-menu" role="menu">
@@ -125,8 +125,8 @@
 			  </ul>
 			</li>
 			<?php } ?>
-			<li class=" <?php print(($current_page=='Help')?'active':''); ?>"><a href="help.php">Help<?php if (!is_logged_in()) { print(" / Login"); } ?></a></li>
-            <?php if (ACCESS_ENABLED && is_logged_in()) { ?>
+			<li class=" <?php print(($current_page=='Help')?'active':''); ?>"><a href="help.php">Help<?php if (!isLoggedIn()) { print(" / Login"); } ?></a></li>
+            <?php if (ACCESS_ENABLED && isLoggedIn()) { ?>
                 <li class=" <?php print(($current_page=='Logout')?'active':''); ?>"><a href="logout.php">Logout</a></li>
             <?php } ?>
           </ul>
@@ -145,7 +145,7 @@
 			);
 			$fmt = '<div class="alert %s" role="alert">%s</div>';
 			foreach ($message_types as $message_type => $alert_class) {
-				$messages = get_messages($message_type);
+				$messages = getMessages($message_type);
 				foreach ($messages as $message) {
 					printf($fmt, $alert_class, $message);
 				}
