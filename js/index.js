@@ -164,4 +164,7 @@ $( document ).ready(function() {
 		$(this).val($(this).val().replace(/\s{2,}/g, ' '));
 	});
 	poll_issues();
+    $(".alert.alert-info").fadeTo(2000, 500).slideUp(500, function(){
+        $(".alert.alert-info").alert('close');
+    });
 });

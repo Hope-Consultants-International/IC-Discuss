@@ -26,6 +26,9 @@ if ($stmt->foundRows == 1) {
 // get issue id
 $issue_id = Utils::requestOrDefault('issue_id', null);
 if (!array_key_exists($issue_id, $issues)) {
+    if (!is_null($issue_id)) {
+        setMessage('Invalid Issue', MSG_TYPE_WARN);
+    }
 	$issue_id = null;
 }
 
