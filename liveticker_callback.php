@@ -10,7 +10,7 @@ $action = Utils::requestOrDefault('action', null);
 
 function check_issue_exists($issue_id) {
 	return (!is_null($issue_id)
-		&& !is_null(Utils::get_issue($issue_id)));
+		&& !is_null(Utils::getIssue($issue_id)));
 }
 
 $reply = (object) array(
@@ -47,7 +47,7 @@ try {
 				}
 			} else {
 				if (check_issue_exists($issue_id)
-					&& Utils::get_issue($issue_id)->Frontpage) {
+					&& Utils::getIssue($issue_id)->Frontpage) {
 					$stmt = db()->preparedStatement(
 						'SELECT StatementId, Statement, IssueId FROM `%table` WHERE IssueId = :issue_id AND StatementId > :statement_id ORDER BY StatementId ASC',
 						array('%table' => TABLE_STATEMENTS, ':issue_id' => $issue_id, ':statement_id' => $max_statement_id)

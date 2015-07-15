@@ -12,16 +12,16 @@ $action = Utils::requestOrDefault('action', null);
 
 function check_statement_exists($statement_id) {
 	return (!is_null($statement_id)
-		&& !is_null(Utils::get_statement($statement_id)));
+		&& !is_null(Utils::getStatement($statement_id)));
 }
 
 function check_summary_exists($summary_id) {
 	return (!is_null($summary_id)
-	  && !is_null(Utils::get_summary($summary_id)));
+	  && !is_null(Utils::getSummary($summary_id)));
 }
 
 function check_statement_link($statement_id, $summary_id) {
-	$statement = Utils::get_statement($statement_id);
+	$statement = Utils::getStatement($statement_id);
 	return (!is_null($statement)
 	  && $statement->SummaryId == $summary_id);
 }
@@ -92,7 +92,7 @@ try {
 		case 'new_summary':
 			if (check_statement_exists($statement_id)
 			  && check_statement_link($statement_id, null)) {
-				$statement = Utils::get_statement($statement_id);
+				$statement = Utils::getStatement($statement_id);
 				$s = db()->preparedStatement(
 					'INSERT INTO `%table` SET Summary = :statement, IssueId = :issue',
 					array(
@@ -157,7 +157,7 @@ try {
 					break;
 				}
 				$highlight = ($highlight == 'true') ? 1 : 0;
-				if (Utils::get_statement($statement_id)->Highlight != $highlight) {
+				if (Utils::getStatement($statement_id)->Highlight != $highlight) {
 					$s_update = db()->preparedStatement(
 						'UPDATE `%table` SET Highlight = :highlight WHERE StatementId = :statement_id',
 						array(

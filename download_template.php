@@ -45,7 +45,7 @@ function create_template($group, $issue, $to_string = false) {
 	
 	$objPHPExcel->getProperties()->setCreator("IC-Discuss");
 	
-	$xlsname = Utils::sanitize_filename(APP_TITLE . ' - ' . $group->Name . ' - ' . $issue->Title) . '.xls';
+	$xlsname = Utils::sanitizeFilename(APP_TITLE . ' - ' . $group->Name . ' - ' . $issue->Title) . '.xls';
 		
 	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel5");
 	if ($to_string) {
@@ -69,7 +69,7 @@ $tmpfile = '';
 $tmpfiles = array();
 
 if (!is_null($issue_id) && is_null($group_id)) {
-	$issue = Utils::get_issue($issue_id);
+	$issue = Utils::getIssue($issue_id);
 	if (is_null($issue)) {
 		abort('Issue not found.');
 	}
@@ -77,7 +77,7 @@ if (!is_null($issue_id) && is_null($group_id)) {
 	// got through all groups
 	$tmpfile = tempnam("tmp", "zip");
 	$tmpfiles[] = $tmpfile;
-	$filename = Utils::sanitize_filename(APP_TITLE . ' - All - ' . $issue->Title) . '.zip';
+	$filename = Utils::sanitizeFilename(APP_TITLE . ' - All - ' . $issue->Title) . '.zip';
 	$zip = new ZipArchive;
 	$res = $zip->open($tmpfile, ZipArchive::CREATE);
 	if ($res === true) {
@@ -90,7 +90,7 @@ if (!is_null($issue_id) && is_null($group_id)) {
 			while ($group = $s->fetchObject()) {
 				list ($xlsname, $xlsfile) = create_template($group, $issue, true);
 				if (!empty($issue->Folder)) {
-					$xlsname = Utils::sanitize_filename($issue->Folder) . DIRECTORY_SEPARATOR . $xlsname;
+					$xlsname = Utils::sanitizeFilename($issue->Folder) . DIRECTORY_SEPARATOR . $xlsname;
 				}
 				$zip->addFromString($xlsname, $xlsfile);
 			}
@@ -101,7 +101,7 @@ if (!is_null($issue_id) && is_null($group_id)) {
 		abort('Could not open temporary file.');
 	}
 } elseif (is_null($issue_id) && !is_null($group_id)) {
-	$group = Utils::get_group($group_id);
+	$group = Utils::getGroup($group_id);
 	if (is_null($group)) {
 		abort('Group not found.');
 	}
@@ -109,7 +109,7 @@ if (!is_null($issue_id) && is_null($group_id)) {
 	// got through all issues
 	$tmpfile = tempnam("tmp", "zip");
 	$tmpfiles[] = $tmpfile;
-	$filename = Utils::sanitize_filename(APP_TITLE . ' - ' . $group->Name . ' - All') . '.zip';
+	$filename = Utils::sanitizeFilename(APP_TITLE . ' - ' . $group->Name . ' - All') . '.zip';
 	$zip = new ZipArchive;
 	$res = $zip->open($tmpfile, ZipArchive::CREATE);
 	if ($res === true) {
@@ -122,7 +122,7 @@ if (!is_null($issue_id) && is_null($group_id)) {
 			while ($issue = $s->fetchObject()) {
 				list ($xlsname, $xlsfile) = create_template($group, $issue, true);
 				if (!empty($issue->Folder)) {
-					$xlsname = Utils::sanitize_filename($issue->Folder) . DIRECTORY_SEPARATOR . $xlsname;
+					$xlsname = Utils::sanitizeFilename($issue->Folder) . DIRECTORY_SEPARATOR . $xlsname;
 				}
 				$zip->addFromString($xlsname, $xlsfile);
 			}
@@ -133,12 +133,12 @@ if (!is_null($issue_id) && is_null($group_id)) {
 		abort('Could not open temporary file.');
 	}
 } elseif (!is_null($issue_id) && !is_null($group_id)) {
-	$group = Utils::get_group($group_id);
+	$group = Utils::getGroup($group_id);
 	if (is_null($group)) {
 		abort('Group not found.');
 	}
 	
-	$issue = Utils::get_issue($issue_id);
+	$issue = Utils::getIssue($issue_id);
 	if (is_null($issue)) {
 		abort('Issue not found.');
 	}	

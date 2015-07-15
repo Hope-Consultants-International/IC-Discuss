@@ -1,8 +1,29 @@
 <?php
+/**
+ * This class provides utilities for IC-Discuss
+ *
+ * PHP version 5
+ *
+ * @package    IC-Discuss
+ * @subpackage TemplateLib
+ */
 
+/**
+ * Utility functions
+ *
+ * @package    IC-Discuss
+ * @subpackage Utils
+ */
 class Utils {
-	
-	static function get_statement($statement_id) {
+
+    /**
+     * Retrieve a Statement from the database
+     *
+     * @param string $statement_id id of statement to retrieve
+     *
+     * @return object Statement or null if not found
+     */
+	static function getStatement($statement_id) {
 		static $cache = array();
 		if (is_null($statement_id)) {
 			return null;
@@ -28,7 +49,14 @@ class Utils {
 		return $cache[$statement_id];
 	}
 	
-	static function get_summary($summary_id) {
+    /**
+     * Retrieve a Summary from the database
+     *
+     * @param string $summary_id id of summary to retrieve
+     *
+     * @return object Summary or null if not found
+     */
+	static function getSummary($summary_id) {
 		static $cache = array();
 		if (is_null($summary_id)) {
 			return null;
@@ -46,7 +74,14 @@ class Utils {
 		return $cache[$summary_id];
 	}
 	
-	static function get_issue($issue_id) {
+    /**
+     * Retrieve an Issue from the database
+     *
+     * @param string $issue_id id of issue to retrieve
+     *
+     * @return object Issue or null if not found
+     */
+	static function getIssue($issue_id) {
 		static $cache = array();
 		if (is_null($issue_id)) {
 			return null;
@@ -64,7 +99,14 @@ class Utils {
 		return $cache[$issue_id];
 	}
 	
-	static function get_group($group_id) {
+    /**
+     * Retrieve a Group from the database
+     *
+     * @param string $group_id id of group to retrieve
+     *
+     * @return object Group or null if not found
+     */
+	static function getGroup($group_id) {
 		static $cache = array();
 		if (is_null($group_id)) {
 			return null;
@@ -81,14 +123,30 @@ class Utils {
 		}
 		return $cache[$group_id];
 	}
-	
-	static function sanitize_filename($string) {
-		$string = preg_replace("/[^A-Za-z0-9-_\. ]/", '_', $string);
-		$string = preg_replace('/_+/', '_', $string);
-		return $string;
+
+    /**
+     * Sanitize a Filename
+     *
+     * Removes problematic characters from a filename and replaces them with _
+     *
+     * @param string $filename filename to sanitize
+     *
+     * @return string sanitized filename
+     */
+	static function sanitizeFilename($filename) {
+		$filename = preg_replace("/[^A-Za-z0-9-_\. ]/", '_', $filename);
+		$filename = preg_replace('/_+/', '_', $filename);
+		return $filename;
 	}
-	
-	static function javascript_string($string) {
+
+    /**
+     * Escape a string to be included in javascript code
+     *
+     * @param string $string string to be escaped
+     *
+     * @return escaped string
+     */
+	static function javascriptString($string) {
 		// htmlentities
 		$string = htmlentities($string);
 		
@@ -100,7 +158,16 @@ class Utils {
 		
 		return $string;
 	}
-	
+
+    /**
+     * Return Request parameter or Default value
+     *
+     * @param string $parameter  parameter name
+     * @param mixed  $default    what should be returned if parameter was not given (default: '')
+     * @param mixed  $null_value treat this value as being null (and return null if given) (default: null)
+     *
+     * @return returns named parameter or the default value
+     */
 	static function requestOrDefault($parameter, $default = '', $null_value = null) {
 		$value = (isset($_REQUEST[$parameter])) ? $_REQUEST[$parameter] : $default;
 		if ($value === $null_value) {
