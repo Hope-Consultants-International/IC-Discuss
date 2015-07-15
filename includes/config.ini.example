@@ -10,10 +10,12 @@ enabled = false
 ; list all users that can upload
 upload[] = "sample-user"
 upload[] = "another-user"
-; list all users that can synthesize
+; list all users that can access synthesize / report / live-ticker
 synthesize[] = "sample-user"
 ; list all users that can manage data
 manage[] = "sample-user"
+; list all users that can access the live-ticker
+ticker[] = "ticker-user"
 
 [DB]
 hostname = "localhost"
