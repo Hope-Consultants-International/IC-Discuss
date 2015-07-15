@@ -9,13 +9,30 @@ ignore_user_abort(true);
 $group_id = Utils::requestOrDefault('group', null);
 $issue_id = Utils::requestOrDefault('issue', null);
 
+/**
+ * Abort with Error message
+ *
+ * @param string $message the message to print
+ *
+ * @return nothing
+ */
 function abort($message) {
 	header('HTTP/1.0 400 Bad Request');
 	print($message);
 	exit(0);
 }
 
-function create_template($group, $issue, $to_string = false) {
+/**
+ * Create a XLS template
+ *
+ * @param string  $group     Group Name to include in template
+ * @param string  $issue     Issue title to include in template
+ * @param boolean $to_string return template as string or write to file
+ *
+ * @return list($xlsname, $xlsfile) $xlsname: name of xls file for client /
+ *                                  $xlsfile: filepath to xls file or string containing xls file
+ */
+function createTemplate($group, $issue, $to_string = false) {
 	global $tmpfiles;
 	
 	// load template
@@ -88,7 +105,7 @@ if (!is_null($issue_id) && is_null($group_id)) {
 		);
 		if ($s->success) {
 			while ($group = $s->fetchObject()) {
-				list ($xlsname, $xlsfile) = create_template($group, $issue, true);
+				list ($xlsname, $xlsfile) = createTemplate($group, $issue, true);
 				if (!empty($issue->Folder)) {
 					$xlsname = Utils::sanitizeFilename($issue->Folder) . DIRECTORY_SEPARATOR . $xlsname;
 				}
@@ -120,7 +137,7 @@ if (!is_null($issue_id) && is_null($group_id)) {
 		);
 		if ($s->success) {
 			while ($issue = $s->fetchObject()) {
-				list ($xlsname, $xlsfile) = create_template($group, $issue, true);
+				list ($xlsname, $xlsfile) = createTemplate($group, $issue, true);
 				if (!empty($issue->Folder)) {
 					$xlsname = Utils::sanitizeFilename($issue->Folder) . DIRECTORY_SEPARATOR . $xlsname;
 				}
@@ -143,7 +160,7 @@ if (!is_null($issue_id) && is_null($group_id)) {
 		abort('Issue not found.');
 	}	
 	
-	list ($filename, $tmpfile) = create_template($group, $issue);
+	list ($filename, $tmpfile) = createTemplate($group, $issue);
 } else {
 	abort('No group and no issue.');
 }

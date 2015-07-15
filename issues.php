@@ -37,9 +37,22 @@ switch ($action) {
 			':folder' => Utils::requestOrDefault('Folder'),
 		);
 		if ($new_issue) {
-			$query = "INSERT INTO `%table` SET Title = :title, Description = :description, AllowUpload = :upload, Frontpage = :frontpage, Folder = :folder";
+			$query = "
+                INSERT INTO `%table` SET
+                    Title = :title,
+                    Description = :description,
+                    AllowUpload = :upload,
+                    Frontpage = :frontpage,
+                    Folder = :folder";
 		} else {
-			$query = "UPDATE `%table` SET Title = :title, Description = :description, AllowUpload = :upload, Frontpage = :frontpage, Folder = :folder WHERE IssueId = :id";
+			$query = "
+                UPDATE `%table` SET
+                    Title = :title,
+                    Description = :description,
+                    AllowUpload = :upload,
+                    Frontpage = :frontpage,
+                    Folder = :folder
+                WHERE IssueId = :id";
 			$values[':id'] = $issue_id;
 		}
 		$stmt = db()->preparedStatement($query, $values);
@@ -51,55 +64,55 @@ switch ($action) {
 		header('Location: ' . $page_url . '?action=list', true, 302);
 		break;
 	case 'edit':
-			if ($new_issue) {
-				$title = 'New Issue';
-				$issue_title = '';
-				$issue_description= '';
-				$issue_allow_upload = true;
-				$issue_frontpage = false;
-				$issue_folder = '';
+		if ($new_issue) {
+			$title = 'New Issue';
+			$issue_title = '';
+			$issue_description= '';
+			$issue_allow_upload = true;
+			$issue_frontpage = false;
+			$issue_folder = '';
+		} else {
+			$query = "SELECT Title, Description, AllowUpload, Frontpage, Folder FROM `%table` WHERE IssueId = :id";
+			$values = array('%table' => TABLE_ISSUES, ':id' => $issue_id);
+			$stmt = db()->preparedStatement($query, $values);
+			if ($stmt->foundRows == 1) {
+				$issue = $stmt->fetchObject();
+				$issue_title = $issue->Title;
+				$issue_description = $issue->Description;
+				$issue_allow_upload = $issue->AllowUpload;
+				$issue_frontpage = $issue->Frontpage;
+				$issue_folder = $issue->Folder;
 			} else {
-				$query = "SELECT Title, Description, AllowUpload, Frontpage, Folder FROM `%table` WHERE IssueId = :id";
-				$values = array('%table' => TABLE_ISSUES, ':id' => $issue_id);
-				$stmt = db()->preparedStatement($query, $values);
-				if ($stmt->foundRows == 1) {
-					$issue = $stmt->fetchObject();
-					$issue_title = $issue->Title;
-					$issue_description = $issue->Description;
-					$issue_allow_upload = $issue->AllowUpload;
-					$issue_frontpage = $issue->Frontpage;
-					$issue_folder = $issue->Folder;
-				} else {
-					die('Issue not found: ' . $issue_id);
-				}
-				$title = 'Edit Issue "' . htmlentities($issue_title) . '"';
+				die('Issue not found: ' . $issue_id);
 			}
-			$vars = array(
-				'issue_id' => $issue_id,
-				'issue_title' => $issue_title,
-				'issue_description' => $issue_description,
-				'issue_upload' => $issue_allow_upload,
-				'issue_frontpage' => $issue_frontpage,
-				'issue_folder' => $issue_folder,
-				'page_url' => $page_url,
-				'title' => $title,
-			);
-			display(APP_TITLE, 'Manage|Issues', 'issues_edit.tpl.php', $vars);
+			$title = 'Edit Issue "' . htmlentities($issue_title) . '"';
+		}
+		$vars = array(
+			'issue_id' => $issue_id,
+			'issue_title' => $issue_title,
+			'issue_description' => $issue_description,
+			'issue_upload' => $issue_allow_upload,
+			'issue_frontpage' => $issue_frontpage,
+			'issue_folder' => $issue_folder,
+			'page_url' => $page_url,
+			'title' => $title,
+		);
+		display(APP_TITLE, 'Manage|Issues', 'issues_edit.tpl.php', $vars);
 		break;
 	case 'list':
-			$issues = array();
-			$query = "SELECT IssueId, Title, Description, AllowUpload, Frontpage FROM `%table`";
-			$values = array('%table' => TABLE_ISSUES);
-			$stmt = db()->preparedStatement($query, $values);
-			while ($issue = $stmt->fetchObject()) {
-				$issues[$issue->IssueId] = $issue;
-			}
-			$vars = array(
-				'issues' => $issues,
-				'page_url' => $page_url,
-				'download_url' => BASE_URL . 'download_template.php',
-			);
-			display(APP_TITLE, 'Manage|Issues', 'issues_list.tpl.php', $vars);
+		$issues = array();
+		$query = "SELECT IssueId, Title, Description, AllowUpload, Frontpage FROM `%table`";
+		$values = array('%table' => TABLE_ISSUES);
+		$stmt = db()->preparedStatement($query, $values);
+		while ($issue = $stmt->fetchObject()) {
+			$issues[$issue->IssueId] = $issue;
+		}
+		$vars = array(
+			'issues' => $issues,
+			'page_url' => $page_url,
+			'download_url' => BASE_URL . 'download_template.php',
+		);
+		display(APP_TITLE, 'Manage|Issues', 'issues_list.tpl.php', $vars);
 		break;
 	default:
 		die('Unknown action: ' . htmlentities($action));

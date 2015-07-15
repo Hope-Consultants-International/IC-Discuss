@@ -10,20 +10,43 @@ $summary_id_old = Utils::requestOrDefault('summary_old', null);
 
 $action = Utils::requestOrDefault('action', null);
 
-function check_statement_exists($statement_id) {
+/**
+ * Check if statement exists
+ *
+ * @param string $statement_id statement id
+ *
+ * @return boolean true if statement exists
+ */
+function checkStatementExists($statement_id) {
 	return (!is_null($statement_id)
 		&& !is_null(Utils::getStatement($statement_id)));
 }
 
-function check_summary_exists($summary_id) {
+/**
+ * Check if summary exists
+ *
+ * @param string $summary_id summary id
+ *
+ * @return boolean true if summary exists
+ */
+function checkSummaryExists($summary_id) {
 	return (!is_null($summary_id)
 	  && !is_null(Utils::getSummary($summary_id)));
 }
 
-function check_statement_link($statement_id, $summary_id) {
+/**
+ * Check if statement is linked to summary
+ *
+ * @param string $statement_id statement id
+ * @param string $summary_id   summary id
+ *
+ * @return boolean true if everything fits
+ */
+function checkStatementLink($statement_id, $summary_id) {
 	$statement = Utils::getStatement($statement_id);
 	return (!is_null($statement)
-	  && $statement->SummaryId == $summary_id);
+	  && $statement->SummaryId == $summary_id
+    );
 }
 
 $reply = (object) array(
@@ -33,9 +56,10 @@ $reply = (object) array(
 try {
 	switch ($action) {
 		case 'link':
-			if (check_statement_exists($statement_id)
-			  && check_summary_exists($summary_id)
-			  && check_statement_link($statement_id, $summary_id_old)) {
+            if (checkStatementExists($statement_id)
+			    && checkSummaryExists($summary_id)
+			    && checkStatementLink($statement_id, $summary_id_old)
+            ) {
 				$s = db()->preparedStatement(
 					'UPDATE `%table` SET SummaryId = :summary_id WHERE StatementId = :statement_id',
 					array('%table' => TABLE_STATEMENTS, ':summary_id' => $summary_id, ':statement_id' => $statement_id)
@@ -50,8 +74,9 @@ try {
 			}
 			break;
 		case 'unlink':
-			if (check_statement_exists($statement_id)
-			  && check_statement_link($statement_id, $summary_id_old)) {
+			if (checkStatementExists($statement_id)
+			    && checkStatementLink($statement_id, $summary_id_old)
+            ) {
 				$s = db()->preparedStatement(
 					'UPDATE `%table` SET SummaryId = NULL WHERE StatementId = :statement_id',
 					array('%table' => TABLE_STATEMENTS, ':statement_id' => $statement_id)
@@ -66,7 +91,7 @@ try {
 			}
 			break;
 		case 'delete_summary':
-			if (check_summary_exists($summary_id)) {
+			if (checkSummaryExists($summary_id)) {
 				$s_update = db()->preparedStatement(
 					'UPDATE `%table` SET SummaryId = NULL WHERE SummaryId = :summary_id',
 					array('%table' => TABLE_STATEMENTS, ':summary_id' => $summary_id)
@@ -90,8 +115,9 @@ try {
 			}
 			break;
 		case 'new_summary':
-			if (check_statement_exists($statement_id)
-			  && check_statement_link($statement_id, null)) {
+			if (checkStatementExists($statement_id)
+			    && checkStatementLink($statement_id, null)
+            ) {
 				$statement = Utils::getStatement($statement_id);
 				$s = db()->preparedStatement(
 					'INSERT INTO `%table` SET Summary = :statement, IssueId = :issue',
@@ -108,7 +134,11 @@ try {
 					// link source statement to the new one
 					$s_link = db()->preparedStatement(
 						'UPDATE `%table` SET SummaryId = :summary_id WHERE StatementId = :statement_id',
-						array('%table' => TABLE_STATEMENTS, ':summary_id' => $summary_id, ':statement_id' => $statement_id)
+						array(
+                            '%table' => TABLE_STATEMENTS,
+                            ':summary_id' => $summary_id,
+                            ':statement_id' => $statement_id
+                        )
 					);
 					if (!$s_link->success) {
 						$reply->success = false;
@@ -124,7 +154,7 @@ try {
 			}
 			break;
 		case 'update_summary':
-			if (check_summary_exists($summary_id)) {
+			if (checkSummaryExists($summary_id)) {
 				$summary_text = Utils::requestOrDefault('summary_text', null);
 				if (!is_null($summary_text)) {
 					$s_update = db()->preparedStatement(
@@ -149,7 +179,7 @@ try {
 			}
 			break;
 		case 'highlight_statement':
-			if (check_statement_exists($statement_id)) {
+			if (checkStatementExists($statement_id)) {
 				$highlight = Utils::requestOrDefault('highlight', null);
 				if (is_null($highlight)) {
 					$reply->success = false;

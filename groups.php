@@ -59,53 +59,53 @@ switch ($action) {
 		header('Location: ' . $page_url . '?action=list', true, 302);
 		break;
 	case 'edit':
-			if ($new_group) {
-				$title = 'New Group';
-				$group_name = '';
+        if ($new_group) {
+		    $title = 'New Group';
+            $group_name = '';
 				$group_frontpage = false;
+		} else {
+			$query = "SELECT Name, Frontpage FROM `%table` WHERE GroupId = :id";
+			$values = array('%table' => TABLE_GROUPS, ':id' => $group_id);
+			$stmt = db()->preparedStatement($query, $values);
+			if ($stmt->foundRows == 1) {
+				$group = $stmt->fetchObject();
+				$group_name = $group->Name;
+				$group_frontpage = $group->Frontpage;
 			} else {
-				$query = "SELECT Name, Frontpage FROM `%table` WHERE GroupId = :id";
-				$values = array('%table' => TABLE_GROUPS, ':id' => $group_id);
-				$stmt = db()->preparedStatement($query, $values);
-				if ($stmt->foundRows == 1) {
-					$group = $stmt->fetchObject();
-					$group_name = $group->Name;
-					$group_frontpage = $group->Frontpage;
-				} else {
-					die('Group not found: ' . $group_id);
-				}
-				$title = 'Edit Group "' . htmlentities($group_name) . '"';
+				die('Group not found: ' . $group_id);
 			}
-			$vars = array(
-				'group_id' => $group_id,
-				'group_name' => $group_name,
-				'group_frontpage' => $group_frontpage,
-				'page_url' => $page_url,
-				'title' => $title,
-			);
-			display(APP_TITLE, 'Manage|Groups', 'groups_edit.tpl.php', $vars);
+			$title = 'Edit Group "' . htmlentities($group_name) . '"';
+		}
+		$vars = array(
+			'group_id' => $group_id,
+			'group_name' => $group_name,
+			'group_frontpage' => $group_frontpage,
+			'page_url' => $page_url,
+            'title' => $title,
+        );
+        display(APP_TITLE, 'Manage|Groups', 'groups_edit.tpl.php', $vars);
 		break;
 	case 'list':
-			$groups = array();
-			$got_default_group = false;
-			$query = "SELECT GroupId, Name, Frontpage FROM `%table`";
-			$values = array('%table' => TABLE_GROUPS);
-			$stmt = db()->preparedStatement($query, $values);
-			while ($group = $stmt->fetchObject()) {
-				$groups[$group->GroupId] = $group;
-				if ($group->Frontpage) {
-					$got_default_group = true;
-				}
+		$groups = array();
+		$got_default_group = false;
+		$query = "SELECT GroupId, Name, Frontpage FROM `%table`";
+		$values = array('%table' => TABLE_GROUPS);
+		$stmt = db()->preparedStatement($query, $values);
+		while ($group = $stmt->fetchObject()) {
+			$groups[$group->GroupId] = $group;
+			if ($group->Frontpage) {
+				$got_default_group = true;
 			}
-			if (!$got_default_group) {
-				setMessage("No Group for Frontpage set!", MSG_TYPE_WARN);
-			}
-			$vars = array(
-				'groups' => $groups,
-				'page_url' => $page_url,
-				'download_url' => BASE_URL . 'download_template.php',
-			);
-			display(APP_TITLE, 'Manage|Groups', 'groups_list.tpl.php', $vars);
+		}
+		if (!$got_default_group) {
+			setMessage("No Group for Frontpage set!", MSG_TYPE_WARN);
+		}
+		$vars = array(
+			'groups' => $groups,
+			'page_url' => $page_url,
+			'download_url' => BASE_URL . 'download_template.php',
+		);
+		display(APP_TITLE, 'Manage|Groups', 'groups_list.tpl.php', $vars);
 		break;
 	default:
 		die('Unknown action: ' . htmlentities($action));

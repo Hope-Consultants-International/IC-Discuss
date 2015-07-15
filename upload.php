@@ -4,6 +4,14 @@ require_once 'php-excel/Classes/PHPExcel.php';
 
 assertAccess(SECTION_UPLOAD);
 
+/**
+ * Try to get data, if none there, return default
+ *
+ * @param mixed $data    input data
+ * @param mixed $default value if $data is empty (default: '')
+ *
+ * @return mixed $data if not emptu $default otherwise
+ */
 function _dataOrDefault($data, $default = '') {
 	return empty($data) ? $default : $data;
 }
@@ -11,9 +19,10 @@ function _dataOrDefault($data, $default = '') {
 $action = Utils::requestOrDefault('action', 'nothing');
 
 if ($action == 'import') {
-	if(isset($_FILES['spreadsheet']) &&
-	  !empty($_FILES['spreadsheet']['name'])) {
-		if(empty($_FILES['spreadsheet']['error'])) {
+	if (isset($_FILES['spreadsheet'])
+        && !empty($_FILES['spreadsheet']['name'])
+    ) {
+		if (empty($_FILES['spreadsheet']['error'])) {
 			$inputFile = $_FILES['spreadsheet']['name'];
 			$extension = strtoupper(pathinfo($inputFile, PATHINFO_EXTENSION));
 			if (in_array(strtolower($extension), array('xls', 'xlsx', 'ods'))) {
@@ -84,7 +93,12 @@ if ($action == 'import') {
 					
 					//  Read Data into Array
 					$highestRow = min($sheet->getHighestDataRow(), DATA_ROW_MAX);
-					$data = $sheet->rangeToArray(DATA_COLUMN_STATEMENT . DATA_ROW_MIN . ':' . DATA_COLUMN_WEIGHT . $highestRow, NULL, TRUE, FALSE);
+					$data = $sheet->rangeToArray(
+                        DATA_COLUMN_STATEMENT . DATA_ROW_MIN . ':' . DATA_COLUMN_WEIGHT . $highestRow,
+                        null,
+                        true,
+                        false
+                    );
 					$row_num = DATA_ROW_MIN - 1;
 					$statement_num = 0;
 					foreach ($data as $row) {
@@ -108,7 +122,10 @@ if ($action == 'import') {
 							}
 						}
 					}
-					setMessage("{$statement_num} Statements imported. (Group: {$group} / Issue: ${issue})", MSG_TYPE_INFO);
+					setMessage(
+                        "{$statement_num} Statements imported. (Group: {$group} / Issue: ${issue})",
+                        MSG_TYPE_INFO
+                    );
 				} else {
 					if ($issue_id !== false) {
 						setMessage("Group ID or Issue ID not found.", MSG_TYPE_ERR);
@@ -117,7 +134,7 @@ if ($action == 'import') {
 			} else {
 				setMessage("Please upload XLS, XLSX or ODS.", MSG_TYPE_ERR);
 			}
-		} else{ 
+		} else {
 			setMessage($_FILES['spreadsheet']['error'], MSG_TYPE_ERR);
 		}
 	} else {

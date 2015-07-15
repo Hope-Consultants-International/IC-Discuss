@@ -13,7 +13,10 @@ if ($stmt->foundRows == 1) {
 	$group_id = $stmt->fetchColumn();
 
 	// get issues for frontpage
-	$stmt = db()->preparedStatement("SELECT IssueId, Title FROM `%table` WHERE Frontpage = 1 ORDER BY Title", array('%table' => TABLE_ISSUES));
+	$stmt = db()->preparedStatement(
+        "SELECT IssueId, Title FROM `%table` WHERE Frontpage = 1 ORDER BY Title",
+        array('%table' => TABLE_ISSUES)
+    );
 	if ($stmt->success) {
 		$issues = $stmt->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_COLUMN);
 		$issues = array_map('reset', $issues);
@@ -67,7 +70,12 @@ const ajaxHandlerURL = '%s';
 
 var issue_id = %s;
 EOJS;
-		$script = sprintf($script, ((DEBUG) ? 'true' : 'false' ), htmlentities(BASE_URL . 'index.php'), (is_null($issue_id) ? 0 : $issue_id));
+		$script = sprintf(
+            $script,
+            ((DEBUG) ? 'true' : 'false' ),
+            htmlentities(BASE_URL . 'index.php'),
+            (is_null($issue_id) ? 0 : $issue_id)
+        );
 
 		$title = 'Home';
 		$vars = array(

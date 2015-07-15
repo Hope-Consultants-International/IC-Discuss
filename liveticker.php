@@ -26,7 +26,12 @@ $script = <<<EOJS
 	
 	var issue_id = %s;
 EOJS;
-$script = sprintf($script, ((DEBUG) ? 'true' : 'false' ), htmlentities(BASE_URL . 'liveticker_callback.php'), $issue_id);
+$script = sprintf(
+    $script,
+    ((DEBUG) ? 'true' : 'false' ),
+    htmlentities(BASE_URL . 'liveticker_callback.php'),
+    $issue_id
+);
 
 $vars = array(
 	'issue_id' => $issue_id,

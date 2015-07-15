@@ -52,7 +52,13 @@ switch ($report_type) {
 				}
 				
 				$s_weight = db()->preparedStatement(
-					"SELECT SUM(W.AverageWeight) AS GroupWeight FROM (SELECT SummaryId, GroupId, AVG(Weight) AS AverageWeight FROM statements  WHERE SummaryId = :id GROUP BY SummaryId, GroupId) AS W",
+					"SELECT SUM(W.AverageWeight) AS GroupWeight
+                    FROM (
+                        SELECT SummaryId, GroupId, AVG(Weight) AS AverageWeight
+                        FROM statements
+                        WHERE SummaryId = :id
+                        GROUP BY SummaryId, GroupId
+                    ) AS W",
 					array('%table' => TABLE_STATEMENTS, ':id' => $summary->SummaryId)
 				);
 				

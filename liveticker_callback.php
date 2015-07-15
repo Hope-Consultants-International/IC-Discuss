@@ -8,7 +8,14 @@ $max_statement_id = Utils::requestOrDefault('statement', 0);
 
 $action = Utils::requestOrDefault('action', null);
 
-function check_issue_exists($issue_id) {
+/**
+ * Check if issue exists
+ *
+ * @param string $issue_id id of issue to check
+ *
+ * @return boolean true if issue exists
+ */
+function checkIssueExists($issue_id) {
 	return (!is_null($issue_id)
 		&& !is_null(Utils::getIssue($issue_id)));
 }
@@ -21,7 +28,10 @@ try {
 	switch ($action) {
 		case 'get_issues':
 			// get issues for frontpage
-			$stmt = db()->preparedStatement("SELECT IssueId, Title FROM `%table` WHERE Frontpage = 1 ORDER BY Title", array('%table' => TABLE_ISSUES));
+			$stmt = db()->preparedStatement(
+                "SELECT IssueId, Title FROM `%table` WHERE Frontpage = 1 ORDER BY Title",
+                array('%table' => TABLE_ISSUES)
+            );
 			if ($stmt->success) {
 				$issues = $stmt->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_COLUMN);
 				$reply->data = array_map('reset', $issues);
@@ -35,8 +45,13 @@ try {
 				$stmt = db()->preparedStatement(
 					'SELECT s.StatementId, s.Statement, s.IssueId
 					 FROM `%stable` s JOIN `%itable` i on s.IssueId = i.IssueId
-					 WHERE i.Frontpage = 1 AND s.StatementId > :statement_id ORDER BY s.StatementId ASC',
-					array('%stable' => TABLE_STATEMENTS, '%itable' => TABLE_ISSUES, ':statement_id' => $max_statement_id)
+					 WHERE i.Frontpage = 1 AND s.StatementId > :statement_id
+                     ORDER BY s.StatementId ASC',
+					array(
+                        '%stable' => TABLE_STATEMENTS,
+                        '%itable' => TABLE_ISSUES,
+                        ':statement_id' => $max_statement_id,
+                    )
 				);
 				if ($stmt->success) {
 					$statements = $stmt->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_ASSOC);
@@ -46,11 +61,19 @@ try {
 					$reply->message = 'Could not get All Statements';
 				}
 			} else {
-				if (check_issue_exists($issue_id)
-					&& Utils::getIssue($issue_id)->Frontpage) {
+				if (checkIssueExists($issue_id)
+					&& Utils::getIssue($issue_id)->Frontpage
+                ) {
 					$stmt = db()->preparedStatement(
-						'SELECT StatementId, Statement, IssueId FROM `%table` WHERE IssueId = :issue_id AND StatementId > :statement_id ORDER BY StatementId ASC',
-						array('%table' => TABLE_STATEMENTS, ':issue_id' => $issue_id, ':statement_id' => $max_statement_id)
+						'SELECT StatementId, Statement, IssueId
+                         FROM `%table`
+                         WHERE IssueId = :issue_id AND StatementId > :statement_id
+                         ORDER BY StatementId ASC',
+						array(
+                            '%table' => TABLE_STATEMENTS,
+                            ':issue_id' => $issue_id,
+                            ':statement_id' => $max_statement_id,
+                        )
 					);
 					if ($stmt->success) {
 						$statements = $stmt->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_ASSOC);
