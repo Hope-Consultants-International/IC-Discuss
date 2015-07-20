@@ -200,4 +200,11 @@ $( document ).ready(function() {
 			$(this).html('<span class="glyphicon glyphicon-pause"></span>');
 		}
 	});
+    $( document ).keydown(function(e) {
+        var unicode = e.keyCode ? e.keyCode : e.charCode;
+        if (unicode == 32) {
+            $('#pauseButton').click();
+            return false;
+        }
+    });
 });
