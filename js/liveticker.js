@@ -165,6 +165,18 @@ function update_title() {
 	}
 }
 
+function pulsate(running = true) {
+    if (running && paused) {
+        console.debug('pulsing...');
+        $( '#pauseButton' ).animate({ opacity: 0.4 }, animate_slow * 2, 'swing')
+            .animate({ opacity: 1 }, animate_slow * 2, 'swing', pulsate);
+    } else {
+        console.debug('pulsing stop');
+        $( '#pauseButton' ).stop();
+        $( '#pauseButton' ).animate({ opacity: 1 }, animate_fast, 'linear');
+    }
+}
+
 $( document ).ready(function() {
 	$.when(get_issues()).done(function() {
 		update_title();
@@ -185,9 +197,13 @@ $( document ).ready(function() {
 	$('#pauseButton').click(function () {
 		paused = ! paused;
 		if (paused) {
+            pulsate();
 			clearTimeout(poll_timer);
 			$(this).html('<span class="glyphicon glyphicon-play"></span>');
 		} else {
+            // stop pulsing
+            pulsate(false);
+
 			// if this was paused due to an error, we need to update the title
 			update_title();
 			
