@@ -165,7 +165,10 @@ function update_title() {
 	}
 }
 
-function pulsate(running = true) {
+function pulsate(running) {
+	// if no value for running is given, use true
+	running = typeof running !== 'undefined' ? running : true;
+	
     if (running && paused) {
         console.debug('pulsing...');
         $( '#pauseButton' ).animate({ opacity: 0.4 }, animate_slow * 2, 'swing')
