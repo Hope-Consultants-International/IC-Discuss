@@ -62,7 +62,7 @@
 <?php } ?>
 
 <h3>Definitions</h3>
-<dl>
+<dl class="dl-horizontal">
 <dt>&empty; Weight</dt>
 <dd>Artihmetic mean of weights of all statements</dd>
 <dt>&oplus; Weight</dt>
