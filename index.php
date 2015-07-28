@@ -51,12 +51,13 @@ switch ($action) {
 		$statement = Utils::requestOrDefault('statement');
 		if (!is_null($issue_id) && !is_null($group_id) && !empty($statement)) {
 			$stmt = db()->preparedStatement(
-				"INSERT INTO `%table` SET GroupId = :group, IssueId = :issue, Statement = :statement",
+				"INSERT INTO `%table` SET GroupId = :group, IssueId = :issue, Statement = :statement, Weight = :weight",
 				array(
 					'%table' => TABLE_STATEMENTS,
 					':group' => $group_id,
 					':issue' => $issue_id,
 					':statement' => $statement,
+					':weight' => 1,
 				)
 			);
 			if (!$stmt->success) {
