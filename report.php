@@ -24,7 +24,8 @@ switch ($report_type) {
 					su.SummaryId,
 					su.Summary,
 					COUNT(DISTINCT st.GroupId) as NumGroups,
-					AVG(st.Weight) as AverageWeight
+					AVG(st.Weight) as AverageWeight,
+					SUM(st.Weight) as TotalWeight
 				  FROM `%sutable` su
 					JOIN `%sttable` st ON su.SummaryId = st.SummaryId
 				  WHERE su.IssueId = :id
@@ -87,6 +88,7 @@ switch ($report_type) {
 					'Summary' => $statement->Statement,
 					'AverageWeight' => $statement->Weight,
 					'GroupWeight' => $statement->Weight,
+					'TotalWeight' => $statement->Weight,
 					'statements' => array($statement),
 					'NumGroups' => 1,
 				);

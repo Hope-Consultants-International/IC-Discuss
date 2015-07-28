@@ -26,9 +26,11 @@
 						/
 						<b><?php print($num_statements); ?></b> Statement<?php print(($num_statements > 1) ? 's' : ''); ?>
 						/
-						<b><?php print(number_format($summary->AverageWeight, 2)); ?></b> Avg. Weight
+						<b><?php print(number_format($summary->AverageWeight, 2)); ?></b> &empty; Weight
 						/
-						<b><?php print(number_format($summary->GroupWeight, 2)); ?></b> Total Weight
+						<b><?php print(number_format($summary->GroupWeight, 2)); ?></b> &oplus; Weight
+						/
+						<b><?php print(number_format($summary->TotalWeight, 2)); ?></b> &sum; Weight
 					</small>
 					<?php if ($num_statements == 1) { 
 						$statement = $summary->statements[0]; ?>
@@ -58,6 +60,16 @@
 		</ul>
 	<?php } ?>
 <?php } ?>
+
+<h3>Definitions</h3>
+<dl>
+<dt>&empty; Weight</dt>
+<dd>Artihmetic mean of weights of all statements</dd>
+<dt>&oplus; Weight</dt>
+<dd>Sum of arthmetic means per group of weights of statements</dd>
+<dt>&sum; Weight</dt>
+<dd>Sum of weights of all statements</dd>
+</dl>
 
 <?php if (DEBUG) { ?>
 <div class="hidden-print">
