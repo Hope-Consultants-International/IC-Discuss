@@ -40,6 +40,9 @@
 			<button class="btn btn-default" onclick="download_issue('<?php print(htmlentities($id)); ?>')">
 				<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download XLS Templates
 			</button>
+			<button class="btn btn-warning" onclick="clear_issue('<?php print(htmlentities($id)); ?>', '<?php print(Utils::javascriptString($data->Title)); ?>')">
+				<span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Clear Statements (<?php print(htmlentities($data->StatementCount)); ?>)
+			</button>
 			<button class="btn btn-danger" onclick="delete_issue('<?php print(htmlentities($id)); ?>', '<?php print(Utils::javascriptString($data->Title)); ?>')">
 				<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
 			</button>
@@ -55,6 +58,25 @@ function download_issue(issue_id) {
 }
 function edit_issue(issue_id) {
 	document.location = '<?php print(htmlentities($page_url)); ?>?action=edit&id=' + issue_id;
+}
+function clear_issue(issue_id, issue_title) {
+	bootbox.dialog({
+		message: 'Do you want remove all statements about "' + issue_title + '"',
+		title: '<?php print(htmlentities(APP_TITLE)); ?>',
+		buttons: {
+			cancel: {
+				label: "Cancel",
+				className: 'btn-default'
+			},
+			delete: {
+				label: 'Clear Statements',
+				className: 'btn-danger',
+				callback: function() {
+					document.location = '<?php print(htmlentities($page_url)); ?>?action=clear-statements&id=' + issue_id;
+				}
+			}
+		}
+	});
 }
 function delete_issue(issue_id, issue_title) {
 	bootbox.dialog({

@@ -101,8 +101,11 @@ switch ($action) {
 		break;
 	case 'list':
 		$issues = array();
-		$query = "SELECT IssueId, Title, Description, AllowUpload, Frontpage FROM `%table`";
-		$values = array('%table' => TABLE_ISSUES);
+		$query = "SELECT COUNT(s.StatementId) AS StatementCount, i.IssueId, i.Title, i.Description, i.AllowUpload, i.Frontpage
+			FROM `%itable` i LEFT JOIN `%stable` s ON i.IssueId = s.IssueId
+			GROUP BY i.IssueId
+			ORDER BY i.Title";
+		$values = array('%itable' => TABLE_ISSUES, '%stable' => TABLE_STATEMENTS);
 		$stmt = db()->preparedStatement($query, $values);
 		while ($issue = $stmt->fetchObject()) {
 			$issues[$issue->IssueId] = $issue;
@@ -113,6 +116,16 @@ switch ($action) {
 			'download_url' => BASE_URL . 'download_template.php',
 		);
 		display(APP_TITLE, 'Manage|Issues', 'issues_list.tpl.php', $vars);
+		break;
+	case 'clear-statements':
+		$s = db()->preparedStatement(
+			"DELETE FROM `%table` WHERE IssueId = :issue_id",
+			array('%table' => TABLE_STATEMENTS, ':issue_id' => $issue_id)
+		);
+		if (!$s->success) {
+			die('Could not clear statements: ' . $s->error);
+		}
+		header('Location: ' . $page_url . '?action=list', true, 302);
 		break;
 	default:
 		die('Unknown action: ' . htmlentities($action));
