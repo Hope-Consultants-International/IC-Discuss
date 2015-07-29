@@ -155,6 +155,16 @@ try {
 			break;
 		case 'update_summary':
 			if (checkSummaryExists($summary_id)) {
+				
+				// make sure this is in sync
+				$summary_previous = Utils::requestOrDefault('summary_previous', null);
+				$summary = Utils::getSummary($summary_id);
+				if ($summary->Summary != $summary_previous) {
+					$reply->success = false;
+					$reply->message = 'Summary Text already changed.';
+					break;
+				}
+				
 				$summary_text = Utils::requestOrDefault('summary_text', null);
 				if (!is_null($summary_text)) {
 					$s_update = db()->preparedStatement(
