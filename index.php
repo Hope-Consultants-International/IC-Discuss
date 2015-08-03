@@ -32,6 +32,8 @@ if (!array_key_exists($issue_id, $issues)) {
 	$issue_id = null;
 }
 
+$statement = '';
+
 $action = Utils::requestOrDefault('action', 'display');
 switch ($action) {
 	case 'get_issues':
@@ -64,8 +66,11 @@ switch ($action) {
 				setMessage('Could not add statement.', MSG_TYPE_ERR);
 			} else {
 				setMessage('Statement added.', MSG_TYPE_INFO);
+                $statement = '';
 			}
-		}
+		} elseif (!empty($statement)) {
+            setMessage('The issue you wanted to comment on has been closed, please check if the statement fits the available issue' . ((count($issues) > 1) ? 's' : '') .'.', MSG_TYPE_INFO);
+        }
 	case 'display':
 	default:
 		$script = <<<EOJS
@@ -85,6 +90,7 @@ EOJS;
 		$vars = array(
 			'title' => $title,
 			'script' => $script,
+            'statement' => $statement,
 		);
 		display(APP_TITLE . ' - Home', 'Home', 'index.tpl.php', $vars);
 		break;

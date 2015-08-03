@@ -1,5 +1,5 @@
 // timeout for input submit
-const poll_interval = 2000;
+const poll_interval = 5000;
 
 // animation speed
 const animate_fast = 100;

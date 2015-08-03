@@ -12,7 +12,7 @@
 	<div class="form-group">
 		<div class="col-md-6">
 			<label for="statement">Your Statement</label>
-			<textarea class="form-control" rows="3" id="statement" name="statement" placeholder="Please enter your statement." required maxlength="250"></textarea>
+			<textarea class="form-control" rows="3" id="statement" name="statement" placeholder="Please enter your statement." required maxlength="250"><?php print(htmlentities($statement)); ?></textarea>
 		</div>
 	</div>
     <input type="hidden" name="action" value="add_statement">
