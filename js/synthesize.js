@@ -91,13 +91,15 @@ function cancel_summary_update(summary_id) {
 }
 function do_summary_update(summary_id) {
 	console.debug('Update Summary ' + summary_id);
-	var summary = $( '#summary-' + summary_id );
-	var summary_text = summary.find('.synth-summary-text').val();
+	var summary_text_obj = $( '#summary-' + summary_id ).find('.synth-summary-text');
+	var summary_text = summary_text_obj.val();
+	var stored_text = summary_text_obj.attr('data-stored-text');
 	
 	var data = {
 		action: 'update_summary',
 		summary: summary_id,
-		summary_text: summary_text
+		summary_text: summary_text,
+		summary_previous: stored_text
 	};
 	var jqxhr = $.ajax({
 		type: 'POST',
@@ -110,6 +112,7 @@ function do_summary_update(summary_id) {
 		success: function(reply, message) {
 			if (reply['success']) {
 				console.info('Update success: ' + reply['message']);
+				summary_text_obj.attr('data-stored-text', summary_text);
 			} else {
 				console.error('Update failure: ' + reply['message']);
 				reload_screen();
@@ -170,7 +173,6 @@ function add_new_summary(statement) {
 				summary.append('<button class="btn btn-default synth-summary-expand" title="Expand Statements"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span></button>');
 				summary.append('<textarea class="synth-summary-text">' + statement_text + '</textarea>');
 				summary.append('<div class="synth-summary-statements" />');
-				
 				
 				// since this is a new object, we have to make it droppable
 				// and bind event handlers
@@ -372,10 +374,13 @@ function make_statement_draggable(statement) {
 function init_summary(summary) {
 	make_summary_droppable(summary);
 	summary.find('.synth-summary-delete').on( 'click', delete_summary);
-	summary.find('.synth-summary-text').on('input', queue_summary_update);
 	summary.find('.synth-summary-collapse').on('click', summary_collapse);
 	summary.find('.synth-summary-expand').on('click', summary_expand);
 	summary.find('.synth-summary-expand').css('display', 'none');
+	
+	var summary_text = summary.find('.synth-summary-text');
+	summary_text.on('input', queue_summary_update);
+	summary_text.attr('data-stored-text', summary_text.val());
 }
 
 $(function() {
