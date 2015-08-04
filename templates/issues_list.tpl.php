@@ -37,8 +37,8 @@
 			<button class="btn btn-default" onclick="edit_issue('<?php print(htmlentities($id)); ?>')">
 				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
 			</button>
-			<button class="btn btn-default" onclick="download_issue('<?php print(htmlentities($id)); ?>')">
-				<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download XLS Templates
+			<button class="btn btn-default" onclick="download_issue('<?php print(htmlentities($id)); ?>', '<?php print(Utils::javascriptString($data->Title)); ?>')">
+				<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download Templates
 			</button>
 			<button class="btn btn-warning" onclick="clear_issue('<?php print(htmlentities($id)); ?>', '<?php print(Utils::javascriptString($data->Title)); ?>')">
 				<span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Clear Statements (<?php print(htmlentities($data->StatementCount)); ?>)
@@ -53,8 +53,33 @@
 </table>
 
 <script type="text/javascript">
-function download_issue(issue_id) {
-	document.location = '<?php print(htmlentities($download_url)); ?>?issue=' + issue_id;
+function download_issue(issue_id, issue_title) {
+	bootbox.dialog({
+		message: '<p>Please select in which format you want to download the templates for issue "' + issue_title + '"</p>' +
+			'<form class="form-horizontal"><div class="form-group">' +
+			'<label for="fileformat" class="col-sm-3 control-label">File Format</label>' +
+			'<div class="col-sm-4">' + 
+			'<select class="form-control" id="fileformat">' +
+			'<option value="Excel5">Excel 97-2003</option>' +
+			'<option value="Excel2007">Excel 2007</option>' +
+			'</select>' +
+			'</div></div></form>',
+		title: '<?php print(htmlentities(APP_TITLE)); ?>',
+		buttons: {
+			cancel: {
+				label: "Cancel",
+				className: 'btn-default'
+			},
+			download: {
+				label: 'Download Archive',
+				className: 'btn-primary',
+				callback: function() {
+					var format = $('#fileformat').val();
+					document.location = '<?php print(htmlentities($download_url)); ?>?issue=' + issue_id + '&format=' + format;
+				}
+			}
+		}
+	});
 }
 function edit_issue(issue_id) {
 	document.location = '<?php print(htmlentities($page_url)); ?>?action=edit&id=' + issue_id;

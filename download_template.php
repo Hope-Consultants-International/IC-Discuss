@@ -8,6 +8,7 @@ ignore_user_abort(true);
 
 $group_id = Utils::requestOrDefault('group', null);
 $issue_id = Utils::requestOrDefault('issue', null);
+$format = Utils::requestOrDefault('format');
 
 /**
  * Abort with Error message
@@ -32,8 +33,20 @@ function abort($message) {
  * @return list($xlsname, $xlsfile) $xlsname: name of xls file for client /
  *                                  $xlsfile: filepath to xls file or string containing xls file
  */
-function createTemplate($group, $issue, $to_string = false) {
+function createTemplate($group, $issue, $to_string = false, $format = "Excel5") {
 	global $tmpfiles;
+
+	// get extension and make sure it's a supported type
+	switch ($format) {
+		case 'Excel2007':
+			$ext = 'xlsx';
+			break;
+		case 'Excel5':
+		default:
+			$ext = 'xls';
+			$format = 'Excel5';
+			break;
+	}
 	
 	// load template
 	$inputFileType = PHPExcel_IOFactory::identify(XLS_TEMPLATE);
@@ -62,15 +75,15 @@ function createTemplate($group, $issue, $to_string = false) {
 	
 	$objPHPExcel->getProperties()->setCreator("IC-Discuss");
 	
-	$xlsname = Utils::sanitizeFilename(APP_TITLE . ' - ' . $group->Name . ' - ' . $issue->Title) . '.xls';
+	$xlsname = Utils::sanitizeFilename(APP_TITLE . ' - ' . $group->Name . ' - ' . $issue->Title) . '.' . $ext;
 		
-	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel5");
+	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $format);
 	if ($to_string) {
 		ob_start();
 		$objWriter->save('php://output');
 		$xlsfile = ob_get_clean();
 	} else {
-		$xlsfile = tempnam("tmp", "xls");
+		$xlsfile = tempnam("tmp", $ext);
 		$tmpfiles[] = $xlsfile;
 		$objWriter->save($xlsfile);
 	}
@@ -94,7 +107,7 @@ if (!is_null($issue_id) && is_null($group_id)) {
 	// got through all groups
 	$tmpfile = tempnam("tmp", "zip");
 	$tmpfiles[] = $tmpfile;
-	$filename = Utils::sanitizeFilename(APP_TITLE . ' - All - ' . $issue->Title) . '.zip';
+	$filename = Utils::sanitizeFilename(APP_TITLE . ' - All - ' . $issue->Title . ' [' . $format . ']') . '.zip';
 	$zip = new ZipArchive;
 	$res = $zip->open($tmpfile, ZipArchive::CREATE);
 	if ($res === true) {
@@ -105,7 +118,7 @@ if (!is_null($issue_id) && is_null($group_id)) {
 		);
 		if ($s->success) {
 			while ($group = $s->fetchObject()) {
-				list ($xlsname, $xlsfile) = createTemplate($group, $issue, true);
+				list ($xlsname, $xlsfile) = createTemplate($group, $issue, true, $format);
 				if (!empty($issue->Folder)) {
 					$xlsname = Utils::sanitizeFilename($issue->Folder) . DIRECTORY_SEPARATOR . $xlsname;
 				}
@@ -126,7 +139,7 @@ if (!is_null($issue_id) && is_null($group_id)) {
 	// got through all issues
 	$tmpfile = tempnam("tmp", "zip");
 	$tmpfiles[] = $tmpfile;
-	$filename = Utils::sanitizeFilename(APP_TITLE . ' - ' . $group->Name . ' - All') . '.zip';
+	$filename = Utils::sanitizeFilename(APP_TITLE . ' - ' . $group->Name . ' - All [' . $format . ']') . '.zip';
 	$zip = new ZipArchive;
 	$res = $zip->open($tmpfile, ZipArchive::CREATE);
 	if ($res === true) {
@@ -137,7 +150,7 @@ if (!is_null($issue_id) && is_null($group_id)) {
 		);
 		if ($s->success) {
 			while ($issue = $s->fetchObject()) {
-				list ($xlsname, $xlsfile) = createTemplate($group, $issue, true);
+				list ($xlsname, $xlsfile) = createTemplate($group, $issue, true, $format);
 				if (!empty($issue->Folder)) {
 					$xlsname = Utils::sanitizeFilename($issue->Folder) . DIRECTORY_SEPARATOR . $xlsname;
 				}
@@ -160,7 +173,7 @@ if (!is_null($issue_id) && is_null($group_id)) {
 		abort('Issue not found.');
 	}	
 	
-	list ($filename, $tmpfile) = createTemplate($group, $issue);
+	list ($filename, $tmpfile) = createTemplate($group, $issue, false, $format);
 } else {
 	abort('No group and no issue.');
 }

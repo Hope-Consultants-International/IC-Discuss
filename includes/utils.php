@@ -134,7 +134,7 @@ class Utils {
      * @return string sanitized filename
      */
 	static function sanitizeFilename($filename) {
-		$filename = preg_replace("/[^A-Za-z0-9-_\. ]/", '_', $filename);
+		$filename = preg_replace("/[^A-Za-z0-9-_\()\[\]. ]/", '_', $filename);
 		$filename = preg_replace('/_+/', '_', $filename);
 		return $filename;
 	}
