@@ -159,9 +159,10 @@ function reload_screen() {
 };
 
 $( document ).ready(function() {
-	$( '#statement' ).keyup(function() {
-		$(this).val($(this).val().replace(/[\n\v]+/g, ' '));
-		$(this).val($(this).val().replace(/\s{2,}/g, ' '));
+	$( '#frontpage-statement' ).submit(function() {
+        var statement = $( 'statement' );
+	    statement.val(statement.val().replace(/[\n\v]+/g, ' '));
+		statement.val(statement.val().replace(/\s{2,}/g, ' '));
 	});
 	poll_issues();
     $(".alert.alert-info").fadeTo(2000, 500).slideUp(500, function(){
