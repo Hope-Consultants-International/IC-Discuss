@@ -160,7 +160,7 @@ function reload_screen() {
 
 $( document ).ready(function() {
 	$( '#frontpage-statement' ).submit(function() {
-        var statement = $( 'statement' );
+        var statement = $( '#statement' );
 	    statement.val(statement.val().replace(/[\n\v]+/g, ' '));
 		statement.val(statement.val().replace(/\s{2,}/g, ' '));
 	});
