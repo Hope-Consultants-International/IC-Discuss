@@ -5,6 +5,10 @@ assertAccess(SECTION_SYNTHESIZE);
 
 $report_type = Utils::requestOrDefault('type', 'normal');
 
+function summary_compare($a, $b) {
+        return $a->TotalWeight < $b->TotalWeight;
+}
+
 $vars=array();
 switch ($report_type) {
 	case 'issues_detail':
@@ -45,7 +49,7 @@ switch ($report_type) {
 						g.Name as GroupName
 					  FROM `%stable` s JOIN `%gtable` g ON s.GroupId = g.GroupId
 					  WHERE SummaryId = :id
-					  ORDER BY g.Name, s.Weight, s.Statement",
+					  ORDER BY s.Weight DESC, g.Name, s.Statement",
 					array('%stable' => TABLE_STATEMENTS, '%gtable' => TABLE_GROUPS, ':id' => $summary->SummaryId)
 				);
 				while ($statement = $s_statements->fetchObject()) {
@@ -79,7 +83,7 @@ switch ($report_type) {
 					g.Name as GroupName
 				  FROM `%stable` s JOIN `%gtable` g ON s.GroupId = g.GroupId
 				  WHERE IssueId = :id AND s.SummaryId IS NULL
-				  ORDER BY g.Name, s.Weight, s.Statement",
+				  ORDER BY s.Weight DESC, g.Name, s.Statement",
 				array('%stable' => TABLE_STATEMENTS, '%gtable' => TABLE_GROUPS, ':id' => $issue->IssueId)
 			);
 			while ($statement = $s_statements->fetchObject()) {
@@ -94,7 +98,9 @@ switch ($report_type) {
 				);
 				$summaries[] = $summary;
 			}
-			
+
+            usort($summaries, "summary_compare");
+
 			$issue->summaries = $summaries;
 			$issues[] = $issue;
 		}
