@@ -6,7 +6,7 @@
 			<span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
 		</div>
 		<div class="statement-text"><?php print(htmlentities($statement->Statement)); ?></div>
-		<small><em><?php print(htmlentities($statement->GroupName)); ?></em></small><br>
+		<small><em><?php print(htmlentities($statement->GroupName)); ?> (Weight: <?php print($statement->Weight); ?>)</em></small><br>
 	</div>
 <?php } ?>
 
