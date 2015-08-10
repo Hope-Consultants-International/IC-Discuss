@@ -292,6 +292,7 @@ function delete_summary() {
 		});
 	});
 	summary.remove();
+	search_modified(true);
 
 	console.debug('Delete Summary ' + summary_id);
 	
@@ -318,9 +319,13 @@ function delete_summary() {
 	});
 }
 
-function search_modified() {
-	var search_text = $( this ).val();
-	filter_statements(search_text);
+function search_modified(delay) {
+	if (delay) {
+		setTimeout(search_modified, animate_normal);
+	} else {
+		var search_text = $( '#search-text' ).val();
+		filter_statements(search_text);
+	}
 }
 function search_clear() {
 	var search_box = $( '#search-text' );
@@ -344,6 +349,7 @@ function filter_statements(search_text) {
 			}
 		});
 	} else {
+		console.debug('filter: clear');
 		$('#synth-statements').find('.synth-statement').each(function() {
 			var statement = $(this);
 			statement.slideDown(animate_fast);
@@ -364,6 +370,8 @@ function make_summary_droppable(summary) {
 			ui.draggable.find( '.synth-statement-highlight' ).slideDown(animate_fast);
 			// hide duplicate
 			ui.draggable.find( '.synth-statement-duplicate' ).slideUp(animate_fast);
+			// remove highlight
+			ui.draggable.find( '.statement-text' ).removeHighlight();
 			
 			// do the data update in the background
 			var statement_id = get_db_id(ui.draggable);
@@ -424,6 +432,8 @@ function make_statement_droppable(statement) {
 			reset_highlight(highlight);
 			// show duplicate
 			ui.draggable.find( '.synth-statement-duplicate' ).slideDown(animate_fast);
+			// obey search
+			search_modified(true);
 			
 			// do the data update in the background
 			var statement_id = get_db_id(ui.draggable);
