@@ -121,9 +121,25 @@ function do_summary_update(summary_id) {
 	});
 }
 
+function summary_collapse_all() {
+	$( '.synth-summary' ).each(function() {
+		summary_collapse( $(this) );
+	});
+}
+function summary_expand_all() {
+	$( '.synth-summary' ).each(function() {
+		summary_expand( $(this) );
+	});
+}
+
 // handles clicks on the collapse button
-function summary_collapse() {
+function summary_collapse_click() {
 	var summary = $( this ).closest('.synth-summary');
+	summary_collapse(summary);
+}
+
+// collapses a summary
+function summary_collapse(summary) {
 	summary.find( '.synth-summary-statements' ).slideUp(
 		animate_normal,
 		function(){
@@ -135,8 +151,12 @@ function summary_collapse() {
 }
 
 // handles clicks on the expand button
-function summary_expand() {
+function summary_expand_click() {
 	var summary = $( this ).closest('.synth-summary');
+}
+
+// expand a summary
+function summary_expand(summary) {
 	summary.find( '.synth-summary-statements' ).slideDown(
 		animate_normal,
 		function(){
@@ -374,8 +394,8 @@ function make_statement_draggable(statement) {
 function init_summary(summary) {
 	make_summary_droppable(summary);
 	summary.find('.synth-summary-delete').on( 'click', delete_summary);
-	summary.find('.synth-summary-collapse').on('click', summary_collapse);
-	summary.find('.synth-summary-expand').on('click', summary_expand);
+	summary.find('.synth-summary-collapse').on('click', summary_collapse_click);
+	summary.find('.synth-summary-expand').on('click', summary_expand_click);
 	summary.find('.synth-summary-expand').css('display', 'none');
 	
 	var summary_text = summary.find('.synth-summary-text');
@@ -403,4 +423,7 @@ $(function() {
 	// bind buttons
 	$( '.synth-new' ).on( 'click', new_summary);
 	$( '.synth-statement-highlight' ).on('click', statement_highlight);
+	
+	$('#synth-summary-collapse-all').on('click', summary_collapse_all);
+	$('#synth-summary-expand-all').on('click', summary_expand_all);
 });

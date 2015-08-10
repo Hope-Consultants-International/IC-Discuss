@@ -13,6 +13,14 @@
 </div>
 <div class="row row-same-height row-full-height" id="synth-main">
 	<div class="col-xs-6 col-xs-height col-full-height synth-box" id="synth-summaries">
+		<div id="synth-summaries-buttons">
+			<button class="btn btn-default" id="synth-summary-collapse-all" title="Collapse All Statements">
+				<span class="glyphicon glyphicon-collapse-up" aria-hidden="true"></span>
+			</button>
+			<button class="btn btn-default" id="synth-summary-expand-all" title="Expand All Statements">
+				<span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+			</button>
+		</div>
 		<h3 class="position:sticky">Summaries</h3>
 		<?php foreach ($summaries as $summary) { ?>
 		<div class="synth-summary" id="summary-<?php print($summary->SummaryId); ?>">
