@@ -211,6 +211,7 @@ function summary_collapse(summary) {
 // handles clicks on the expand button
 function summary_expand_click() {
 	var summary = $( this ).closest('.synth-summary');
+	summary_expand(summary);
 }
 
 // expand a summary
