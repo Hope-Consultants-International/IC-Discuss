@@ -93,6 +93,24 @@ if ($db_version < $current_version) {
 	}
 }
 
+$current_version++;
+if ($db_version < $current_version) {
+	$sql = "ALTER TABLE `statements` ADD `ParentStatementId` INT NULL , ADD INDEX (`ParentStatementId`);";
+	$s = db()->preparedStatement($sql);
+	if (!$s->success) {
+		die(sprintf('Error updating to version %d:<p><b>Query</b><br>%s</p>', $current_version, $sql));
+	}
+}
+
+$current_version++;
+if ($db_version < $current_version) {
+	$sql = "ALTER TABLE `statements` ADD FOREIGN KEY (`ParentStatementId`) REFERENCES `ic-discuss`.`statements`(`StatementId`) ON DELETE SET NULL ON UPDATE RESTRICT;";
+	$s = db()->preparedStatement($sql);
+	if (!$s->success) {
+		die(sprintf('Error updating to version %d:<p><b>Query</b><br>%s</p>', $current_version, $sql));
+	}
+}
+
 // ---- NEW UPDATES GO HERE ----
 
 // save new version to database	

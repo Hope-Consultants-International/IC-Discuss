@@ -219,6 +219,32 @@ try {
 				$reply->message = 'Statement does not exist';
 			}
 			break;
+		case 'duplicate_statement':
+			if (checkStatementExists($statement_id)) {
+				$statement = Utils::getStatement($statement_id);
+				$parent_statement_id = (is_null($statement->ParentStatementId) ? $statement->StatementId : $statement->ParentStatementId);
+				$s_insert = db()->preparedStatement(
+					'INSERT INTO `%table` SET GroupId = :group, IssueId = :issue, Statement = :statement, Weight = :weight, ParentStatementId = :parent',
+					array(
+						'%table' => TABLE_STATEMENTS,
+						':group' => $statement->GroupId,
+						':issue' => $statement->IssueId,
+						':statement' => $statement->Statement,
+						':weight' => $statement->Weight,
+						':parent' => $parent_statement_id,
+					)
+				);
+				if ($s_insert->success) {
+					$reply->statement_id = $s_insert->lastInsertId;
+				} else {
+					$reply->success = false;
+					$reply->message = 'Could not insert Statement';
+				}
+			} else {
+				$reply->success = false;
+				$reply->message = 'Statement does not exist';
+			}
+			break;
 		default:
 			throw new Exception('action not found');
 			break;

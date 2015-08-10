@@ -1,9 +1,12 @@
 <h2 style="overflow:hidden; white-space: nowrap;">Synthesize "<?php print(htmlentities($issue_title)); ?>"</h2>
 
-<?php function emitStatement($statement, $display_highlight) { ?>
+<?php function emitStatement($statement, $for_summary_column) { ?>
 	<div class="synth-statement" id="statement-<?php print($statement->StatementId); ?>">
-		<div class="synth-statement-highlight <?php if ($statement->Highlight) { print("highlighted"); } ?>" <?php if (!$display_highlight) {print('style="display:none;"'); } ?>>
+		<div class="synth-statement-highlight <?php if ($statement->Highlight) { print("highlighted"); } ?>" <?php if (!$for_summary_column) {print('style="display:none;"'); } ?>>
 			<span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+		</div>
+		<div class="synth-statement-duplicate" <?php if ($for_summary_column) {print('style="display:none;"'); } ?>>
+			<span class="glyphicon glyphicon-duplicate" aria-hidden="true" title="Duplicate"></span>
 		</div>
 		<div class="statement-text"><?php print(htmlentities($statement->Statement)); ?></div>
 		<small><em><?php print(htmlentities($statement->GroupName)); ?> (Weight: <?php print($statement->Weight); ?>)</em></small><br>

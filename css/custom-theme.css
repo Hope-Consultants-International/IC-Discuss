@@ -125,6 +125,17 @@ html, body {
     cursor: pointer;
 }
 
+/* Statement Duplicate */
+.synth-statement-duplicate {
+    float:right;
+	margin-right:0.2em;
+    clear: both;
+	font-size: 10pt;
+}
+.synth-statement-duplicate > span:hover {
+    cursor: pointer;
+}
+	
 /* Live Ticker */
 #ticker-options {
 	position: absolute;

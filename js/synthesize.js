@@ -70,6 +70,64 @@ function statement_highlight() {
 	});
 }
 
+function duplicate_statement_click() {
+	var statement = $( this ).closest('.synth-statement');
+	var statement_id = get_db_id(statement);
+	
+	bootbox.dialog({
+		message: 'Are you sure you want to duplicate this statement?',
+		title: '<?php print(htmlentities(APP_TITLE)); ?>',
+		buttons: {
+			cancel: {
+				label: "Don't Duplicate",
+				className: 'btn-default'
+			},
+			delete: {
+				label: 'Duplicate',
+				className: 'btn-warning',
+				callback: function() {
+					console.debug('Duplicate Statement ' + statement_id);	
+					var data = {
+						action: 'duplicate_statement',
+						statement: statement_id
+					};
+					var jqxhr = $.ajax({
+						type: 'POST',
+						url: ajaxHandlerURL,
+						data: data,
+						dataType: 'json',
+						error: function(jqXHR_obj, message, error) {
+							console.error('Could not duplicate: ' + message);
+						},
+						success: function(reply, message) {
+							if (reply['success']) {
+								console.info('Update success: ' + reply['message']);
+								duplicate_statement(statement_id, reply['statement_id']);				
+							} else {
+								console.error('Update failure: ' + reply['message']);
+								reload_screen();
+							}
+						}
+					});
+				}
+			}
+		}
+	})
+}
+
+function duplicate_statement(source_id, target_id) {
+	var source_statement = $( '#statement-' + source_id );
+	
+	source_statement.clone()
+		.attr('id', 'statement-' + target_id )
+		.insertAfter( source_statement );
+	
+	var target_statement = $( '#statement-' + target_id );
+	make_statement_draggable( target_statement );
+	target_statement.find('.synth-statement-duplicate').on('click', duplicate_statement_click);
+	
+}
+
 // we want to send updates as soon as they are entered,
 // so we set a timeout while input is received and 
 // execute the update when there is no input on the summary for 1s
@@ -269,6 +327,8 @@ function make_summary_droppable(summary) {
 			ui.draggable.appendTo( $( this ).find('.synth-summary-statements') );
 			// show highlighting
 			ui.draggable.find( '.synth-statement-highlight' ).slideDown(animate_fast);
+			// hide duplicate
+			ui.draggable.find( '.synth-statement-duplicate' ).slideUp(animate_fast);
 			
 			// do the data update in the background
 			var statement_id = get_db_id(ui.draggable);
@@ -327,6 +387,8 @@ function make_statement_droppable(statement) {
 			var highlight = ui.draggable.find( '.synth-statement-highlight' );
 			highlight.slideUp(animate_fast);
 			reset_highlight(highlight);
+			// show duplicate
+			ui.draggable.find( '.synth-statement-duplicate' ).slideDown(animate_fast);
 			
 			// do the data update in the background
 			var statement_id = get_db_id(ui.draggable);
@@ -423,6 +485,7 @@ $(function() {
 	// bind buttons
 	$( '.synth-new' ).on( 'click', new_summary);
 	$( '.synth-statement-highlight' ).on('click', statement_highlight);
+	$( '.synth-statement-duplicate' ).on('click', duplicate_statement_click);
 	
 	$('#synth-summary-collapse-all').on('click', summary_collapse_all);
 	$('#synth-summary-expand-all').on('click', summary_expand_all);
