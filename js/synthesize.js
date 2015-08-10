@@ -318,6 +318,40 @@ function delete_summary() {
 	});
 }
 
+function search_modified() {
+	var search_text = $( this ).val();
+	filter_statements(search_text);
+}
+function search_clear() {
+	var search_box = $( '#search-text' );
+	search_box.val('');
+	filter_statements('');
+}
+
+function filter_statements(search_text) {
+	if (search_text) {
+		$('#synth-statements').find('.synth-statement').each(function() {
+			var statement = $(this);
+			var statement_text = statement.find('.statement-text');
+			var result = statement_text.text().search(new RegExp(search_text, "i"));
+			if (result == -1) {
+				statement_text.removeHighlight();
+				statement.slideUp(animate_fast);
+			} else {
+				statement_text.removeHighlight()
+					.highlight(search_text);
+				statement.slideDown(animate_fast);
+			}
+		});
+	} else {
+		$('#synth-statements').find('.synth-statement').each(function() {
+			var statement = $(this);
+			statement.slideDown(animate_fast);
+			statement.find('.statement-text').removeHighlight();
+		});
+	}
+}
+
 function make_summary_droppable(summary) {
 	summary.droppable({
 		activeClass: 'ui-state-default',
@@ -487,7 +521,12 @@ $(function() {
 	$( '.synth-new' ).on( 'click', new_summary);
 	$( '.synth-statement-highlight' ).on('click', statement_highlight);
 	$( '.synth-statement-duplicate' ).on('click', duplicate_statement_click);
-	
+
+	// collapse / expand all
 	$('#synth-summary-collapse-all').on('click', summary_collapse_all);
 	$('#synth-summary-expand-all').on('click', summary_expand_all);
+	
+	$('#search-text').on('input', search_modified);
+	$('#search-clear').on('click', search_clear);
+	search_clear();
 });

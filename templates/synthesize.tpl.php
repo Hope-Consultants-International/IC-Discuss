@@ -47,6 +47,15 @@
 		</div>
 	</div>
 	<div class="col-xs-6 col-xs-height col-full-height synth-box" id="synth-statements">
+		<div id="synth-statements-search">
+			<div class="input-group">
+				<span class="input-group-addon"><span class="glyphicon glyphicon-filter" title="Filter"></span></span>
+				<input type="text" class="form-control" id="search-text">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" id="search-clear"><span class="glyphicon glyphicon-remove" title="Clear"></span></button>
+				</span>
+			</div>
+		</div>
 		<h3 class="position:sticky">Statements</h3>
 		<?php foreach ($statements as $statement) { emitStatement($statement, false); } ?>
 	  </div>

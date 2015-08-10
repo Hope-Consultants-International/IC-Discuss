@@ -53,7 +53,8 @@ html, body {
 	height: 4.7em;
 }
 
-#synth-summaries-buttons{
+#synth-summaries-buttons,
+#synth-statements-search {
 	position: absolute;
 	right: 0.4em;
 }
@@ -97,6 +98,10 @@ html, body {
 }
 
 /* statement highlighting */
+.highlight {
+	background-color: #FFFF88;
+}
+
 .synth-statement-highlight {
     float:right;
     clear: both;

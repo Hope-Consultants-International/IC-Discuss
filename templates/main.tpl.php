@@ -15,6 +15,9 @@
 	<link rel="stylesheet" href="jquery-ui/jquery-ui.theme.min.css">
 	<script type="text/javascript" src="jquery-ui/jquery-ui.min.js"></script>
 	
+	<!-- jQuery highlight-->
+	<script type="text/javascript" src="jquery-highlight/jquery.highlight.min.js"></script>
+	
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
