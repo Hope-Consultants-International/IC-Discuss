@@ -1,0 +1,31 @@
+This software is using other projects.
+Each project is included as provided by the authors.
+Please read the individual licensing terms.
+
+bootbox
+  http://bootboxjs.com/
+  MIT License
+
+bootstrap
+  http://getbootstrap.com/
+  MIT
+
+bootstrap-touchspin
+  http://www.virtuosoft.eu/code/bootstrap-touchspin/
+  Apache License v2.0
+
+jquery
+  https://jquery.com/
+  MIT license
+  
+jquery-ui
+  https://jquery.com/
+  MIT license
+
+jquery-highlight
+  http://johannburkard.de/blog/programming/javascript/highlight-javascript-text-higlighting-jquery-plugin.html
+  MIT license
+
+php-excel
+  http://www.phpexcel.net/
+  GNU Library General Public License (LGPL) Version 2.1
