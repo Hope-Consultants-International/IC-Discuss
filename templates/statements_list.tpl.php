@@ -23,7 +23,8 @@ work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
   <th>Group</th>
   <th>Statement</th>
   <th>Weight</th>
-  <th style="width:15em">Actions</th>
+  <th>Duplicates</th>
+  <th style="width:20em">Actions</th>
 </tr>
 <?php foreach ($statements as $id => $data) { ?>
   <tr>
@@ -31,6 +32,7 @@ work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
 	<td><?php print(htmlentities($data->GroupName)); ?></td>
 	<td><?php print(htmlentities($data->Statement)); ?></td>
 	<td><?php print(htmlentities($data->Weight)); ?></td>
+	<td><?php print(number_format($data->ChildStatements, 0)); ?></td>
 	<td style="width:15em">
 		<div class="btn-group">
 			<button class="btn btn-default" onclick="edit_statement('<?php print(htmlentities($id)); ?>')">
@@ -38,6 +40,7 @@ work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
 			</button>
 			<button class="btn btn-danger" onclick="delete_statement('<?php print(htmlentities($id)); ?>', '<?php print(Utils::javascriptString($data->Statement)); ?>')">
 				<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
+				<?php if ($data->ChildStatements > 0) { print("One Copy"); } ?>
 			</button>
 		</div>
 	</td>

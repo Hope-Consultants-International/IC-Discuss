@@ -24,11 +24,18 @@ if ($statement_id == NEW_ENTRY_ID) {
 
 switch ($action) {
 	case 'delete':
-		$query = "DELETE FROM `%table` WHERE StatementId = :id";
+		// check if there are child statements
+		$q_check = "SELECT COUNT(*) FROM `%table` WHERE ParentStatementId = :id";
 		$values = array(
 			'%table' => TABLE_STATEMENTS,
 			':id' => $statement_id,
 		);
+		$stmt_check = db()->preparedStatement($q_check, $values);
+		if ($stmt_check->fetchColumn(0) > 0) {
+			$query = "DELETE FROM `%table` WHERE ParentStatementId = :id LIMIT 1";
+		} else {
+			$query = "DELETE FROM `%table` WHERE StatementId = :id";
+		}
 		$stmt = db()->preparedStatement($query, $values);
 		if (!$stmt->success) {
 			die('Database delete fail: ' . $stmt->error);
@@ -58,7 +65,7 @@ switch ($action) {
                     GroupId = :group_id,
                     IssueId = :issue_id,
                     Weight = :weight
-                WHERE StatementId = :id";
+                WHERE (StatementId = :id) OR (ParentStatementId = :id)";
 			$values[':id'] = $statement_id;
 		}
 		$stmt = db()->preparedStatement($query, $values);
@@ -129,10 +136,12 @@ switch ($action) {
                 i.Title AS IssueTitle,
                 g.Name AS GroupName,
                 s.Statement,
-                s.Weight
+                s.Weight,
+				(SELECT COUNT(*) FROM `%stable` s2 WHERE s2.ParentStatementId = s.StatementId) AS ChildStatements
 			FROM `%stable` s
 					JOIN `%gtable` g ON s.GroupId = g.GroupId
 					JOIN `%itable` i ON s.IssueId = i.IssueId
+			WHERE ISNULL(s.ParentStatementId)
 			ORDER BY i.Title, g.Name, s.Statement",
 			array(
 				'%stable' => TABLE_STATEMENTS,
@@ -140,8 +149,12 @@ switch ($action) {
 				'%itable' => TABLE_ISSUES,
 			)
 		);
-		while ($statement = $stmt->fetchObject()) {
-			$statements[$statement->StatementId] = $statement;
+		if ($stmt->success) {
+			while ($statement = $stmt->fetchObject()) {
+				$statements[$statement->StatementId] = $statement;
+			}
+		} else {
+			die('Database query failed: ' . $stmt->error);
 		}
 		$vars = array(
 			'statements' => $statements,
