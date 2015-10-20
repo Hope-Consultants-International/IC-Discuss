@@ -18,7 +18,7 @@ work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
 		<div class="form-group">
 			<label for="IssueId" class="col-sm-2 control-label">Issue</label>
 			<div class="col-sm-6">
-				<select class="form-control" id="IssueId" name="IssueId">
+				<select class="form-control" id="IssueId" name="IssueId" <?php if (count($issues) == 0) { print("disabled"); } ?>>
 				<?php foreach($issues as $id => $issue) { ?>
 					<option <?php print(($issue_id == $id)?'selected="selected"':'');?> value="<?php print(htmlentities($id)); ?>">
 						<?php print(htmlentities($issue)); ?>
@@ -32,7 +32,7 @@ work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
 		<div class="form-group">
 			<label for="IssueId" class="col-sm-2 control-label">Group</label>
 			<div class="col-sm-6">
-				<select class="form-control" id="GroupId" name="GroupId">
+				<select class="form-control" id="GroupId" name="GroupId" <?php if (count($groups) == 0) { print("disabled"); } ?>>
 				<?php foreach($groups as $id => $group) { ?>
 					<option <?php print(($group_id == $id)?'selected="selected"':'');?> value="<?php print(htmlentities($id)); ?>">
 						<?php print(htmlentities($group)); ?>
@@ -61,7 +61,7 @@ work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
 	<div class="form-group">
 		<div class="col-sm-10">
 			<div class="btn-group" role="group">
-				<button type="submit" class="btn btn-primary">
+				<button type="submit" class="btn btn-primary" <?php if ((count($issues) == 0) || (count($groups) == 0)) { print("disabled"); } ?>>
 					<span class="glyphicon glyphicon-save" aria-hidden="true"></span> Save
 				</button>
 				<button type="button" class="btn btn-default" onclick="edit_cancel()">
