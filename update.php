@@ -41,37 +41,37 @@ $current_version++;
 if ($db_version < $current_version) {
 	// create database
 	$statements = array(
-		'CREATE TABLE IF NOT EXISTS `groups` (
+		'CREATE TABLE IF NOT EXISTS `' . TABLE_GROUPS . '` (
 			`GroupId` int(11) NOT NULL, `Name` varchar(255) NOT NULL
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8',
-		'CREATE TABLE IF NOT EXISTS `issues` (
+		'CREATE TABLE IF NOT EXISTS `' . TABLE_ISSUES . '` (
 			`IssueId` int(11) NOT NULL, `Title` varchar(255) NOT NULL,
 			`Description` varchar(255) NOT NULL
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8',
-		'CREATE TABLE IF NOT EXISTS `statements` (
+		'CREATE TABLE IF NOT EXISTS `' . TABLE_STATEMENTS . '` (
 			`StatementId` int(11) NOT NULL, `GroupId` int(11) NOT NULL,
 			`IssueId` int(11) NOT NULL, `SummaryId` int(11) DEFAULT NULL,
 			`Statement` text NOT NULL
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8',
-		'CREATE TABLE IF NOT EXISTS `summaries` (
+		'CREATE TABLE IF NOT EXISTS `' . TABLE_SUMMARIES . '` (
 			`SummaryId` int(11) NOT NULL,
 			`IssueId` int(11) NOT NULL,
 			`Summary` text NOT NULL
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8',
-		'ALTER TABLE `groups` ADD PRIMARY KEY (`GroupId`), ADD UNIQUE KEY `Name` (`Name`)',
-		'ALTER TABLE `issues` ADD PRIMARY KEY (`IssueId`), ADD UNIQUE KEY `Title` (`Title`)',
-		'ALTER TABLE `statements` ADD PRIMARY KEY (`StatementId`), ADD KEY `GroupId` (`GroupId`), ADD KEY `IssueId` (`IssueId`), ADD KEY `SummaryId` (`SummaryId`)',
-		'ALTER TABLE `summaries` ADD PRIMARY KEY (`SummaryId`), ADD KEY `IssueId` (`IssueId`)',
-		'ALTER TABLE `groups` MODIFY `GroupId` int(11) NOT NULL AUTO_INCREMENT',
-		'ALTER TABLE `issues` MODIFY `IssueId` int(11) NOT NULL AUTO_INCREMENT',
-		'ALTER TABLE `statements` MODIFY `StatementId` int(11) NOT NULL AUTO_INCREMENT',
-		'ALTER TABLE `summaries` MODIFY `SummaryId` int(11) NOT NULL AUTO_INCREMENT',
-		'ALTER TABLE `statements`
-			ADD CONSTRAINT `statements_ibfk_3` FOREIGN KEY (`SummaryId`) REFERENCES `summaries` (`SummaryId`) ON DELETE SET NULL,
-			ADD CONSTRAINT `statements_ibfk_1` FOREIGN KEY (`GroupId`) REFERENCES `groups` (`GroupId`) ON DELETE CASCADE,
-			ADD CONSTRAINT `statements_ibfk_2` FOREIGN KEY (`IssueId`) REFERENCES `issues` (`IssueId`) ON DELETE CASCADE',
-		'ALTER TABLE `summaries`
-			ADD CONSTRAINT `summaries_ibfk_1` FOREIGN KEY (`IssueId`) REFERENCES `issues` (`IssueId`) ON DELETE CASCADE',
+		'ALTER TABLE `' . TABLE_GROUPS . '` ADD PRIMARY KEY (`GroupId`), ADD UNIQUE KEY `Name` (`Name`)',
+		'ALTER TABLE `' . TABLE_ISSUES . '` ADD PRIMARY KEY (`IssueId`), ADD UNIQUE KEY `Title` (`Title`)',
+		'ALTER TABLE `' . TABLE_STATEMENTS . '` ADD PRIMARY KEY (`StatementId`), ADD KEY `GroupId` (`GroupId`), ADD KEY `IssueId` (`IssueId`), ADD KEY `SummaryId` (`SummaryId`)',
+		'ALTER TABLE `' . TABLE_SUMMARIES . '` ADD PRIMARY KEY (`SummaryId`), ADD KEY `IssueId` (`IssueId`)',
+		'ALTER TABLE `' . TABLE_GROUPS . '` MODIFY `GroupId` int(11) NOT NULL AUTO_INCREMENT',
+		'ALTER TABLE `' . TABLE_ISSUES . '` MODIFY `IssueId` int(11) NOT NULL AUTO_INCREMENT',
+		'ALTER TABLE `' . TABLE_STATEMENTS . '` MODIFY `StatementId` int(11) NOT NULL AUTO_INCREMENT',
+		'ALTER TABLE `' . TABLE_SUMMARIES . '` MODIFY `SummaryId` int(11) NOT NULL AUTO_INCREMENT',
+		'ALTER TABLE `' . TABLE_STATEMENTS . '`
+			ADD CONSTRAINT `statements_ibfk_3` FOREIGN KEY (`SummaryId`) REFERENCES `' . TABLE_SUMMARIES . '` (`SummaryId`) ON DELETE SET NULL,
+			ADD CONSTRAINT `statements_ibfk_1` FOREIGN KEY (`GroupId`) REFERENCES `' . TABLE_GROUPS . '` (`GroupId`) ON DELETE CASCADE,
+			ADD CONSTRAINT `statements_ibfk_2` FOREIGN KEY (`IssueId`) REFERENCES `' . TABLE_ISSUES . '` (`IssueId`) ON DELETE CASCADE',
+		'ALTER TABLE `' . TABLE_SUMMARIES . '`
+			ADD CONSTRAINT `summaries_ibfk_1` FOREIGN KEY (`IssueId`) REFERENCES `' . TABLE_ISSUES . '` (`IssueId`) ON DELETE CASCADE',
 	);
 	foreach ($statements as $sql) {
 		$s = db()->preparedStatement($sql);
@@ -95,7 +95,7 @@ if ($db_version < $current_version) {
 
 $current_version++;
 if ($db_version < $current_version) {
-	$sql = "ALTER TABLE `issues` ADD `AllowUpload` BOOLEAN NOT NULL DEFAULT TRUE";
+	$sql = "ALTER TABLE `" . TABLE_ISSUES . "` ADD `AllowUpload` BOOLEAN NOT NULL DEFAULT TRUE";
 	$s = db()->preparedStatement($sql);
 	if (!$s->success) {
 		die(sprintf('Error updating to version %d:<p><b>Query</b><br>%s</p>', $current_version, $sql));
@@ -104,7 +104,7 @@ if ($db_version < $current_version) {
 
 $current_version++;
 if ($db_version < $current_version) {
-	$sql = "ALTER TABLE `statements` ADD `Highlight` BOOLEAN NOT NULL DEFAULT FALSE";
+	$sql = "ALTER TABLE `" . TABLE_STATEMENTS . "` ADD `Highlight` BOOLEAN NOT NULL DEFAULT FALSE";
 	$s = db()->preparedStatement($sql);
 	if (!$s->success) {
 		die(sprintf('Error updating to version %d:<p><b>Query</b><br>%s</p>', $current_version, $sql));
@@ -113,7 +113,7 @@ if ($db_version < $current_version) {
 
 $current_version++;
 if ($db_version < $current_version) {
-	$sql = "ALTER TABLE `statements` ADD `Weight` INT NOT NULL DEFAULT '0'";
+	$sql = "ALTER TABLE `" . TABLE_STATEMENTS . "` ADD `Weight` INT NOT NULL DEFAULT '0'";
 	$s = db()->preparedStatement($sql);
 	if (!$s->success) {
 		die(sprintf('Error updating to version %d:<p><b>Query</b><br>%s</p>', $current_version, $sql));
@@ -122,7 +122,7 @@ if ($db_version < $current_version) {
 
 $current_version++;
 if ($db_version < $current_version) {
-	$sql = "ALTER TABLE `issues` ADD `Frontpage` TINYINT NOT NULL DEFAULT '0', ADD INDEX (`Frontpage`) ;";
+	$sql = "ALTER TABLE `" . TABLE_ISSUES . "` ADD `Frontpage` TINYINT NOT NULL DEFAULT '0', ADD INDEX (`Frontpage`) ;";
 	$s = db()->preparedStatement($sql);
 	if (!$s->success) {
 		die(sprintf('Error updating to version %d:<p><b>Query</b><br>%s</p>', $current_version, $sql));
@@ -131,7 +131,7 @@ if ($db_version < $current_version) {
 
 $current_version++;
 if ($db_version < $current_version) {
-	$sql = "ALTER TABLE `groups` ADD `Frontpage` TINYINT NOT NULL DEFAULT '0', ADD INDEX (`Frontpage`) ;";
+	$sql = "ALTER TABLE `" . TABLE_GROUPS . "` ADD `Frontpage` TINYINT NOT NULL DEFAULT '0', ADD INDEX (`Frontpage`) ;";
 	$s = db()->preparedStatement($sql);
 	if (!$s->success) {
 		die(sprintf('Error updating to version %d:<p><b>Query</b><br>%s</p>', $current_version, $sql));
@@ -140,7 +140,7 @@ if ($db_version < $current_version) {
 
 $current_version++;
 if ($db_version < $current_version) {
-	$sql = "ALTER TABLE `issues` ADD `Folder` VARCHAR(250) NOT NULL DEFAULT ''";
+	$sql = "ALTER TABLE `" . TABLE_ISSUES . "` ADD `Folder` VARCHAR(250) NOT NULL DEFAULT ''";
 	$s = db()->preparedStatement($sql);
 	if (!$s->success) {
 		die(sprintf('Error updating to version %d:<p><b>Query</b><br>%s</p>', $current_version, $sql));
@@ -149,7 +149,7 @@ if ($db_version < $current_version) {
 
 $current_version++;
 if ($db_version < $current_version) {
-	$sql = "ALTER TABLE `statements` ADD `ParentStatementId` INT NULL , ADD INDEX (`ParentStatementId`);";
+	$sql = "ALTER TABLE `" . TABLE_STATEMENTS . "` ADD `ParentStatementId` INT NULL , ADD INDEX (`ParentStatementId`);";
 	$s = db()->preparedStatement($sql);
 	if (!$s->success) {
 		die(sprintf('Error updating to version %d:<p><b>Query</b><br>%s</p>', $current_version, $sql));
@@ -158,7 +158,7 @@ if ($db_version < $current_version) {
 
 $current_version++;
 if ($db_version < $current_version) {
-	$sql = "ALTER TABLE `statements` ADD FOREIGN KEY (`ParentStatementId`) REFERENCES `ic-discuss`.`statements`(`StatementId`) ON DELETE SET NULL ON UPDATE RESTRICT;";
+	$sql = "ALTER TABLE `" . TABLE_STATEMENTS . "` ADD FOREIGN KEY (`ParentStatementId`) REFERENCES `" . TABLE_STATEMENTS . "` (`StatementId`) ON DELETE SET NULL ON UPDATE RESTRICT;";
 	$s = db()->preparedStatement($sql);
 	if (!$s->success) {
 		die(sprintf('Error updating to version %d:<p><b>Query</b><br>%s</p>', $current_version, $sql));
